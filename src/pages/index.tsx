@@ -27,7 +27,7 @@ export default function HomePage() {
         return;
       }
 
-      const { data, error } = await supabase.from("match_days").select("*");
+      const { data } = await supabase.from("match_days").select("*");
       if (data) setMatchDays(data);
       setLoading(false);
     };
