@@ -104,3 +104,35 @@ body {
     cursor: pointer;
   }
 }
+
+/* Next Match Card Styles */
+.next-match-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.next-match-card:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--text-accent), #10b981);
+}
+
+/* Mobile responsive for next match card */
+@media (max-width: 639px) {
+  .next-match-card {
+    padding: var(--spacing-lg) !important;
+  }
+
+  .next-match-card__details {
+    grid-template-columns: 1fr !important;
+    gap: var(--spacing-md) !important;
+  }
+
+  .next-match-card__header {
+    margin-bottom: var(--spacing-md) !important;
+  }
+}

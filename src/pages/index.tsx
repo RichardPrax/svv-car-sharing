@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabaseClient";
 import { MatchDay } from "@/entities/MatchDay";
 import MatchDayList from "@/components/MatchDayList";
+import NextMatchCard from "@/components/NextMatchCard";
 
 export default function HomePage() {
   const [matchDays, setMatchDays] = useState<MatchDay[]>([]);
@@ -28,6 +29,25 @@ export default function HomePage() {
     getUserAndData();
   }, []);
 
+  // Helper function to check if match is in the future
+  const isMatchInFuture = (dateStr: string, timeStr: string): boolean => {
+    const now = new Date();
+    const matchDate = new Date(`${dateStr} ${timeStr}`);
+    return matchDate > now;
+  };
+
+  // Sort all matches by date and time
+  const sortedMatchDays = matchDays.sort((a, b) => {
+    const dateA = new Date(`${a.date} ${a.time}`);
+    const dateB = new Date(`${b.date} ${b.time}`);
+    return dateA.getTime() - dateB.getTime();
+  });
+
+  // Find the next upcoming match
+  const nextMatch = sortedMatchDays.find((match) =>
+    isMatchInFuture(match.date, match.time)
+  );
+
   if (loading) return <p>Lade...</p>;
 
   return (
@@ -45,19 +65,41 @@ export default function HomePage() {
           padding: "0 var(--spacing-md)",
         }}
       >
-        <h1
-          style={{
-            fontSize: "2rem",
-            fontWeight: "700",
-            marginBottom: "var(--spacing-xl)",
-            color: "var(--text-primary)",
-            textAlign: "center",
-            padding: "0 var(--spacing-md)",
-          }}
-        >
-          Spieltage
-        </h1>
-        <MatchDayList matchDays={matchDays} />
+        {/* Nächster Spieltag Section */}
+        {nextMatch && (
+          <section style={{ marginBottom: "var(--spacing-xl)" }}>
+            <h2
+              style={{
+                fontSize: "1.75rem",
+                fontWeight: "700",
+                marginBottom: "var(--spacing-lg)",
+                color: "var(--text-primary)",
+                textAlign: "center",
+                padding: "0 var(--spacing-md)",
+              }}
+            >
+              Nächster Spieltag
+            </h2>
+            <NextMatchCard match={nextMatch} />
+          </section>
+        )}
+
+        {/* Alle Spieltage Section */}
+        <section>
+          <h2
+            style={{
+              fontSize: "1.75rem",
+              fontWeight: "700",
+              marginBottom: "var(--spacing-lg)",
+              color: "var(--text-primary)",
+              textAlign: "center",
+              padding: "0 var(--spacing-md)",
+            }}
+          >
+            Alle Spieltage
+          </h2>
+          <MatchDayList matchDays={sortedMatchDays} />
+        </section>
       </div>
     </div>
   );

@@ -11,6 +11,22 @@ function isMatchInPast(dateStr: string, timeStr: string): boolean {
   return matchDate < today;
 }
 
+// Helper function to format date from YYYY-MM-DD to DD.MM.YYYY
+const formatDate = (dateStr: string): string => {
+  const date = new Date(dateStr);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}.${month}.${year}`;
+};
+
+// Helper function to format time
+const formatTime = (timeStr: string): string => {
+  // Remove seconds if present (e.g., "15:30:00" -> "15:30")
+  const timeWithoutSeconds = timeStr.substring(0, 5);
+  return `Beginn: ${timeWithoutSeconds}`;
+};
+
 export default function MatchDayCard({ match }: Props) {
   const isPast = isMatchInPast(match.date, match.time);
 
@@ -34,6 +50,7 @@ export default function MatchDayCard({ match }: Props) {
       <div className="match-card__content">
         <div className="match-card__header">
           <div className="match-card__date-time">
+            {" "}
             <p
               className="match-card__date"
               style={{
@@ -44,7 +61,7 @@ export default function MatchDayCard({ match }: Props) {
                 lineHeight: "1.4",
               }}
             >
-              {match.date}
+              {formatDate(match.date)}
             </p>
             <p
               className="match-card__time"
@@ -54,7 +71,7 @@ export default function MatchDayCard({ match }: Props) {
                 margin: "0",
               }}
             >
-              {match.time} Uhr
+              {formatTime(match.time)}
             </p>
           </div>
           {isPast && (
