@@ -1,5 +1,6 @@
 // src/components/MatchDayCard.tsx
 import { MatchDay } from "@/entities/MatchDay";
+import { useRouter } from "next/router";
 
 type Props = {
   match: MatchDay;
@@ -29,10 +30,16 @@ const formatTime = (timeStr: string): string => {
 
 export default function MatchDayCard({ match }: Props) {
   const isPast = isMatchInPast(match.date, match.time);
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    router.push(`/match/${match.id}`);
+  };
 
   return (
     <div
       className={`match-card ${isPast ? "match-card--past" : ""}`}
+      onClick={handleCardClick}
       style={{
         backgroundColor: isPast
           ? "var(--card-past-background)"
@@ -45,6 +52,7 @@ export default function MatchDayCard({ match }: Props) {
         padding: "var(--spacing-lg)",
         width: "100%",
         transition: "all 0.2s ease-in-out",
+        cursor: "pointer",
       }}
     >
       <div className="match-card__content">

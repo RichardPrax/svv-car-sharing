@@ -1,5 +1,6 @@
 // src/components/NextMatchCard.tsx
 import { MatchDay } from "@/entities/MatchDay";
+import { useRouter } from "next/router";
 
 type Props = {
   match: MatchDay;
@@ -22,9 +23,16 @@ const formatTime = (timeStr: string): string => {
 };
 
 export default function NextMatchCard({ match }: Props) {
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    router.push(`/match/${match.id}`);
+  };
+
   return (
     <div
       className="next-match-card"
+      onClick={handleCardClick}
       style={{
         backgroundColor: "var(--card-background)",
         borderColor: "var(--card-border)",
@@ -40,6 +48,7 @@ export default function NextMatchCard({ match }: Props) {
         transition: "all 0.2s ease-in-out",
         background:
           "linear-gradient(135deg, var(--card-background) 0%, #f1f5f9 100%)",
+        cursor: "pointer",
       }}
     >
       <div className="next-match-card__content">

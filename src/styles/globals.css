@@ -76,6 +76,13 @@ body {
     box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.1),
       0 10px 10px -5px rgb(0 0 0 / 0.04);
   }
+
+  /* Next Match Card hover effect */
+  .next-match-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+      0 10px 10px -5px rgb(0 0 0 / 0.04);
+  }
 }
 
 /* Mobile specific improvements */
@@ -101,7 +108,6 @@ body {
 @media (max-width: 767px) {
   .match-card {
     min-height: 48px;
-    cursor: pointer;
   }
 }
 
