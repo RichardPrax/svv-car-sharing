@@ -142,3 +142,32 @@ body {
     margin-bottom: var(--spacing-md) !important;
   }
 }
+
+/* Ride management styles */
+.ride-form input:focus,
+.ride-form select:focus,
+.ride-form textarea:focus {
+  outline: none;
+  border-color: var(--text-accent);
+  box-shadow: 0 0 0 3px rgb(5 150 105 / 0.1);
+}
+
+.ride-card {
+  transition: all 0.2s ease-in-out;
+}
+
+.ride-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* Mobile responsiveness for rides */
+@media (max-width: 639px) {
+  .ride-card {
+    padding: var(--spacing-md) !important;
+  }
+
+  .ride-form {
+    padding: var(--spacing-md) !important;
+  }
+}

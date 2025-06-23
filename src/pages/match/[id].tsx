@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { MatchDay } from "@/entities/MatchDay";
+import CreateRideForm from "@/components/CreateRideForm";
+import RidesList from "@/components/RidesList";
 
 // Helper function to format date from YYYY-MM-DD to DD.MM.YYYY
 const formatDate = (dateStr: string): string => {
@@ -24,6 +26,8 @@ export default function MatchDetailPage() {
   const { id } = router.query;
   const [match, setMatch] = useState<MatchDay | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     const getMatchData = async () => {
@@ -56,9 +60,21 @@ export default function MatchDetailPage() {
 
     getMatchData();
   }, [id, router]);
-
   const handleBackClick = () => {
     router.push("/");
+  };
+
+  const handleRideCreated = () => {
+    setShowCreateForm(false);
+    setRefreshTrigger((prev) => prev + 1);
+  };
+
+  const handleShowCreateForm = () => {
+    setShowCreateForm(true);
+  };
+
+  const handleCancelCreate = () => {
+    setShowCreateForm(false);
   };
 
   if (loading) return <p>Lade...</p>;
@@ -206,7 +222,6 @@ export default function MatchDetailPage() {
                   {match.opponent}
                 </p>
               </div>
-
               <div
                 style={{
                   padding: "var(--spacing-md)",
@@ -235,9 +250,86 @@ export default function MatchDetailPage() {
                 >
                   {match.location}
                 </p>
-              </div>
+              </div>{" "}
             </div>
           </div>
+        </div>
+
+        {/* Fahrtverwaltung Sektion */}
+        <div
+          style={{
+            backgroundColor: "var(--card-background)",
+            borderColor: "var(--card-border)",
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderRadius: "var(--radius-lg)",
+            boxShadow: "var(--card-shadow)",
+            padding: "var(--spacing-xl)",
+            width: "100%",
+            marginTop: "var(--spacing-xl)",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "var(--spacing-lg)",
+              flexWrap: "wrap",
+              gap: "var(--spacing-sm)",
+            }}
+          >
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "700",
+                color: "var(--text-primary)",
+                margin: 0,
+              }}
+            >
+              🚗 Fahrgemeinschaften
+            </h2>
+            {!showCreateForm && (
+              <button
+                onClick={handleShowCreateForm}
+                style={{
+                  padding: "var(--spacing-sm) var(--spacing-md)",
+                  border: "none",
+                  borderRadius: "var(--radius-sm)",
+                  fontSize: "0.875rem",
+                  fontWeight: "600",
+                  color: "white",
+                  backgroundColor: "var(--text-accent)",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease-in-out",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "var(--spacing-xs)",
+                }}
+                onMouseEnter={(e) => {
+                  (e.target as HTMLElement).style.transform =
+                    "translateY(-1px)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.target as HTMLElement).style.transform = "translateY(0)";
+                }}
+              >
+                + Fahrt anbieten
+              </button>
+            )}
+          </div>
+
+          {/* Create Ride Form */}
+          {showCreateForm && (
+            <CreateRideForm
+              matchId={match.id}
+              onRideCreated={handleRideCreated}
+              onCancel={handleCancelCreate}
+            />
+          )}
+
+          {/* Rides List */}
+          <RidesList matchId={match.id} refreshTrigger={refreshTrigger} />
         </div>
       </div>
     </div>
