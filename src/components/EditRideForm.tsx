@@ -389,6 +389,30 @@ export default function EditRideForm({
               }}
             >
               <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  flex: "2 1 auto",
+                  minWidth: "120px",
+                  padding: "var(--spacing-sm) var(--spacing-xs)",
+                  border: "none",
+                  borderRadius: "var(--radius-sm)",
+                  fontSize: "0.8rem",
+                  fontWeight: "600",
+                  color: "white",
+                  backgroundColor: "var(--text-accent)",
+                  cursor: loading ? "not-allowed" : "pointer",
+                  opacity: loading ? 0.6 : 1,
+                  transition: "all 0.2s ease-in-out",
+                  textAlign: "center",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {loading ? "Speichert..." : "Änderungen speichern"}
+              </button>
+              <button
                 type="button"
                 onClick={() => setShowDeleteConfirm(true)}
                 disabled={loading}
@@ -435,30 +459,6 @@ export default function EditRideForm({
                 }}
               >
                 Abbrechen
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                style={{
-                  flex: "2 1 auto",
-                  minWidth: "120px",
-                  padding: "var(--spacing-sm) var(--spacing-xs)",
-                  border: "none",
-                  borderRadius: "var(--radius-sm)",
-                  fontSize: "0.8rem",
-                  fontWeight: "600",
-                  color: "white",
-                  backgroundColor: "var(--text-accent)",
-                  cursor: loading ? "not-allowed" : "pointer",
-                  opacity: loading ? 0.6 : 1,
-                  transition: "all 0.2s ease-in-out",
-                  textAlign: "center",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {loading ? "Speichert..." : "Änderungen speichern"}
               </button>
             </div>
           </div>
