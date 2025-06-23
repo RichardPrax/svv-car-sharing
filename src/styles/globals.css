@@ -1,26 +1,106 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #f8fafc;
   --foreground: #171717;
-}
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Match Day Card Variables */
+  --card-background: #ffffff;
+  --card-border: #e2e8f0;
+  --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --card-past-background: #f0fdf4;
+  --card-past-border: #bbf7d0;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Text Colors */
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-accent: #059669;
+
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Responsive Design - Mobile First */
+.match-day-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+  width: 100%;
+  padding: 0 var(--spacing-md);
+}
+
+/* Tablet - 2 columns */
+@media (min-width: 640px) {
+  .match-day-list {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+/* Desktop - 3 columns */
+@media (min-width: 1024px) {
+  .match-day-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-xl);
+    padding: 0 var(--spacing-xl);
+  }
+}
+
+/* Extra large screens - max width */
+@media (min-width: 1280px) {
+  .match-day-list {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+/* Match card hover effects for desktop */
+@media (min-width: 768px) {
+  .match-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.1),
+      0 10px 10px -5px rgb(0 0 0 / 0.04);
+  }
+}
+
+/* Mobile specific improvements */
+@media (max-width: 639px) {
+  .match-card {
+    padding: var(--spacing-md) !important;
+  }
+
+  .match-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+
+  .match-card__past-indicator {
+    align-self: flex-start;
+  }
+}
+
+/* Improved touch targets for mobile */
+@media (max-width: 767px) {
+  .match-card {
+    min-height: 48px;
+    cursor: pointer;
+  }
 }

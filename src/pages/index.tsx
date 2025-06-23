@@ -1,15 +1,8 @@
-// pages/index.tsx
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { supabase } from "../../lib/supabaseClient";
-
-type MatchDay = {
-  id: string;
-  date: string;
-  time: string;
-  location: string;
-  opponent: string;
-};
+import { supabase } from "@/lib/supabaseClient";
+import { MatchDay } from "@/entities/MatchDay";
+import MatchDayList from "@/components/MatchDayList";
 
 export default function HomePage() {
   const [matchDays, setMatchDays] = useState<MatchDay[]>([]);
@@ -38,26 +31,34 @@ export default function HomePage() {
   if (loading) return <p>Lade...</p>;
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Spieltage</h1>
-      <ul className="space-y-3">
-        {matchDays.map((match) => (
-          <li key={match.id} className="border rounded p-4">
-            <p>
-              <strong>Datum:</strong> {match.date}
-            </p>
-            <p>
-              <strong>Zeit:</strong> {match.time}
-            </p>
-            <p>
-              <strong>Ort:</strong> {match.location}
-            </p>
-            <p>
-              <strong>Gegner:</strong> {match.opponent}
-            </p>
-          </li>
-        ))}
-      </ul>
+    <div
+      style={{
+        padding: "var(--spacing-lg) 0",
+        minHeight: "100vh",
+        backgroundColor: "var(--background)",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+          padding: "0 var(--spacing-md)",
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "2rem",
+            fontWeight: "700",
+            marginBottom: "var(--spacing-xl)",
+            color: "var(--text-primary)",
+            textAlign: "center",
+            padding: "0 var(--spacing-md)",
+          }}
+        >
+          Spieltage
+        </h1>
+        <MatchDayList matchDays={matchDays} />
+      </div>
     </div>
   );
 }
