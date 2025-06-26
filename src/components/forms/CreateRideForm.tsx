@@ -1,6 +1,6 @@
 // src/components/forms/CreateRideForm.tsx
-import { useCreateRide } from "@/hooks/useCreateRide";
 import { FormField, Input, Select, Textarea, Button } from "@/components/forms";
+import { useCreateRide } from "@/hooks/rides/useCreateRide";
 
 type Props = {
     matchId: string;
