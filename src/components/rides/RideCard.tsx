@@ -4,7 +4,7 @@ import { RideWithDetails } from "@/entities/Ride";
 import RideDetails from "./RideDetails";
 import RidePassengers from "./RidePassengers";
 import RideActions from "./RideActions";
-import EditRideForm from "../EditRideForm";
+import { EditRideForm } from "@/components/forms";
 
 interface RideCardProps {
     ride: RideWithDetails;

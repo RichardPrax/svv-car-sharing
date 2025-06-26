@@ -1,52 +1,18 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { supabase } from "@/lib/supabaseClient";
-import { MatchDay } from "@/entities/MatchDay";
-import MatchDayList from "@/components/MatchDayList";
-import NextMatchCard from "@/components/NextMatchCard";
+import { MatchDayList, NextMatchCard } from "@/components/matches";
+import { useMatches } from "@/hooks/matches/useMatches";
+import { isMatchInFuture, sortMatchesByDateTime } from "@/utils/dateTime";
 
 export default function HomePage() {
-    const [matchDays, setMatchDays] = useState<MatchDay[]>([]);
-    const [loading, setLoading] = useState(true);
-    const router = useRouter();
-
-    useEffect(() => {
-        const getUserAndData = async () => {
-            const {
-                data: { session },
-            } = await supabase.auth.getSession();
-
-            if (!session) {
-                router.push("/login");
-                return;
-            }
-
-            const { data } = await supabase.from("match_days").select("*");
-            if (data) setMatchDays(data);
-            setLoading(false);
-        };
-
-        getUserAndData();
-    }, [router]);
-
-    // Helper function to check if match is in the future
-    const isMatchInFuture = (dateStr: string, timeStr: string): boolean => {
-        const now = new Date();
-        const matchDate = new Date(`${dateStr} ${timeStr}`);
-        return matchDate > now;
-    };
+    const { matchDays, loading, error } = useMatches();
 
     // Sort all matches by date and time
-    const sortedMatchDays = matchDays.sort((a, b) => {
-        const dateA = new Date(`${a.date} ${a.time}`);
-        const dateB = new Date(`${b.date} ${b.time}`);
-        return dateA.getTime() - dateB.getTime();
-    });
+    const sortedMatchDays = sortMatchesByDateTime(matchDays);
 
     // Find the next upcoming match
     const nextMatch = sortedMatchDays.find((match) => isMatchInFuture(match.date, match.time));
 
     if (loading) return <p>Lade...</p>;
+    if (error) return <p>Fehler beim Laden der Spieltage: {error}</p>;
 
     return (
         <div

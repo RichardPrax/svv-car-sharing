@@ -1,25 +1,10 @@
-// src/components/NextMatchCard.tsx
+// src/components/matches/NextMatchCard.tsx
 import { MatchDay } from "@/entities/MatchDay";
 import { useRouter } from "next/router";
+import { formatDate, formatTime } from "@/utils/dateTime";
 
 type Props = {
     match: MatchDay;
-};
-
-// Helper function to format date from YYYY-MM-DD to DD.MM.YYYY
-const formatDate = (dateStr: string): string => {
-    const date = new Date(dateStr);
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}.${month}.${year}`;
-};
-
-// Helper function to format time
-const formatTime = (timeStr: string): string => {
-    // Remove seconds if present (e.g., "15:30:00" -> "15:30")
-    const timeWithoutSeconds = timeStr.substring(0, 5);
-    return `Beginn: ${timeWithoutSeconds}`;
 };
 
 export default function NextMatchCard({ match }: Props) {
@@ -57,7 +42,6 @@ export default function NextMatchCard({ match }: Props) {
                         marginBottom: "var(--spacing-lg)",
                     }}
                 >
-                    {" "}
                     <p
                         className="next-match-card__date"
                         style={{

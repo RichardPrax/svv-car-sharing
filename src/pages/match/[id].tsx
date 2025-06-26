@@ -1,61 +1,19 @@
 // src/pages/match/[id].tsx
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
-import { MatchDay } from "@/entities/MatchDay";
-import CreateRideForm from "@/components/CreateRideForm";
-import RidesList from "@/components/rides/RidesList";
-
-// Helper function to format date from YYYY-MM-DD to DD.MM.YYYY
-const formatDate = (dateStr: string): string => {
-    const date = new Date(dateStr);
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}.${month}.${year}`;
-};
-
-// Helper function to format time
-const formatTime = (timeStr: string): string => {
-    const timeWithoutSeconds = timeStr.substring(0, 5);
-    return `Beginn: ${timeWithoutSeconds}`;
-};
+import { useState } from "react";
+import { useMatchDetail } from "@/hooks/matches/useMatchDetail";
+import { formatDate, formatTime } from "@/utils/dateTime";
+import { CreateRideForm } from "@/components/forms";
+import { RidesList } from "@/components/rides";
 
 export default function MatchDetailPage() {
     const router = useRouter();
     const { id } = router.query;
-    const [match, setMatch] = useState<MatchDay | null>(null);
-    const [loading, setLoading] = useState(true);
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-    useEffect(() => {
-        const getMatchData = async () => {
-            if (!id) return;
+    const { match, loading, error } = useMatchDetail(id);
 
-            const {
-                data: { session },
-            } = await supabase.auth.getSession();
-
-            if (!session) {
-                router.push("/login");
-                return;
-            }
-
-            const { data, error } = await supabase.from("match_days").select("*").eq("id", id).single();
-
-            if (error) {
-                console.error("Error fetching match:", error);
-                router.push("/");
-                return;
-            }
-
-            if (data) setMatch(data);
-            setLoading(false);
-        };
-
-        getMatchData();
-    }, [id, router]);
     const handleBackClick = () => {
         router.push("/");
     };
@@ -65,16 +23,60 @@ export default function MatchDetailPage() {
         setRefreshTrigger((prev) => prev + 1);
     };
 
-    const handleShowCreateForm = () => {
-        setShowCreateForm(true);
-    };
-
     const handleCancelCreate = () => {
         setShowCreateForm(false);
     };
 
-    if (loading) return <p>Lade...</p>;
-    if (!match) return <p>Spieltag nicht gefunden</p>;
+    const handleShowCreateForm = () => {
+        setShowCreateForm(true);
+    };
+
+    if (loading) {
+        return (
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    minHeight: "100vh",
+                    backgroundColor: "var(--background)",
+                }}
+            >
+                <p style={{ color: "var(--text-secondary)" }}>Lade Spieltag...</p>
+            </div>
+        );
+    }
+
+    if (error || !match) {
+        return (
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    minHeight: "100vh",
+                    backgroundColor: "var(--background)",
+                    gap: "var(--spacing-md)",
+                }}
+            >
+                <p style={{ color: "#dc2626", textAlign: "center" }}>{error || "Spieltag nicht gefunden"}</p>
+                <button
+                    onClick={handleBackClick}
+                    style={{
+                        padding: "var(--spacing-sm) var(--spacing-md)",
+                        backgroundColor: "var(--text-accent)",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "var(--radius-sm)",
+                        cursor: "pointer",
+                    }}
+                >
+                    Zurück zur Übersicht
+                </button>
+            </div>
+        );
+    }
 
     return (
         <div
@@ -86,49 +88,47 @@ export default function MatchDetailPage() {
         >
             <div
                 style={{
-                    maxWidth: "800px",
+                    maxWidth: "1200px",
                     margin: "0 auto",
                     padding: "0 var(--spacing-md)",
                 }}
             >
-                {/* Back Button */}
-                <button
-                    onClick={handleBackClick}
+                {/* Header with Back Button */}
+                <div
                     style={{
-                        backgroundColor: "var(--card-background)",
-                        border: "1px solid var(--card-border)",
-                        borderRadius: "var(--radius-md)",
-                        padding: "var(--spacing-sm) var(--spacing-md)",
-                        fontSize: "0.875rem",
-                        color: "var(--text-primary)",
-                        cursor: "pointer",
                         marginBottom: "var(--spacing-xl)",
                         display: "flex",
                         alignItems: "center",
-                        gap: "var(--spacing-xs)",
-                        transition: "all 0.2s ease-in-out",
-                    }}
-                    onMouseEnter={(e) => {
-                        (e.target as HTMLElement).style.backgroundColor = "var(--card-past-background)";
-                    }}
-                    onMouseLeave={(e) => {
-                        (e.target as HTMLElement).style.backgroundColor = "var(--card-background)";
+                        gap: "var(--spacing-md)",
                     }}
                 >
-                    ← Zurück zur Übersicht
-                </button>
+                    <button
+                        onClick={handleBackClick}
+                        style={{
+                            padding: "var(--spacing-sm) var(--spacing-md)",
+                            backgroundColor: "var(--card-background)",
+                            color: "var(--text-secondary)",
+                            border: "1px solid var(--card-border)",
+                            borderRadius: "var(--radius-sm)",
+                            cursor: "pointer",
+                            fontSize: "0.875rem",
+                            fontWeight: "600",
+                            transition: "all 0.2s ease-in-out",
+                        }}
+                    >
+                        ← Zurück
+                    </button>
+                </div>
 
-                {/* Match Details Card */}
+                {/* Match Info Card */}
                 <div
                     style={{
                         backgroundColor: "var(--card-background)",
-                        borderColor: "var(--card-border)",
-                        borderWidth: "1px",
-                        borderStyle: "solid",
+                        border: "1px solid var(--card-border)",
                         borderRadius: "var(--radius-lg)",
-                        boxShadow: "var(--card-shadow)",
                         padding: "var(--spacing-xl)",
-                        width: "100%",
+                        marginBottom: "var(--spacing-xl)",
+                        textAlign: "center",
                     }}
                 >
                     <h1
@@ -137,130 +137,103 @@ export default function MatchDetailPage() {
                             fontWeight: "700",
                             color: "var(--text-primary)",
                             marginBottom: "var(--spacing-lg)",
-                            textAlign: "center",
                         }}
                     >
-                        Spieltag Details
+                        {formatDate(match.date)}
                     </h1>
 
                     <div
                         style={{
                             display: "grid",
+                            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
                             gap: "var(--spacing-lg)",
+                            marginBottom: "var(--spacing-lg)",
                         }}
                     >
-                        {/* Date and Time */}
-                        <div
-                            style={{
-                                textAlign: "center",
-                                padding: "var(--spacing-lg)",
-                                backgroundColor: "var(--background)",
-                                borderRadius: "var(--radius-md)",
-                            }}
-                        >
-                            <h2
+                        <div>
+                            <h3
                                 style={{
-                                    fontSize: "1.5rem",
-                                    fontWeight: "700",
-                                    color: "var(--text-primary)",
+                                    fontSize: "0.875rem",
+                                    fontWeight: "600",
+                                    color: "var(--text-secondary)",
                                     marginBottom: "var(--spacing-xs)",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.025em",
                                 }}
                             >
-                                {formatDate(match.date)}
-                            </h2>
+                                Zeit
+                            </h3>
                             <p
                                 style={{
                                     fontSize: "1.125rem",
-                                    color: "var(--text-accent)",
                                     fontWeight: "600",
+                                    color: "var(--text-primary)",
+                                    margin: "0",
                                 }}
                             >
                                 {formatTime(match.time)}
                             </p>
                         </div>
 
-                        {/* Match Info */}
-                        <div
-                            style={{
-                                display: "grid",
-                                gridTemplateColumns: "1fr",
-                                gap: "var(--spacing-md)",
-                            }}
-                        >
-                            <div
+                        <div>
+                            <h3
                                 style={{
-                                    padding: "var(--spacing-md)",
-                                    borderLeft: "4px solid var(--text-accent)",
-                                    backgroundColor: "var(--background)",
+                                    fontSize: "0.875rem",
+                                    fontWeight: "600",
+                                    color: "var(--text-secondary)",
+                                    marginBottom: "var(--spacing-xs)",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.025em",
                                 }}
                             >
-                                <h3
-                                    style={{
-                                        fontSize: "0.875rem",
-                                        fontWeight: "600",
-                                        color: "var(--text-secondary)",
-                                        marginBottom: "var(--spacing-xs)",
-                                        textTransform: "uppercase",
-                                        letterSpacing: "0.025em",
-                                    }}
-                                >
-                                    Gegner
-                                </h3>
-                                <p
-                                    style={{
-                                        fontSize: "1.25rem",
-                                        fontWeight: "600",
-                                        color: "var(--text-primary)",
-                                    }}
-                                >
-                                    {match.opponent}
-                                </p>
-                            </div>
-                            <div
+                                Gegner
+                            </h3>
+                            <p
                                 style={{
-                                    padding: "var(--spacing-md)",
-                                    borderLeft: "4px solid var(--text-accent)",
-                                    backgroundColor: "var(--background)",
+                                    fontSize: "1.125rem",
+                                    fontWeight: "600",
+                                    color: "var(--text-primary)",
+                                    margin: "0",
                                 }}
                             >
-                                <h3
-                                    style={{
-                                        fontSize: "0.875rem",
-                                        fontWeight: "600",
-                                        color: "var(--text-secondary)",
-                                        marginBottom: "var(--spacing-xs)",
-                                        textTransform: "uppercase",
-                                        letterSpacing: "0.025em",
-                                    }}
-                                >
-                                    Spielort
-                                </h3>
-                                <p
-                                    style={{
-                                        fontSize: "1.25rem",
-                                        fontWeight: "600",
-                                        color: "var(--text-primary)",
-                                    }}
-                                >
-                                    {match.location}
-                                </p>
-                            </div>{" "}
+                                {match.opponent}
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3
+                                style={{
+                                    fontSize: "0.875rem",
+                                    fontWeight: "600",
+                                    color: "var(--text-secondary)",
+                                    marginBottom: "var(--spacing-xs)",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.025em",
+                                }}
+                            >
+                                Ort
+                            </h3>
+                            <p
+                                style={{
+                                    fontSize: "1.125rem",
+                                    fontWeight: "600",
+                                    color: "var(--text-primary)",
+                                    margin: "0",
+                                }}
+                            >
+                                {match.location}
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                {/* Fahrtverwaltung Sektion */}
+                {/* Rides Section */}
                 <div
                     style={{
                         backgroundColor: "var(--card-background)",
-                        borderColor: "var(--card-border)",
-                        borderWidth: "1px",
-                        borderStyle: "solid",
+                        border: "1px solid var(--card-border)",
                         borderRadius: "var(--radius-lg)",
-                        boxShadow: "var(--card-shadow)",
                         padding: "var(--spacing-xl)",
-                        width: "100%",
-                        marginTop: "var(--spacing-xl)",
                     }}
                 >
                     <div
@@ -270,7 +243,7 @@ export default function MatchDetailPage() {
                             alignItems: "center",
                             marginBottom: "var(--spacing-lg)",
                             flexWrap: "wrap",
-                            gap: "var(--spacing-sm)",
+                            gap: "var(--spacing-md)",
                         }}
                     >
                         <h2
@@ -278,45 +251,32 @@ export default function MatchDetailPage() {
                                 fontSize: "1.5rem",
                                 fontWeight: "700",
                                 color: "var(--text-primary)",
-                                margin: 0,
+                                margin: "0",
                             }}
                         >
-                            🚗 Fahrgemeinschaften
+                            Fahrten
                         </h2>
-                        {!showCreateForm && (
-                            <button
-                                onClick={handleShowCreateForm}
-                                style={{
-                                    padding: "var(--spacing-sm) var(--spacing-md)",
-                                    border: "none",
-                                    borderRadius: "var(--radius-sm)",
-                                    fontSize: "0.875rem",
-                                    fontWeight: "600",
-                                    color: "white",
-                                    backgroundColor: "var(--text-accent)",
-                                    cursor: "pointer",
-                                    transition: "all 0.2s ease-in-out",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "var(--spacing-xs)",
-                                }}
-                                onMouseEnter={(e) => {
-                                    (e.target as HTMLElement).style.transform = "translateY(-1px)";
-                                }}
-                                onMouseLeave={(e) => {
-                                    (e.target as HTMLElement).style.transform = "translateY(0)";
-                                }}
-                            >
-                                + Fahrt anbieten
-                            </button>
-                        )}
+                        <button
+                            onClick={handleShowCreateForm}
+                            style={{
+                                padding: "var(--spacing-sm) var(--spacing-md)",
+                                backgroundColor: "var(--text-accent)",
+                                color: "white",
+                                border: "none",
+                                borderRadius: "var(--radius-sm)",
+                                fontSize: "0.875rem",
+                                fontWeight: "600",
+                                cursor: "pointer",
+                                transition: "all 0.2s ease-in-out",
+                            }}
+                        >
+                            + Fahrt anbieten
+                        </button>
                     </div>
 
-                    {/* Create Ride Form */}
-                    {showCreateForm && <CreateRideForm matchId={match.id} onRideCreated={handleRideCreated} onCancel={handleCancelCreate} />}
-
-                    {/* Rides List */}
                     <RidesList matchId={match.id} refreshTrigger={refreshTrigger} />
+
+                    {showCreateForm && <CreateRideForm matchId={match.id} onRideCreated={handleRideCreated} onCancel={handleCancelCreate} />}
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
-// src/components/EditRideForm.tsx
+// src/components/forms/EditRideForm.tsx
 import { RideWithDetails } from "@/entities/Ride";
-import { useEditRide } from "@/hooks/useEditRide";
+import { useEditRide } from "@/hooks/rides";
 import { FormField, Input, Select, Textarea, Button } from "@/components/forms";
 
 type Props = {
