@@ -4,9 +4,10 @@ import { supabase } from "@/lib/supabaseClient";
 
 interface UseUserRideCheckProps {
     matchId: string | string[] | undefined;
+    refreshTrigger?: number;
 }
 
-export function useUserRideCheck({ matchId }: UseUserRideCheckProps) {
+export function useUserRideCheck({ matchId, refreshTrigger }: UseUserRideCheckProps) {
     const [hasExistingRide, setHasExistingRide] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -53,7 +54,7 @@ export function useUserRideCheck({ matchId }: UseUserRideCheckProps) {
         if (matchId && !Array.isArray(matchId)) {
             checkExistingRide();
         }
-    }, [matchId]);
+    }, [matchId, refreshTrigger]);
 
     return {
         hasExistingRide,

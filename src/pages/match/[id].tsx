@@ -2,7 +2,7 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useMatchDetail } from "@/hooks/matches/useMatchDetail";
-import { useUserRideCheck } from "@/hooks/rides/useUserRideCheck";
+import { useUserRideCheck, useUserParticipationCheck } from "@/hooks/rides";
 import { formatDate, formatTime } from "@/utils/dateTime";
 import { CreateRideForm } from "@/components/forms";
 import { RidesList } from "@/components/rides";
@@ -21,6 +21,14 @@ export default function MatchDetailPage() {
         recheckExistingRide,
     } = useUserRideCheck({
         matchId: id as string,
+        refreshTrigger,
+    });
+    const { 
+        isParticipating, 
+        recheckParticipation 
+    } = useUserParticipationCheck({
+        matchId: id as string,
+        refreshTrigger,
     });
 
     const handleBackClick = () => {
@@ -31,6 +39,7 @@ export default function MatchDetailPage() {
         setShowCreateForm(false);
         setRefreshTrigger((prev) => prev + 1);
         recheckExistingRide();
+        recheckParticipation();
     };
 
     const handleCancelCreate = () => {
@@ -38,12 +47,23 @@ export default function MatchDetailPage() {
     };
 
     const handleShowCreateForm = () => {
+        if (hasExistingRide) {
+            setShowExistingRideWarning(true);
+            setTimeout(() => setShowExistingRideWarning(false), 3000);
+            return;
+        }
+        if (isParticipating) {
+            setShowExistingRideWarning(true);
+            setTimeout(() => setShowExistingRideWarning(false), 3000);
+            return;
+        }
         setShowCreateForm(true);
     };
 
     const handleRideUpdated = () => {
         setRefreshTrigger((prev) => prev + 1);
         recheckExistingRide();
+        recheckParticipation();
     };
 
     // Warte bis Router geladen ist
@@ -291,22 +311,35 @@ export default function MatchDetailPage() {
                         <div style={{ position: "relative" }}>
                             <button
                                 onClick={handleShowCreateForm}
-                                disabled={hasExistingRide || checkingRide}
-                                title={hasExistingRide ? "Sie haben bereits eine Fahrt für diesen Spieltag angeboten" : "Neue Fahrt anbieten"}
+                                disabled={hasExistingRide || isParticipating || checkingRide}
+                                title={
+                                    hasExistingRide 
+                                        ? "Sie haben bereits eine Fahrt für diesen Spieltag angeboten"
+                                        : isParticipating
+                                        ? "Sie können keine eigene Fahrt anbieten, da Sie bereits als Mitfahrer angemeldet sind"
+                                        : "Neue Fahrt anbieten"
+                                }
                                 style={{
                                     padding: "var(--spacing-sm) var(--spacing-md)",
-                                    backgroundColor: hasExistingRide ? "#9ca3af" : "var(--text-accent)",
+                                    backgroundColor: (hasExistingRide || isParticipating) ? "#9ca3af" : "var(--text-accent)",
                                     color: "white",
                                     border: "none",
                                     borderRadius: "var(--radius-sm)",
                                     fontSize: "0.875rem",
                                     fontWeight: "600",
-                                    cursor: hasExistingRide ? "not-allowed" : "pointer",
+                                    cursor: (hasExistingRide || isParticipating) ? "not-allowed" : "pointer",
                                     transition: "all 0.2s ease-in-out",
-                                    opacity: hasExistingRide ? 0.7 : 1,
+                                    opacity: (hasExistingRide || isParticipating) ? 0.7 : 1,
                                 }}
                             >
-                                {checkingRide ? "Überprüfe..." : hasExistingRide ? "Bereits angeboten" : "+ Fahrt anbieten"}
+                                {checkingRide 
+                                    ? "Überprüfe..." 
+                                    : hasExistingRide 
+                                    ? "Bereits angeboten" 
+                                    : isParticipating
+                                    ? "Als Mitfahrer angemeldet"
+                                    : "+ Fahrt anbieten"
+                                }
                             </button>
 
                             {showExistingRideWarning && (
@@ -321,12 +354,16 @@ export default function MatchDetailPage() {
                                         borderRadius: "var(--radius-sm)",
                                         border: "1px solid #fecaca",
                                         fontSize: "0.875rem",
-                                        whiteSpace: "nowrap",
                                         boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
                                         zIndex: 10,
+                                        maxWidth: "300px",
+                                        whiteSpace: "normal",
                                     }}
                                 >
-                                    Sie haben bereits eine Fahrt für diesen Spieltag angeboten
+                                    {hasExistingRide 
+                                        ? "Sie haben bereits eine Fahrt für diesen Spieltag angeboten"
+                                        : "Sie können keine eigene Fahrt anbieten, da Sie bereits als Mitfahrer angemeldet sind"
+                                    }
                                 </div>
                             )}
                         </div>

@@ -2,6 +2,7 @@
 import { useCurrentUser } from "@/hooks/rides/useCurrentUser";
 import { useRides } from "@/hooks/rides/useRides";
 import { useRideActions } from "@/hooks/rides/useRideActions";
+import { useUserRideCheck, useUserParticipationCheck } from "@/hooks/rides";
 import RideCard from "./RideCard";
 
 interface RidesListProps {
@@ -13,8 +14,12 @@ interface RidesListProps {
 export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: RidesListProps) {
     const { currentUserId } = useCurrentUser();
     const { rides, loading, error, refetch } = useRides({ matchId, refreshTrigger });
-    const { joinRide, leaveRide } = useRideActions({
+    const { hasExistingRide } = useUserRideCheck({ matchId, refreshTrigger });
+    const { isParticipating } = useUserParticipationCheck({ matchId, refreshTrigger });
+    
+    const { joinRide, leaveRide, deleteRide } = useRideActions({
         currentUserId,
+        matchId,
         onSuccess: () => {
             refetch();
             onRideUpdated?.();
@@ -96,7 +101,16 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
             }}
         >
             {rides.map((ride) => (
-                <RideCard key={ride.id} ride={ride} currentUserId={currentUserId} onJoinRide={handleJoinRide} onLeaveRide={handleLeaveRide} onRideUpdated={handleRideUpdated} />
+                <RideCard 
+                    key={ride.id} 
+                    ride={ride} 
+                    currentUserId={currentUserId} 
+                    isUserDriver={hasExistingRide}
+                    isUserParticipating={isParticipating}
+                    onJoinRide={handleJoinRide} 
+                    onLeaveRide={handleLeaveRide} 
+                    onRideUpdated={handleRideUpdated} 
+                />
             ))}
         </div>
     );

@@ -9,12 +9,22 @@ import { EditRideForm } from "@/components/forms";
 interface RideCardProps {
     ride: RideWithDetails;
     currentUserId: string | null;
+    isUserDriver: boolean;
+    isUserParticipating: boolean;
     onJoinRide: (rideId: string) => void;
     onLeaveRide: (rideId: string) => void;
     onRideUpdated: () => void;
 }
 
-export default function RideCard({ ride, currentUserId, onJoinRide, onLeaveRide, onRideUpdated }: RideCardProps) {
+export default function RideCard({ 
+    ride, 
+    currentUserId, 
+    isUserDriver, 
+    isUserParticipating, 
+    onJoinRide, 
+    onLeaveRide, 
+    onRideUpdated 
+}: RideCardProps) {
     const [editingRideId, setEditingRideId] = useState<string | null>(null);
 
     const isUserInRide = (): boolean => {
@@ -92,6 +102,8 @@ export default function RideCard({ ride, currentUserId, onJoinRide, onLeaveRide,
                 isOwnRide={isOwnRide()}
                 isUserInRide={isUserInRide()}
                 isRideFull={isRideFull()}
+                isUserDriver={isUserDriver}
+                isUserParticipating={isUserParticipating}
                 onEdit={handleEditRide}
                 onJoin={() => onJoinRide(ride.id)}
                 onLeave={() => onLeaveRide(ride.id)}

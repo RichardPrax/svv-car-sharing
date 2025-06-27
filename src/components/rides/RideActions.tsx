@@ -3,12 +3,39 @@ interface RideActionsProps {
     isOwnRide: boolean;
     isUserInRide: boolean;
     isRideFull: boolean;
+    isUserDriver: boolean;
+    isUserParticipating: boolean;
     onEdit: () => void;
     onJoin: () => void;
     onLeave: () => void;
 }
 
-export default function RideActions({ isOwnRide, isUserInRide, isRideFull, onEdit, onJoin, onLeave }: RideActionsProps) {
+export default function RideActions({ 
+    isOwnRide, 
+    isUserInRide, 
+    isRideFull, 
+    isUserDriver, 
+    isUserParticipating, 
+    onEdit, 
+    onJoin, 
+    onLeave 
+}: RideActionsProps) {
+    // Bestimme, ob der "Mitfahren" Button deaktiviert werden soll
+    const canJoin = !isRideFull && !isUserDriver && !isUserParticipating;
+    const getJoinButtonText = () => {
+        if (isRideFull) return "Voll";
+        if (isUserDriver) return "Sie fahren bereits";
+        if (isUserParticipating) return "Bereits angemeldet";
+        return "Mitfahren";
+    };
+
+    const getJoinButtonTitle = () => {
+        if (isUserDriver) return "Sie können sich nicht als Mitfahrer anmelden, da Sie bereits eine Fahrt anbieten";
+        if (isUserParticipating) return "Sie sind bereits als Mitfahrer in einer anderen Fahrt angemeldet";
+        if (isRideFull) return "Diese Fahrt ist bereits voll";
+        return "Als Mitfahrer anmelden";
+    };
+
     return (
         <div
             style={{
@@ -76,7 +103,8 @@ export default function RideActions({ isOwnRide, isUserInRide, isRideFull, onEdi
                         ) : (
                             <button
                                 onClick={onJoin}
-                                disabled={isRideFull}
+                                disabled={!canJoin}
+                                title={getJoinButtonTitle()}
                                 style={{
                                     padding: "var(--spacing-xs) var(--spacing-sm)",
                                     border: "none",
@@ -84,12 +112,13 @@ export default function RideActions({ isOwnRide, isUserInRide, isRideFull, onEdi
                                     fontSize: "0.875rem",
                                     fontWeight: "600",
                                     color: "white",
-                                    backgroundColor: isRideFull ? "#9ca3af" : "var(--text-accent)",
-                                    cursor: isRideFull ? "not-allowed" : "pointer",
+                                    backgroundColor: canJoin ? "var(--text-accent)" : "#9ca3af",
+                                    cursor: canJoin ? "pointer" : "not-allowed",
                                     transition: "all 0.2s ease-in-out",
+                                    opacity: canJoin ? 1 : 0.7,
                                 }}
                             >
-                                {isRideFull ? "Voll" : "Mitfahren"}
+                                {getJoinButtonText()}
                             </button>
                         )}
                     </>

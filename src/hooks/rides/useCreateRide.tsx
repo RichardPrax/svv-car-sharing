@@ -65,6 +65,31 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
                 return { success: false };
             }
 
+            // Überprüfe, ob der User bereits als Mitfahrer in einer Fahrt angemeldet ist
+            const { data: existingParticipations, error: participationCheckError } = await supabase
+                .from("ride_passengers")
+                .select(`
+                    id,
+                    ride_id,
+                    rides!inner (
+                        id,
+                        match_day_id
+                    )
+                `)
+                .eq("passenger_id", session.user.id)
+                .eq("rides.match_day_id", matchId);
+
+            if (participationCheckError) {
+                console.error("Error checking participation:", participationCheckError);
+                setError("Fehler beim Überprüfen der Teilnahme");
+                return { success: false };
+            }
+
+            if (existingParticipations.length > 0) {
+                setError("Sie können keine eigene Fahrt anbieten, da Sie bereits als Mitfahrer angemeldet sind");
+                return { success: false };
+            }
+
             const { error: insertError } = await supabase.from("rides").insert({
                 match_day_id: matchId,
                 driver_id: session.user.id,
