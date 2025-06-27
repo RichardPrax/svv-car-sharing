@@ -1,5 +1,5 @@
 // src/hooks/rides/useUserParticipationCheck.tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
 interface UseUserParticipationCheckProps {
@@ -13,7 +13,7 @@ export function useUserParticipationCheck({ matchId, refreshTrigger }: UseUserPa
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const checkParticipation = async () => {
+    const checkParticipation = useCallback(async () => {
         // Warte bis matchId verfügbar ist
         if (!matchId || Array.isArray(matchId)) {
             setLoading(true);
@@ -66,13 +66,13 @@ export function useUserParticipationCheck({ matchId, refreshTrigger }: UseUserPa
         } finally {
             setLoading(false);
         }
-    };
+    }, [matchId]);
 
     useEffect(() => {
         if (matchId && !Array.isArray(matchId)) {
             checkParticipation();
         }
-    }, [matchId, refreshTrigger]);
+    }, [matchId, refreshTrigger, checkParticipation]);
 
     return {
         isParticipating,

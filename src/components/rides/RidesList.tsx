@@ -17,7 +17,7 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
     const { hasExistingRide } = useUserRideCheck({ matchId, refreshTrigger });
     const { isParticipating } = useUserParticipationCheck({ matchId, refreshTrigger });
 
-    const { joinRide, leaveRide, deleteRide } = useRideActions({
+    const { joinRide, leaveRide } = useRideActions({
         currentUserId,
         matchId,
         onSuccess: () => {

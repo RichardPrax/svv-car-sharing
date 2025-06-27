@@ -41,22 +41,17 @@ export function useRides({ matchId, refreshTrigger }: UseRidesProps) {
             }
 
             // Sammle alle User IDs
-            const driverIds = ridesData.map(ride => ride.driver_id);
-            const passengerIds = ridesData.flatMap(ride => 
-                ride.ride_passengers?.map((p: { passenger_id: string }) => p.passenger_id) || []
-            );
+            const driverIds = ridesData.map((ride) => ride.driver_id);
+            const passengerIds = ridesData.flatMap((ride) => ride.ride_passengers?.map((p: { passenger_id: string }) => p.passenger_id) || []);
             const uniqueUserIds = [...new Set([...driverIds, ...passengerIds])];
 
             // Lade Benutzerprofile für alle beteiligten User
-            let profiles: any[] = [];
+            let profiles: { id: string; first_name: string; last_name: string }[] = [];
             if (uniqueUserIds.length > 0) {
-                const { data: profilesData, error: profilesError } = await supabase
-                    .from('user_profiles')
-                    .select('*')
-                    .in('id', uniqueUserIds);
+                const { data: profilesData, error: profilesError } = await supabase.from("user_profiles").select("*").in("id", uniqueUserIds);
 
                 if (profilesError) {
-                    console.error('Error fetching profiles:', profilesError);
+                    console.error("Error fetching profiles:", profilesError);
                 } else {
                     profiles = profilesData || [];
                 }
@@ -64,11 +59,11 @@ export function useRides({ matchId, refreshTrigger }: UseRidesProps) {
 
             // Hilfsfunktion für Namen
             const getNameForUser = (userId: string): string => {
-                const profile = profiles.find(p => p.id === userId);
+                const profile = profiles.find((p) => p.id === userId);
                 if (profile) {
                     return `${profile.first_name} ${profile.last_name}`;
                 }
-                return userId.substring(0, 8) + '...'; // Fallback
+                return userId.substring(0, 8) + "..."; // Fallback
             };
 
             // Erstelle RideWithDetails mit echten Namen
@@ -100,3 +95,4 @@ export function useRides({ matchId, refreshTrigger }: UseRidesProps) {
         refetch: fetchRides,
     };
 }
+

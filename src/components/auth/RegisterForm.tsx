@@ -9,7 +9,8 @@ import AuthLink from "./AuthLink";
 import AuthSuccess from "./AuthSuccess";
 
 export default function RegisterForm() {
-    const { email, password, confirmPassword, firstName, lastName, error, loading, success, setEmail, setPassword, setConfirmPassword, setFirstName, setLastName, register } = useRegister();
+    const { email, password, confirmPassword, firstName, lastName, error, loading, success, setEmail, setPassword, setConfirmPassword, setFirstName, setLastName, register } =
+        useRegister();
 
     if (success) {
         return (
@@ -34,24 +35,8 @@ export default function RegisterForm() {
                 }}
             >
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--spacing-md)" }}>
-                    <AuthField 
-                        label="Vorname" 
-                        type="text" 
-                        placeholder="Dein Vorname" 
-                        value={firstName || ""} 
-                        onChange={setFirstName} 
-                        required 
-                        hasError={!!error} 
-                    />
-                    <AuthField 
-                        label="Nachname" 
-                        type="text" 
-                        placeholder="Dein Nachname" 
-                        value={lastName || ""} 
-                        onChange={setLastName} 
-                        required 
-                        hasError={!!error} 
-                    />
+                    <AuthField label="Vorname" type="text" placeholder="Dein Vorname" value={firstName || ""} onChange={setFirstName} required hasError={!!error} />
+                    <AuthField label="Nachname" type="text" placeholder="Dein Nachname" value={lastName || ""} onChange={setLastName} required hasError={!!error} />
                 </div>
 
                 <AuthField label="E-Mail-Adresse" type="email" placeholder="deine@email.de" value={email} onChange={setEmail} required hasError={!!error} />

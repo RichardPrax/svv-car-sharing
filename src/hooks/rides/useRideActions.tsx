@@ -91,7 +91,7 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
                 return { error: "Ein unerwarteter Fehler ist aufgetreten" };
             }
         },
-        [currentUserId, matchId, onSuccess]
+        [currentUserId, onSuccess]
     );
 
     const deleteRide = useCallback(

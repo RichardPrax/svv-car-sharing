@@ -16,21 +16,17 @@ export function useUserProfile(userId?: string) {
             }
 
             try {
-                const { data, error } = await supabase
-                    .from('user_profiles')
-                    .select('*')
-                    .eq('id', userId)
-                    .single();
+                const { data, error } = await supabase.from("user_profiles").select("*").eq("id", userId).single();
 
                 if (error) {
-                    console.error('Error fetching user profile:', error);
-                    setError('Fehler beim Laden des Benutzerprofils');
+                    console.error("Error fetching user profile:", error);
+                    setError("Fehler beim Laden des Benutzerprofils");
                 } else {
                     setProfile(data);
                 }
             } catch (err) {
-                console.error('Error:', err);
-                setError('Ein unerwarteter Fehler ist aufgetreten');
+                console.error("Error:", err);
+                setError("Ein unerwarteter Fehler ist aufgetreten");
             } finally {
                 setLoading(false);
             }
@@ -56,35 +52,33 @@ export function useUserProfiles(userIds: string[]) {
             }
 
             try {
-                const { data, error } = await supabase
-                    .from('user_profiles')
-                    .select('*')
-                    .in('id', userIds);
+                const { data, error } = await supabase.from("user_profiles").select("*").in("id", userIds);
 
                 if (error) {
-                    console.error('Error fetching user profiles:', error);
-                    setError('Fehler beim Laden der Benutzerprofile');
+                    console.error("Error fetching user profiles:", error);
+                    setError("Fehler beim Laden der Benutzerprofile");
                 } else {
                     setProfiles(data || []);
                 }
             } catch (err) {
-                console.error('Error:', err);
-                setError('Ein unerwarteter Fehler ist aufgetreten');
+                console.error("Error:", err);
+                setError("Ein unerwarteter Fehler ist aufgetreten");
             } finally {
                 setLoading(false);
             }
         }
 
         fetchProfiles();
-    }, [userIds.join(',')]);
+    }, [userIds]);
 
     const getProfileName = (userId: string): string => {
-        const profile = profiles.find(p => p.id === userId);
+        const profile = profiles.find((p) => p.id === userId);
         if (profile) {
             return `${profile.first_name} ${profile.last_name}`;
         }
-        return userId.substring(0, 8) + '...'; // Fallback
+        return userId.substring(0, 8) + "..."; // Fallback
     };
 
     return { profiles, loading, error, getProfileName };
 }
+

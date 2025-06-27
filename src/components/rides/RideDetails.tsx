@@ -70,3 +70,4 @@ export default function RideDetails({ ride, isRideFull }: RideDetailsProps) {
         </div>
     );
 }
+

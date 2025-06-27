@@ -1,5 +1,5 @@
 // src/hooks/rides/useUserRideCheck.tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
 interface UseUserRideCheckProps {
@@ -12,7 +12,7 @@ export function useUserRideCheck({ matchId, refreshTrigger }: UseUserRideCheckPr
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const checkExistingRide = async () => {
+    const checkExistingRide = useCallback(async () => {
         // Warte bis matchId verfügbar ist
         if (!matchId || Array.isArray(matchId)) {
             setLoading(true);
@@ -48,13 +48,13 @@ export function useUserRideCheck({ matchId, refreshTrigger }: UseUserRideCheckPr
         } finally {
             setLoading(false);
         }
-    };
+    }, [matchId]);
 
     useEffect(() => {
         if (matchId && !Array.isArray(matchId)) {
             checkExistingRide();
         }
-    }, [matchId, refreshTrigger]);
+    }, [matchId, refreshTrigger, checkExistingRide]);
 
     return {
         hasExistingRide,

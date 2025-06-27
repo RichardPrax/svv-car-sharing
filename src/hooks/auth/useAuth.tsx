@@ -112,15 +112,15 @@ export function useRegister() {
             return;
         }
 
-        const { data, error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
             email: state.email,
             password: state.password,
             options: {
                 data: {
                     first_name: state.firstName.trim(),
                     last_name: state.lastName.trim(),
-                }
-            }
+                },
+            },
         });
 
         if (error) {
