@@ -10,11 +10,20 @@ export function useMatchDetail(matchId: string | string[] | undefined) {
 
     useEffect(() => {
         const fetchMatch = async () => {
-            if (!matchId || Array.isArray(matchId)) {
+            // Warte bis matchId verfügbar ist (Router ist geladen)
+            if (!matchId) {
+                setLoading(true);
+                return;
+            }
+
+            if (Array.isArray(matchId)) {
                 setError("Ungültige Match-ID");
                 setLoading(false);
                 return;
             }
+
+            setLoading(true);
+            setError(null);
 
             try {
                 const { data, error: fetchError } = await supabase.from("match_days").select("*").eq("id", matchId).single();
@@ -43,3 +52,4 @@ export function useMatchDetail(matchId: string | string[] | undefined) {
         error,
     };
 }
+

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
 interface UseUserRideCheckProps {
-    matchId: string;
+    matchId: string | string[] | undefined;
 }
 
 export function useUserRideCheck({ matchId }: UseUserRideCheckProps) {
@@ -12,6 +12,12 @@ export function useUserRideCheck({ matchId }: UseUserRideCheckProps) {
     const [error, setError] = useState<string | null>(null);
 
     const checkExistingRide = async () => {
+        // Warte bis matchId verfügbar ist
+        if (!matchId || Array.isArray(matchId)) {
+            setLoading(true);
+            return;
+        }
+
         setLoading(true);
         setError(null);
 
@@ -44,7 +50,9 @@ export function useUserRideCheck({ matchId }: UseUserRideCheckProps) {
     };
 
     useEffect(() => {
-        checkExistingRide();
+        if (matchId && !Array.isArray(matchId)) {
+            checkExistingRide();
+        }
     }, [matchId]);
 
     return {

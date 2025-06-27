@@ -46,6 +46,23 @@ export default function MatchDetailPage() {
         recheckExistingRide();
     };
 
+    // Warte bis Router geladen ist
+    if (!router.isReady) {
+        return (
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    minHeight: "100vh",
+                    backgroundColor: "var(--background)",
+                }}
+            >
+                <p style={{ color: "var(--text-secondary)" }}>Lade...</p>
+            </div>
+        );
+    }
+
     if (loading) {
         return (
             <div
