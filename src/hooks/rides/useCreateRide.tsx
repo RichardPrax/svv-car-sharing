@@ -51,6 +51,20 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
                 return { success: false };
             }
 
+            // Überprüfe, ob der User bereits eine Fahrt für diesen Spieltag anbietet
+            const { data: existingRides, error: checkError } = await supabase.from("rides").select("id").eq("match_day_id", matchId).eq("driver_id", session.user.id);
+
+            if (checkError) {
+                console.error("Error checking existing rides:", checkError);
+                setError("Fehler beim Überprüfen bestehender Fahrten");
+                return { success: false };
+            }
+
+            if (existingRides.length > 0) {
+                setError("Sie haben bereits eine Fahrt für diesen Spieltag angeboten");
+                return { success: false };
+            }
+
             const { error: insertError } = await supabase.from("rides").insert({
                 match_day_id: matchId,
                 driver_id: session.user.id,
@@ -86,3 +100,4 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
         clearError: () => setError(null),
     };
 }
+

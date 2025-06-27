@@ -7,15 +7,24 @@ import RideCard from "./RideCard";
 interface RidesListProps {
     matchId: string;
     refreshTrigger: number;
+    onRideUpdated?: () => void;
 }
 
-export default function RidesList({ matchId, refreshTrigger }: RidesListProps) {
+export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: RidesListProps) {
     const { currentUserId } = useCurrentUser();
     const { rides, loading, error, refetch } = useRides({ matchId, refreshTrigger });
     const { joinRide, leaveRide } = useRideActions({
         currentUserId,
-        onSuccess: refetch,
+        onSuccess: () => {
+            refetch();
+            onRideUpdated?.();
+        },
     });
+
+    const handleRideUpdated = () => {
+        refetch();
+        onRideUpdated?.();
+    };
 
     const handleJoinRide = async (rideId: string) => {
         const result = await joinRide(rideId);
@@ -87,8 +96,9 @@ export default function RidesList({ matchId, refreshTrigger }: RidesListProps) {
             }}
         >
             {rides.map((ride) => (
-                <RideCard key={ride.id} ride={ride} currentUserId={currentUserId} onJoinRide={handleJoinRide} onLeaveRide={handleLeaveRide} onRideUpdated={refetch} />
+                <RideCard key={ride.id} ride={ride} currentUserId={currentUserId} onJoinRide={handleJoinRide} onLeaveRide={handleLeaveRide} onRideUpdated={handleRideUpdated} />
             ))}
         </div>
     );
 }
+

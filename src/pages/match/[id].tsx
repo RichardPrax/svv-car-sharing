@@ -2,6 +2,7 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useMatchDetail } from "@/hooks/matches/useMatchDetail";
+import { useUserRideCheck } from "@/hooks/rides/useUserRideCheck";
 import { formatDate, formatTime } from "@/utils/dateTime";
 import { CreateRideForm } from "@/components/forms";
 import { RidesList } from "@/components/rides";
@@ -11,8 +12,16 @@ export default function MatchDetailPage() {
     const { id } = router.query;
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
+    const [showExistingRideWarning, setShowExistingRideWarning] = useState(false);
 
     const { match, loading, error } = useMatchDetail(id);
+    const {
+        hasExistingRide,
+        loading: checkingRide,
+        recheckExistingRide,
+    } = useUserRideCheck({
+        matchId: id as string,
+    });
 
     const handleBackClick = () => {
         router.push("/");
@@ -21,6 +30,7 @@ export default function MatchDetailPage() {
     const handleRideCreated = () => {
         setShowCreateForm(false);
         setRefreshTrigger((prev) => prev + 1);
+        recheckExistingRide();
     };
 
     const handleCancelCreate = () => {
@@ -29,6 +39,11 @@ export default function MatchDetailPage() {
 
     const handleShowCreateForm = () => {
         setShowCreateForm(true);
+    };
+
+    const handleRideUpdated = () => {
+        setRefreshTrigger((prev) => prev + 1);
+        recheckExistingRide();
     };
 
     if (loading) {
@@ -256,25 +271,51 @@ export default function MatchDetailPage() {
                         >
                             Fahrten
                         </h2>
-                        <button
-                            onClick={handleShowCreateForm}
-                            style={{
-                                padding: "var(--spacing-sm) var(--spacing-md)",
-                                backgroundColor: "var(--text-accent)",
-                                color: "white",
-                                border: "none",
-                                borderRadius: "var(--radius-sm)",
-                                fontSize: "0.875rem",
-                                fontWeight: "600",
-                                cursor: "pointer",
-                                transition: "all 0.2s ease-in-out",
-                            }}
-                        >
-                            + Fahrt anbieten
-                        </button>
+                        <div style={{ position: "relative" }}>
+                            <button
+                                onClick={handleShowCreateForm}
+                                disabled={hasExistingRide || checkingRide}
+                                title={hasExistingRide ? "Sie haben bereits eine Fahrt für diesen Spieltag angeboten" : "Neue Fahrt anbieten"}
+                                style={{
+                                    padding: "var(--spacing-sm) var(--spacing-md)",
+                                    backgroundColor: hasExistingRide ? "#9ca3af" : "var(--text-accent)",
+                                    color: "white",
+                                    border: "none",
+                                    borderRadius: "var(--radius-sm)",
+                                    fontSize: "0.875rem",
+                                    fontWeight: "600",
+                                    cursor: hasExistingRide ? "not-allowed" : "pointer",
+                                    transition: "all 0.2s ease-in-out",
+                                    opacity: hasExistingRide ? 0.7 : 1,
+                                }}
+                            >
+                                {checkingRide ? "Überprüfe..." : hasExistingRide ? "Bereits angeboten" : "+ Fahrt anbieten"}
+                            </button>
+
+                            {showExistingRideWarning && (
+                                <div
+                                    style={{
+                                        position: "absolute",
+                                        top: "calc(100% + 8px)",
+                                        right: "0",
+                                        backgroundColor: "#fef2f2",
+                                        color: "#dc2626",
+                                        padding: "var(--spacing-sm)",
+                                        borderRadius: "var(--radius-sm)",
+                                        border: "1px solid #fecaca",
+                                        fontSize: "0.875rem",
+                                        whiteSpace: "nowrap",
+                                        boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                                        zIndex: 10,
+                                    }}
+                                >
+                                    Sie haben bereits eine Fahrt für diesen Spieltag angeboten
+                                </div>
+                            )}
+                        </div>
                     </div>
 
-                    <RidesList matchId={match.id} refreshTrigger={refreshTrigger} />
+                    <RidesList matchId={match.id} refreshTrigger={refreshTrigger} onRideUpdated={handleRideUpdated} />
 
                     {showCreateForm && <CreateRideForm matchId={match.id} onRideCreated={handleRideCreated} onCancel={handleCancelCreate} />}
                 </div>
@@ -282,3 +323,4 @@ export default function MatchDetailPage() {
         </div>
     );
 }
+
