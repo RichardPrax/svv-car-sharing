@@ -9,7 +9,7 @@ import AuthLink from "./AuthLink";
 import AuthSuccess from "./AuthSuccess";
 
 export default function RegisterForm() {
-    const { email, password, confirmPassword, error, loading, success, setEmail, setPassword, setConfirmPassword, register } = useRegister();
+    const { email, password, confirmPassword, firstName, lastName, error, loading, success, setEmail, setPassword, setConfirmPassword, setFirstName, setLastName, register } = useRegister();
 
     if (success) {
         return (
@@ -33,6 +33,27 @@ export default function RegisterForm() {
                     gap: "var(--spacing-lg)",
                 }}
             >
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--spacing-md)" }}>
+                    <AuthField 
+                        label="Vorname" 
+                        type="text" 
+                        placeholder="Dein Vorname" 
+                        value={firstName || ""} 
+                        onChange={setFirstName} 
+                        required 
+                        hasError={!!error} 
+                    />
+                    <AuthField 
+                        label="Nachname" 
+                        type="text" 
+                        placeholder="Dein Nachname" 
+                        value={lastName || ""} 
+                        onChange={setLastName} 
+                        required 
+                        hasError={!!error} 
+                    />
+                </div>
+
                 <AuthField label="E-Mail-Adresse" type="email" placeholder="deine@email.de" value={email} onChange={setEmail} required hasError={!!error} />
 
                 <AuthField label="Passwort" type="password" placeholder="Mindestens 6 Zeichen" value={password} onChange={setPassword} required hasError={!!error} />
@@ -49,7 +70,7 @@ export default function RegisterForm() {
 
                 <AuthError message={error} />
 
-                <Button type="submit" loading={loading} disabled={!email || !password || !confirmPassword} size="large" style={{ width: "100%" }}>
+                <Button type="submit" loading={loading} disabled={!email || !password || !confirmPassword || !firstName || !lastName} size="large" style={{ width: "100%" }}>
                     Registrieren
                 </Button>
             </form>

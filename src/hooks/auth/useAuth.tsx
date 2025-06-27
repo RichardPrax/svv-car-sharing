@@ -7,6 +7,8 @@ interface AuthState {
     email: string;
     password: string;
     confirmPassword?: string;
+    firstName?: string;
+    lastName?: string;
     error: string;
     loading: boolean;
     success: boolean;
@@ -55,6 +57,8 @@ export function useRegister() {
         email: "",
         password: "",
         confirmPassword: "",
+        firstName: "",
+        lastName: "",
         error: "",
         loading: false,
         success: false,
@@ -64,12 +68,32 @@ export function useRegister() {
     const setEmail = (email: string) => setState((prev) => ({ ...prev, email }));
     const setPassword = (password: string) => setState((prev) => ({ ...prev, password }));
     const setConfirmPassword = (confirmPassword: string) => setState((prev) => ({ ...prev, confirmPassword }));
+    const setFirstName = (firstName: string) => setState((prev) => ({ ...prev, firstName }));
+    const setLastName = (lastName: string) => setState((prev) => ({ ...prev, lastName }));
 
     const register = async (e: React.FormEvent) => {
         e.preventDefault();
         setState((prev) => ({ ...prev, loading: true, error: "" }));
 
         // Validation
+        if (!state.firstName?.trim()) {
+            setState((prev) => ({
+                ...prev,
+                error: "Vorname ist erforderlich",
+                loading: false,
+            }));
+            return;
+        }
+
+        if (!state.lastName?.trim()) {
+            setState((prev) => ({
+                ...prev,
+                error: "Nachname ist erforderlich",
+                loading: false,
+            }));
+            return;
+        }
+
         if (state.password !== state.confirmPassword) {
             setState((prev) => ({
                 ...prev,
@@ -88,9 +112,15 @@ export function useRegister() {
             return;
         }
 
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
             email: state.email,
             password: state.password,
+            options: {
+                data: {
+                    first_name: state.firstName.trim(),
+                    last_name: state.lastName.trim(),
+                }
+            }
         });
 
         if (error) {
@@ -108,6 +138,8 @@ export function useRegister() {
         setEmail,
         setPassword,
         setConfirmPassword,
+        setFirstName,
+        setLastName,
         register,
     };
 }

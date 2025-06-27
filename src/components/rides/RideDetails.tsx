@@ -38,6 +38,16 @@ export default function RideDetails({ ride, isRideFull }: RideDetailsProps) {
                 >
                     von {ride.departure_location}
                 </p>
+                <p
+                    style={{
+                        fontSize: "0.75rem",
+                        color: "var(--text-accent)",
+                        margin: "var(--spacing-xs) 0 0 0",
+                        fontWeight: "600",
+                    }}
+                >
+                    Fahrer: {ride.driver_name}
+                </p>
             </div>
             <div
                 style={{

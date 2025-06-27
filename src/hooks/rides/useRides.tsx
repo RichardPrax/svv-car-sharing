@@ -40,13 +40,44 @@ export function useRides({ matchId, refreshTrigger }: UseRidesProps) {
                 return;
             }
 
-            // Einfache Implementierung: Verwende User IDs als Fallback für Namen
+            // Sammle alle User IDs
+            const driverIds = ridesData.map(ride => ride.driver_id);
+            const passengerIds = ridesData.flatMap(ride => 
+                ride.ride_passengers?.map((p: { passenger_id: string }) => p.passenger_id) || []
+            );
+            const uniqueUserIds = [...new Set([...driverIds, ...passengerIds])];
+
+            // Lade Benutzerprofile für alle beteiligten User
+            let profiles: any[] = [];
+            if (uniqueUserIds.length > 0) {
+                const { data: profilesData, error: profilesError } = await supabase
+                    .from('user_profiles')
+                    .select('*')
+                    .in('id', uniqueUserIds);
+
+                if (profilesError) {
+                    console.error('Error fetching profiles:', profilesError);
+                } else {
+                    profiles = profilesData || [];
+                }
+            }
+
+            // Hilfsfunktion für Namen
+            const getNameForUser = (userId: string): string => {
+                const profile = profiles.find(p => p.id === userId);
+                if (profile) {
+                    return `${profile.first_name} ${profile.last_name}`;
+                }
+                return userId.substring(0, 8) + '...'; // Fallback
+            };
+
+            // Erstelle RideWithDetails mit echten Namen
             const ridesWithDetails: RideWithDetails[] = ridesData.map((ride) => ({
                 ...ride,
                 passenger_count: ride.ride_passengers?.length || 0,
                 passengers: ride.ride_passengers || [],
-                driver_name: ride.driver_id.substring(0, 8) + "...", // Fallback
-                passenger_names: ride.ride_passengers?.map((p: { passenger_id: string }) => p.passenger_id.substring(0, 8) + "...") || [],
+                driver_name: getNameForUser(ride.driver_id),
+                passenger_names: ride.ride_passengers?.map((p: { passenger_id: string }) => getNameForUser(p.passenger_id)) || [],
             }));
 
             setRides(ridesWithDetails);
