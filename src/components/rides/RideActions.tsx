@@ -10,16 +10,7 @@ interface RideActionsProps {
     onLeave: () => void;
 }
 
-export default function RideActions({ 
-    isOwnRide, 
-    isUserInRide, 
-    isRideFull, 
-    isUserDriver, 
-    isUserParticipating, 
-    onEdit, 
-    onJoin, 
-    onLeave 
-}: RideActionsProps) {
+export default function RideActions({ isOwnRide, isUserInRide, isRideFull, isUserDriver, isUserParticipating, onEdit, onJoin, onLeave }: RideActionsProps) {
     // Bestimme, ob der "Mitfahren" Button deaktiviert werden soll
     const canJoin = !isRideFull && !isUserDriver && !isUserParticipating;
     const getJoinButtonText = () => {
@@ -127,3 +118,4 @@ export default function RideActions({
         </div>
     );
 }
+

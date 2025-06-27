@@ -68,14 +68,16 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
             // Überprüfe, ob der User bereits als Mitfahrer in einer Fahrt angemeldet ist
             const { data: existingParticipations, error: participationCheckError } = await supabase
                 .from("ride_passengers")
-                .select(`
+                .select(
+                    `
                     id,
                     ride_id,
                     rides!inner (
                         id,
                         match_day_id
                     )
-                `)
+                `
+                )
                 .eq("passenger_id", session.user.id)
                 .eq("rides.match_day_id", matchId);
 

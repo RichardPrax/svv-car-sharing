@@ -15,11 +15,7 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
 
             try {
                 // 1. Überprüfe, ob User bereits Fahrer für diesen Spieltag ist
-                const { data: existingDriverRides, error: driverCheckError } = await supabase
-                    .from("rides")
-                    .select("id")
-                    .eq("match_day_id", matchId)
-                    .eq("driver_id", currentUserId);
+                const { data: existingDriverRides, error: driverCheckError } = await supabase.from("rides").select("id").eq("match_day_id", matchId).eq("driver_id", currentUserId);
 
                 if (driverCheckError) {
                     console.error("Error checking driver status:", driverCheckError);
@@ -33,14 +29,16 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
                 // 2. Überprüfe, ob User bereits als Mitfahrer in einer anderen Fahrt angemeldet ist
                 const { data: existingParticipations, error: participationCheckError } = await supabase
                     .from("ride_passengers")
-                    .select(`
+                    .select(
+                        `
                         id,
                         ride_id,
                         rides!inner (
                             id,
                             match_day_id
                         )
-                    `)
+                    `
+                    )
                     .eq("passenger_id", currentUserId)
                     .eq("rides.match_day_id", matchId);
 
@@ -102,10 +100,7 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
 
             try {
                 // Zuerst alle Mitfahrer entfernen
-                const { error: passengersError } = await supabase
-                    .from("ride_passengers")
-                    .delete()
-                    .eq("ride_id", rideId);
+                const { error: passengersError } = await supabase.from("ride_passengers").delete().eq("ride_id", rideId);
 
                 if (passengersError) {
                     console.error("Error deleting passengers:", passengersError);
@@ -113,10 +108,7 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
                 }
 
                 // Dann die Fahrt löschen
-                const { error: rideError } = await supabase
-                    .from("rides")
-                    .delete()
-                    .eq("id", rideId);
+                const { error: rideError } = await supabase.from("rides").delete().eq("id", rideId);
 
                 if (rideError) {
                     console.error("Error deleting ride:", rideError);
@@ -139,3 +131,4 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
         deleteRide,
     };
 }
+

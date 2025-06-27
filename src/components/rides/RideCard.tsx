@@ -16,15 +16,7 @@ interface RideCardProps {
     onRideUpdated: () => void;
 }
 
-export default function RideCard({ 
-    ride, 
-    currentUserId, 
-    isUserDriver, 
-    isUserParticipating, 
-    onJoinRide, 
-    onLeaveRide, 
-    onRideUpdated 
-}: RideCardProps) {
+export default function RideCard({ ride, currentUserId, isUserDriver, isUserParticipating, onJoinRide, onLeaveRide, onRideUpdated }: RideCardProps) {
     const [editingRideId, setEditingRideId] = useState<string | null>(null);
 
     const isUserInRide = (): boolean => {
@@ -111,3 +103,4 @@ export default function RideCard({
         </div>
     );
 }
+

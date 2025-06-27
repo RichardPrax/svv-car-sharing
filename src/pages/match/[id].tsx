@@ -23,10 +23,7 @@ export default function MatchDetailPage() {
         matchId: id as string,
         refreshTrigger,
     });
-    const { 
-        isParticipating, 
-        recheckParticipation 
-    } = useUserParticipationCheck({
+    const { isParticipating, recheckParticipation } = useUserParticipationCheck({
         matchId: id as string,
         refreshTrigger,
     });
@@ -313,7 +310,7 @@ export default function MatchDetailPage() {
                                 onClick={handleShowCreateForm}
                                 disabled={hasExistingRide || isParticipating || checkingRide}
                                 title={
-                                    hasExistingRide 
+                                    hasExistingRide
                                         ? "Sie haben bereits eine Fahrt für diesen Spieltag angeboten"
                                         : isParticipating
                                         ? "Sie können keine eigene Fahrt anbieten, da Sie bereits als Mitfahrer angemeldet sind"
@@ -321,25 +318,18 @@ export default function MatchDetailPage() {
                                 }
                                 style={{
                                     padding: "var(--spacing-sm) var(--spacing-md)",
-                                    backgroundColor: (hasExistingRide || isParticipating) ? "#9ca3af" : "var(--text-accent)",
+                                    backgroundColor: hasExistingRide || isParticipating ? "#9ca3af" : "var(--text-accent)",
                                     color: "white",
                                     border: "none",
                                     borderRadius: "var(--radius-sm)",
                                     fontSize: "0.875rem",
                                     fontWeight: "600",
-                                    cursor: (hasExistingRide || isParticipating) ? "not-allowed" : "pointer",
+                                    cursor: hasExistingRide || isParticipating ? "not-allowed" : "pointer",
                                     transition: "all 0.2s ease-in-out",
-                                    opacity: (hasExistingRide || isParticipating) ? 0.7 : 1,
+                                    opacity: hasExistingRide || isParticipating ? 0.7 : 1,
                                 }}
                             >
-                                {checkingRide 
-                                    ? "Überprüfe..." 
-                                    : hasExistingRide 
-                                    ? "Bereits angeboten" 
-                                    : isParticipating
-                                    ? "Als Mitfahrer angemeldet"
-                                    : "+ Fahrt anbieten"
-                                }
+                                {checkingRide ? "Überprüfe..." : hasExistingRide ? "Bereits angeboten" : isParticipating ? "Als Mitfahrer angemeldet" : "+ Fahrt anbieten"}
                             </button>
 
                             {showExistingRideWarning && (
@@ -360,10 +350,9 @@ export default function MatchDetailPage() {
                                         whiteSpace: "normal",
                                     }}
                                 >
-                                    {hasExistingRide 
+                                    {hasExistingRide
                                         ? "Sie haben bereits eine Fahrt für diesen Spieltag angeboten"
-                                        : "Sie können keine eigene Fahrt anbieten, da Sie bereits als Mitfahrer angemeldet sind"
-                                    }
+                                        : "Sie können keine eigene Fahrt anbieten, da Sie bereits als Mitfahrer angemeldet sind"}
                                 </div>
                             )}
                         </div>

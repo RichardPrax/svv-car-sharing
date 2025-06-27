@@ -16,7 +16,7 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
     const { rides, loading, error, refetch } = useRides({ matchId, refreshTrigger });
     const { hasExistingRide } = useUserRideCheck({ matchId, refreshTrigger });
     const { isParticipating } = useUserParticipationCheck({ matchId, refreshTrigger });
-    
+
     const { joinRide, leaveRide, deleteRide } = useRideActions({
         currentUserId,
         matchId,
@@ -101,15 +101,15 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
             }}
         >
             {rides.map((ride) => (
-                <RideCard 
-                    key={ride.id} 
-                    ride={ride} 
-                    currentUserId={currentUserId} 
+                <RideCard
+                    key={ride.id}
+                    ride={ride}
+                    currentUserId={currentUserId}
                     isUserDriver={hasExistingRide}
                     isUserParticipating={isParticipating}
-                    onJoinRide={handleJoinRide} 
-                    onLeaveRide={handleLeaveRide} 
-                    onRideUpdated={handleRideUpdated} 
+                    onJoinRide={handleJoinRide}
+                    onLeaveRide={handleLeaveRide}
+                    onRideUpdated={handleRideUpdated}
                 />
             ))}
         </div>
