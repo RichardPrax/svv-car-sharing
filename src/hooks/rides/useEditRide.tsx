@@ -4,136 +4,130 @@ import { supabase } from "@/lib/supabaseClient";
 import { RideWithDetails } from "@/entities/Ride";
 
 export interface EditRideData {
-  departure_time: string;
-  departure_location: string;
-  available_seats: number;
-  additional_info: string;
+    departure_time: string;
+    departure_location: string;
+    available_seats: number;
+    additional_info: string;
 }
 
 interface UseEditRideProps {
-  ride: RideWithDetails;
-  onSuccess: () => void;
-  onDelete: () => void;
+    ride: RideWithDetails;
+    onSuccess: () => void;
+    onDelete: () => void;
 }
 
 export function useEditRide({ ride, onSuccess, onDelete }: UseEditRideProps) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  
-  // Helper function to format departure time for form
-  const formatDepartureTimeForForm = (departureTime: Date): string => {
-    return departureTime.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-  };
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const [formData, setFormData] = useState<EditRideData>({
-    departure_time: formatDepartureTimeForForm(ride.departureTime),
-    departure_location: ride.departureLocation,
-    available_seats: ride.availableSeats,
-    additional_info: ride.additionalInfo || "",
-  });
+    // Helper function to format departure time for form
+    const formatDepartureTimeForForm = (departureTime: Date): string => {
+        return departureTime.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+    };
 
-  const handleChange = (field: keyof EditRideData, value: string | number) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
+    const [formData, setFormData] = useState<EditRideData>({
+        departure_time: formatDepartureTimeForForm(ride.departureTime),
+        departure_location: ride.departureLocation,
+        available_seats: ride.availableSeats,
+        additional_info: ride.additionalInfo || "",
+    });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const result = await updateRide(formData);
-    return result;
-  };
+    const handleChange = (field: keyof EditRideData, value: string | number) => {
+        setFormData((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
 
-  const updateRide = async (data: EditRideData) => {
-    setLoading(true);
-    setError(null);
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const result = await updateRide(formData);
+        return result;
+    };
 
-    try {
-      const { error: updateError } = await supabase
-        .from("rides")
-        .update({
-          departure_time: data.departure_time,
-          departure_location: data.departure_location,
-          available_seats: data.available_seats,
-          additional_info: data.additional_info || null,
-        })
-        .eq("id", ride.id);
+    const updateRide = async (data: EditRideData) => {
+        setLoading(true);
+        setError(null);
 
-      if (updateError) {
-        console.error("Error updating ride:", updateError);
-        setError("Fehler beim Aktualisieren der Fahrt");
-        return { success: false };
-      }
+        try {
+            const { error: updateError } = await supabase
+                .from("rides")
+                .update({
+                    departure_time: data.departure_time,
+                    departure_location: data.departure_location,
+                    available_seats: data.available_seats,
+                    additional_info: data.additional_info || null,
+                })
+                .eq("id", ride.id);
 
-      onSuccess();
-      return { success: true };
-    } catch (err) {
-      console.error("Error:", err);
-      setError("Ein unerwarteter Fehler ist aufgetreten");
-      return { success: false };
-    } finally {
-      setLoading(false);
-    }
-  };
+            if (updateError) {
+                console.error("Error updating ride:", updateError);
+                setError("Fehler beim Aktualisieren der Fahrt");
+                return { success: false };
+            }
 
-  const deleteRide = async () => {
-    setLoading(true);
-    setError(null);
+            onSuccess();
+            return { success: true };
+        } catch (err) {
+            console.error("Error:", err);
+            setError("Ein unerwarteter Fehler ist aufgetreten");
+            return { success: false };
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    try {
-      // Zuerst alle Mitfahrer entfernen
-      const { error: passengersError } = await supabase
-        .from("ride_passengers")
-        .delete()
-        .eq("ride_id", ride.id);
+    const deleteRide = async () => {
+        setLoading(true);
+        setError(null);
 
-      if (passengersError) {
-        console.error("Error deleting passengers:", passengersError);
-        setError("Fehler beim Löschen der Mitfahrer");
-        return { success: false };
-      }
+        try {
+            // Zuerst alle Mitfahrer entfernen
+            const { error: passengersError } = await supabase.from("ride_passengers").delete().eq("ride_id", ride.id);
 
-      // Dann die Fahrt löschen
-      const { error: rideError } = await supabase
-        .from("rides")
-        .delete()
-        .eq("id", ride.id);
+            if (passengersError) {
+                console.error("Error deleting passengers:", passengersError);
+                setError("Fehler beim Löschen der Mitfahrer");
+                return { success: false };
+            }
 
-      if (rideError) {
-        console.error("Error deleting ride:", rideError);
-        setError("Fehler beim Löschen der Fahrt");
-        return { success: false };
-      }
+            // Dann die Fahrt löschen
+            const { error: rideError } = await supabase.from("rides").delete().eq("id", ride.id);
 
-      onDelete();
-      return { success: true };
-    } catch (err) {
-      console.error("Error:", err);
-      setError("Ein unerwarteter Fehler ist aufgetreten");
-      return { success: false };
-    } finally {
-      setLoading(false);
-    }
-  };
+            if (rideError) {
+                console.error("Error deleting ride:", rideError);
+                setError("Fehler beim Löschen der Fahrt");
+                return { success: false };
+            }
 
-  const handleDeleteConfirm = () => {
-    setShowDeleteConfirm(false);
-    deleteRide();
-  };
+            onDelete();
+            return { success: true };
+        } catch (err) {
+            console.error("Error:", err);
+            setError("Ein unerwarteter Fehler ist aufgetreten");
+            return { success: false };
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  return {
-    formData,
-    loading,
-    error,
-    showDeleteConfirm,
-    handleChange,
-    handleSubmit,
-    updateRide,
-    deleteRide,
-    setShowDeleteConfirm,
-    handleDeleteConfirm,
-    clearError: () => setError(null),
-  };
+    const handleDeleteConfirm = () => {
+        setShowDeleteConfirm(false);
+        deleteRide();
+    };
+
+    return {
+        formData,
+        loading,
+        error,
+        showDeleteConfirm,
+        handleChange,
+        handleSubmit,
+        updateRide,
+        deleteRide,
+        setShowDeleteConfirm,
+        handleDeleteConfirm,
+        clearError: () => setError(null),
+    };
 }

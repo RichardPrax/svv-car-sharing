@@ -104,4 +104,3 @@ export default function RideCard({ ride, currentUserId, isUserDriver, isUserPart
         </div>
     );
 }
-

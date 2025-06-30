@@ -81,4 +81,3 @@ export function useUserProfiles(userIds: string[]) {
 
     return { profiles, loading, error, getProfileName };
 }
-
