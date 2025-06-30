@@ -27,7 +27,10 @@ export default function RideDetails({ ride, isRideFull }: RideDetailsProps) {
                         margin: "0 0 var(--spacing-xs) 0",
                     }}
                 >
-                    Abfahrt: {ride.departure_time.substring(0, 5)}
+                    Abfahrt: {ride.departureTime instanceof Date ? 
+                        ride.departureTime.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : 
+                        ride.departureTime
+                    }
                 </h4>
                 <p
                     style={{
@@ -36,7 +39,7 @@ export default function RideDetails({ ride, isRideFull }: RideDetailsProps) {
                         margin: 0,
                     }}
                 >
-                    von {ride.departure_location}
+                    von {ride.departureLocation}
                 </p>
                 <p
                     style={{
@@ -46,7 +49,8 @@ export default function RideDetails({ ride, isRideFull }: RideDetailsProps) {
                         fontWeight: "600",
                     }}
                 >
-                    Fahrer: {ride.driver_name}
+                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                    Fahrer: {(ride.driver as any)?.firstName} {(ride.driver as any)?.lastName}
                 </p>
             </div>
             <div
@@ -64,7 +68,7 @@ export default function RideDetails({ ride, isRideFull }: RideDetailsProps) {
                         borderRadius: "var(--radius-sm)",
                     }}
                 >
-                    {ride.passenger_count}/{ride.available_seats} Plätze
+                    {ride.passengerCount}/{ride.availableSeats} Plätze
                 </span>
             </div>
         </div>

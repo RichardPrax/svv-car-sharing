@@ -20,11 +20,17 @@ export function useEditRide({ ride, onSuccess, onDelete }: UseEditRideProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  
+  // Helper function to format departure time for form
+  const formatDepartureTimeForForm = (departureTime: Date): string => {
+    return departureTime.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+  };
+
   const [formData, setFormData] = useState<EditRideData>({
-    departure_time: ride.departure_time.substring(0, 5), // Remove seconds
-    departure_location: ride.departure_location,
-    available_seats: ride.available_seats,
-    additional_info: ride.additional_info || "",
+    departure_time: formatDepartureTimeForForm(ride.departureTime),
+    departure_location: ride.departureLocation,
+    available_seats: ride.availableSeats,
+    additional_info: ride.additionalInfo || "",
   });
 
   const handleChange = (field: keyof EditRideData, value: string | number) => {

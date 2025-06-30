@@ -20,15 +20,16 @@ export default function RideCard({ ride, currentUserId, isUserDriver, isUserPart
     const [editingRideId, setEditingRideId] = useState<string | null>(null);
 
     const isUserInRide = (): boolean => {
-        return ride.passengers?.some((p) => p.passenger_id === currentUserId) || false;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return ride.passengers?.some((p: any) => p.passengerId === currentUserId) || false;
     };
 
     const isRideFull = (): boolean => {
-        return ride.passenger_count >= ride.available_seats;
+        return ride.passengerCount >= ride.availableSeats;
     };
 
     const isOwnRide = (): boolean => {
-        return ride.driver_id === currentUserId;
+        return ride.driverId === currentUserId;
     };
 
     const handleEditRide = () => {
@@ -65,9 +66,9 @@ export default function RideCard({ ride, currentUserId, isUserDriver, isUserPart
         >
             <RideDetails ride={ride} isRideFull={isRideFull()} />
 
-            <RidePassengers passengerCount={ride.passenger_count} passengerNames={ride.passenger_names} />
+            <RidePassengers passengerCount={ride.passengerCount} passengerNames={ride.passengerNames} />
 
-            {ride.additional_info && (
+            {ride.additionalInfo && (
                 <div
                     style={{
                         backgroundColor: "var(--background)",
@@ -85,7 +86,7 @@ export default function RideCard({ ride, currentUserId, isUserDriver, isUserPart
                             fontStyle: "italic",
                         }}
                     >
-                        &quot;{ride.additional_info}&quot;
+                        &quot;{ride.additionalInfo}&quot;
                     </p>
                 </div>
             )}

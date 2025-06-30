@@ -74,7 +74,7 @@ export function useUserProfiles(userIds: string[]) {
     const getProfileName = (userId: string): string => {
         const profile = profiles.find((p) => p.id === userId);
         if (profile) {
-            return `${profile.first_name} ${profile.last_name}`;
+            return `${profile.firstName} ${profile.lastName}`;
         }
         return userId.substring(0, 8) + "..."; // Fallback
     };
