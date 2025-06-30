@@ -61,7 +61,7 @@ export default function CreateRideForm({ matchId, onRideCreated, onCancel }: Pro
                     }}
                 >
                     <FormField label="Abfahrtszeit">
-                        <Input type="time" required value={formData.departure_time} onChange={(e) => handleChange("departure_time", e.target.value)} />
+                        <Input type="time" required value={formData.departureTime} onChange={(e) => handleChange("departureTime", e.target.value)} />
                     </FormField>
 
                     <FormField label="Abfahrtsort">
@@ -69,13 +69,13 @@ export default function CreateRideForm({ matchId, onRideCreated, onCancel }: Pro
                             type="text"
                             required
                             placeholder="z.B. Hauptbahnhof, Meine Adresse..."
-                            value={formData.departure_location}
-                            onChange={(e) => handleChange("departure_location", e.target.value)}
+                            value={formData.departureLocation}
+                            onChange={(e) => handleChange("departureLocation", e.target.value)}
                         />
                     </FormField>
 
                     <FormField label="Verfügbare Plätze">
-                        <Select value={formData.available_seats} onChange={(e) => handleChange("available_seats", parseInt(e.target.value))}>
+                        <Select value={formData.availableSeats} onChange={(e) => handleChange("availableSeats", parseInt(e.target.value))}>
                             {[1, 2, 3, 4, 5, 6, 7].map((num) => (
                                 <option key={num} value={num}>
                                     {num} {num === 1 ? "Platz" : "Plätze"}
@@ -87,8 +87,8 @@ export default function CreateRideForm({ matchId, onRideCreated, onCancel }: Pro
                     <FormField label="Zusätzliche Informationen (optional)">
                         <Textarea
                             placeholder="z.B. Rückfahrt um 18:00, bringe Bälle mit..."
-                            value={formData.additional_info}
-                            onChange={(e) => handleChange("additional_info", e.target.value)}
+                            value={formData.additionalInfo}
+                            onChange={(e) => handleChange("additionalInfo", e.target.value)}
                             rows={3}
                         />
                     </FormField>

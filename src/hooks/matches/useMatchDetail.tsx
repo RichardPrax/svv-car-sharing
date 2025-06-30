@@ -1,7 +1,9 @@
 // src/hooks/matches/useMatchDetail.tsx
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
 import { MatchDay } from "@/entities/MatchDay";
+import { MatchDayRepository } from "@/lib/repositories/matchDayRepository";
+
+const matchDayRepository = new MatchDayRepository();
 
 export function useMatchDetail(matchId: string | string[] | undefined) {
     const [match, setMatch] = useState<MatchDay | null>(null);
@@ -26,17 +28,16 @@ export function useMatchDetail(matchId: string | string[] | undefined) {
             setError(null);
 
             try {
-                const { data, error: fetchError } = await supabase.from("match_days").select("*").eq("id", matchId).single();
+                const data = await matchDayRepository.findById(matchId);
 
-                if (fetchError) {
-                    console.error("Error fetching match:", fetchError);
+                if (!data) {
                     setError("Spieltag nicht gefunden");
                     return;
                 }
 
                 setMatch(data);
             } catch (err) {
-                console.error("Error:", err);
+                console.error("Error fetching match:", err);
                 setError("Ein unerwarteter Fehler ist aufgetreten");
             } finally {
                 setLoading(false);
@@ -52,4 +53,3 @@ export function useMatchDetail(matchId: string | string[] | undefined) {
         error,
     };
 }
-

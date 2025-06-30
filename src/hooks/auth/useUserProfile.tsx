@@ -1,7 +1,9 @@
 // src/hooks/auth/useUserProfile.tsx
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabaseClient";
 import { UserProfile } from "@/entities/UserProfile";
+import { UserProfileRepository } from "@/lib/repositories/userProfileRepository";
+
+const userProfileRepository = new UserProfileRepository();
 
 export function useUserProfile(userId?: string) {
     const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -16,17 +18,11 @@ export function useUserProfile(userId?: string) {
             }
 
             try {
-                const { data, error } = await supabase.from("user_profiles").select("*").eq("id", userId).single();
-
-                if (error) {
-                    console.error("Error fetching user profile:", error);
-                    setError("Fehler beim Laden des Benutzerprofils");
-                } else {
-                    setProfile(data);
-                }
+                const userProfile = await userProfileRepository.findById(userId);
+                setProfile(userProfile);
             } catch (err) {
-                console.error("Error:", err);
-                setError("Ein unerwarteter Fehler ist aufgetreten");
+                console.error("Error fetching user profile:", err);
+                setError("Fehler beim Laden des Benutzerprofils");
             } finally {
                 setLoading(false);
             }
@@ -52,17 +48,11 @@ export function useUserProfiles(userIds: string[]) {
             }
 
             try {
-                const { data, error } = await supabase.from("user_profiles").select("*").in("id", userIds);
-
-                if (error) {
-                    console.error("Error fetching user profiles:", error);
-                    setError("Fehler beim Laden der Benutzerprofile");
-                } else {
-                    setProfiles(data || []);
-                }
+                const userProfiles = await userProfileRepository.findByIds(userIds);
+                setProfiles(userProfiles);
             } catch (err) {
-                console.error("Error:", err);
-                setError("Ein unerwarteter Fehler ist aufgetreten");
+                console.error("Error fetching user profiles:", err);
+                setError("Fehler beim Laden der Benutzerprofile");
             } finally {
                 setLoading(false);
             }

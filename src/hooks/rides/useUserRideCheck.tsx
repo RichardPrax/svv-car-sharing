@@ -1,6 +1,9 @@
 // src/hooks/rides/useUserRideCheck.tsx
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { RideRepository } from "@/lib/repositories/rideRepository";
+
+const rideRepository = new RideRepository();
 
 interface UseUserRideCheckProps {
     matchId: string | string[] | undefined;
@@ -33,17 +36,12 @@ export function useUserRideCheck({ matchId, refreshTrigger }: UseUserRideCheckPr
                 return;
             }
 
-            const { data: existingRides, error: checkError } = await supabase.from("rides").select("id").eq("match_day_id", matchId).eq("driver_id", session.user.id);
+            const existingRides = await rideRepository.findByDriver(session.user.id);
+            const hasRideForMatch = existingRides.some((ride) => ride.matchDayId === matchId);
 
-            if (checkError) {
-                console.error("Error checking existing rides:", checkError);
-                setError("Fehler beim Überprüfen bestehender Fahrten");
-                return;
-            }
-
-            setHasExistingRide(existingRides.length > 0);
+            setHasExistingRide(hasRideForMatch);
         } catch (err) {
-            console.error("Error:", err);
+            console.error("Error checking existing rides:", err);
             setError("Ein unerwarteter Fehler ist aufgetreten");
         } finally {
             setLoading(false);
@@ -63,4 +61,3 @@ export function useUserRideCheck({ matchId, refreshTrigger }: UseUserRideCheckPr
         recheckExistingRide: checkExistingRide,
     };
 }
-

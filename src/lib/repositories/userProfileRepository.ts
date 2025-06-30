@@ -17,6 +17,14 @@ export class UserProfileRepository {
         });
     }
 
+    // Get multiple user profiles by IDs
+    async findByIds(ids: string[]): Promise<UserProfile[]> {
+        return await prisma.userProfile.findMany({
+            where: { id: { in: ids } },
+            orderBy: { firstName: "asc" },
+        });
+    }
+
     // Get user profile with rides
     async findByIdWithRides(id: string) {
         return await prisma.userProfile.findUnique({

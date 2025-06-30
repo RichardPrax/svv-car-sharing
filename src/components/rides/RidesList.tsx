@@ -1,8 +1,9 @@
 // src/components/rides/RidesList.tsx
 import { useCurrentUser } from "@/hooks/rides/useCurrentUser";
-import { useRides } from "@/hooks/rides/useRides";
+import { useRides } from "@/hooks/rides";
 import { useRideActions } from "@/hooks/rides/useRideActions";
 import { useUserRideCheck, useUserParticipationCheck } from "@/hooks/rides";
+import { RideWithDetails } from "@/entities/Ride";
 import RideCard from "./RideCard";
 
 interface RidesListProps {
@@ -100,7 +101,7 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
                 marginTop: "var(--spacing-lg)",
             }}
         >
-            {rides.map((ride) => (
+            {rides.map((ride: RideWithDetails) => (
                 <RideCard
                     key={ride.id}
                     ride={ride}
@@ -115,4 +116,3 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
         </div>
     );
 }
-

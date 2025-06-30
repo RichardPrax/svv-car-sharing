@@ -108,6 +108,19 @@ export class RideRepository {
         return !!passenger;
     }
 
+    // Check if user is passenger in any ride for a specific match day
+    async isPassengerInMatchDay(matchDayId: string, passengerId: string): Promise<boolean> {
+        const passenger = await prisma.ridePassenger.findFirst({
+            where: {
+                passengerId,
+                ride: {
+                    matchDayId,
+                },
+            },
+        });
+        return !!passenger;
+    }
+
     // Get rides where user is driver
     async findByDriver(driverId: string) {
         return await prisma.ride.findMany({
