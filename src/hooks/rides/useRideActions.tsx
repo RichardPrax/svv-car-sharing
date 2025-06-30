@@ -1,8 +1,5 @@
 // src/hooks/rides/useRideActions.tsx
 import { useCallback } from "react";
-import { RideRepository } from "@/lib/repositories/rideRepository";
-
-const rideRepository = new RideRepository();
 
 interface UseRideActionsProps {
     currentUserId: string | null;
@@ -17,22 +14,41 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
 
             try {
                 // 1. Überprüfe, ob User bereits Fahrer für diesen Spieltag ist
-                const existingDriverRides = await rideRepository.findByDriver(currentUserId);
-                const hasExistingRide = existingDriverRides.some((ride) => ride.matchDayId === matchId);
+                const driverResponse = await fetch(`/api/rides/driver/${currentUserId}`);
+                if (!driverResponse.ok) {
+                    throw new Error("Fehler beim Laden der Fahrerfahrten");
+                }
+                const existingDriverRides = await driverResponse.json();
+                const hasExistingRide = existingDriverRides.some((ride: any) => ride.matchDayId === matchId);
 
                 if (hasExistingRide) {
                     return { error: "Sie können sich nicht als Mitfahrer anmelden, da Sie bereits eine Fahrt anbieten" };
                 }
 
                 // 2. Überprüfe, ob User bereits als Mitfahrer in einer anderen Fahrt angemeldet ist
-                const isAlreadyPassenger = await rideRepository.isPassengerInMatchDay(matchId, currentUserId);
+                const passengerResponse = await fetch(`/api/rides/passenger/${currentUserId}`);
+                if (!passengerResponse.ok) {
+                    throw new Error("Fehler beim Laden der Mitfahrerfahrten");
+                }
+                const passengerRides = await passengerResponse.json();
+                const isAlreadyPassenger = passengerRides.some((pr: any) => pr.ride.matchDayId === matchId);
 
                 if (isAlreadyPassenger) {
                     return { error: "Sie sind bereits als Mitfahrer in einer anderen Fahrt angemeldet" };
                 }
 
                 // 3. Jetzt zur Fahrt anmelden
-                await rideRepository.addPassenger(rideId, currentUserId);
+                const joinResponse = await fetch("/api/rides/actions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ rideId, userId: currentUserId }),
+                });
+
+                if (!joinResponse.ok) {
+                    throw new Error("Fehler beim Beitreten zur Fahrt");
+                }
 
                 onSuccess?.();
                 return { success: true };
@@ -49,7 +65,17 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
             if (!currentUserId) return { error: "Nicht angemeldet" };
 
             try {
-                await rideRepository.removePassenger(rideId, currentUserId);
+                const response = await fetch("/api/rides/actions", {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ rideId, userId: currentUserId }),
+                });
+
+                if (!response.ok) {
+                    throw new Error("Fehler beim Verlassen der Fahrt");
+                }
 
                 onSuccess?.();
                 return { success: true };
@@ -66,8 +92,13 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
             if (!currentUserId) return { error: "Nicht angemeldet" };
 
             try {
-                // Prisma wird automatisch die Mitfahrer löschen (CASCADE)
-                await rideRepository.delete(rideId);
+                const response = await fetch(`/api/rides/${rideId}`, {
+                    method: "DELETE",
+                });
+
+                if (!response.ok) {
+                    throw new Error("Fehler beim Löschen der Fahrt");
+                }
 
                 onSuccess?.();
                 return { success: true };

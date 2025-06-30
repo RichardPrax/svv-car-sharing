@@ -1,7 +1,7 @@
 // src/components/rides/RidesList.tsx
 import { useCurrentUser } from "@/hooks/rides/useCurrentUser";
 import { useRides } from "@/hooks/rides";
-import { useRideActions } from "@/hooks/rides/useRideActions";
+import { useRideActions } from "@/hooks/rides";
 import { useUserRideCheck, useUserParticipationCheck } from "@/hooks/rides";
 import { RideWithDetails } from "@/entities/Ride";
 import RideCard from "./RideCard";

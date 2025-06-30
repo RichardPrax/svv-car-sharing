@@ -1,9 +1,6 @@
 // src/hooks/rides/useRides.tsx
 import { useEffect, useState, useCallback } from "react";
 import { RideWithDetails } from "@/entities/Ride";
-import { RideRepository } from "@/lib/repositories/rideRepository";
-
-const rideRepository = new RideRepository();
 
 interface UseRidesProps {
     matchId: string;
@@ -20,11 +17,17 @@ export function useRides({ matchId, refreshTrigger }: UseRidesProps) {
         setError(null);
 
         try {
-            // Lade Fahrten mit allen Details über das Repository
-            const ridesData = await rideRepository.findByMatchDay(matchId);
+            // Lade Fahrten über die API-Route
+            const response = await fetch(`/api/rides/by-match/${matchId}`);
+
+            if (!response.ok) {
+                throw new Error("Fehler beim Laden der Fahrten");
+            }
+
+            const ridesData = await response.json();
 
             // Transform the data to match RideWithDetails interface
-            const ridesWithDetails: RideWithDetails[] = ridesData.map((ride) => ({
+            const ridesWithDetails: RideWithDetails[] = ridesData.map((ride: any) => ({
                 id: ride.id,
                 matchDayId: ride.matchDayId,
                 driverId: ride.driverId,

@@ -2,9 +2,6 @@
 import { useEffect, useState } from "react";
 import { MatchDay } from "@/entities/MatchDay";
 import { sortMatchesByDateTime, isMatchInFuture } from "@/utils/dateTime";
-import { MatchDayRepository } from "@/lib/repositories/matchDayRepository";
-
-const matchDayRepository = new MatchDayRepository();
 
 export function useMatches() {
     const [matchDays, setMatchDays] = useState<MatchDay[]>([]);
@@ -14,7 +11,13 @@ export function useMatches() {
     useEffect(() => {
         const fetchMatches = async () => {
             try {
-                const data = await matchDayRepository.findAll();
+                const response = await fetch("/api/matches");
+
+                if (!response.ok) {
+                    throw new Error("Fehler beim Laden der Spieltage");
+                }
+
+                const data = await response.json();
                 setMatchDays(data);
             } catch (err) {
                 console.error("Error fetching matches:", err);

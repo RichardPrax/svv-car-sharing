@@ -1,9 +1,6 @@
 // src/hooks/matches/useMatchDetail.tsx
 import { useEffect, useState } from "react";
 import { MatchDay } from "@/entities/MatchDay";
-import { MatchDayRepository } from "@/lib/repositories/matchDayRepository";
-
-const matchDayRepository = new MatchDayRepository();
 
 export function useMatchDetail(matchId: string | string[] | undefined) {
     const [match, setMatch] = useState<MatchDay | null>(null);
@@ -28,13 +25,18 @@ export function useMatchDetail(matchId: string | string[] | undefined) {
             setError(null);
 
             try {
-                const data = await matchDayRepository.findById(matchId);
+                const response = await fetch(`/api/matches/${matchId}`);
 
-                if (!data) {
-                    setError("Spieltag nicht gefunden");
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        setError("Spieltag nicht gefunden");
+                    } else {
+                        throw new Error("Fehler beim Laden des Spieltags");
+                    }
                     return;
                 }
 
+                const data = await response.json();
                 setMatch(data);
             } catch (err) {
                 console.error("Error fetching match:", err);

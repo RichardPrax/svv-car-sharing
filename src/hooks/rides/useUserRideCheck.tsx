@@ -1,9 +1,6 @@
 // src/hooks/rides/useUserRideCheck.tsx
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { RideRepository } from "@/lib/repositories/rideRepository";
-
-const rideRepository = new RideRepository();
 
 interface UseUserRideCheckProps {
     matchId: string | string[] | undefined;
@@ -36,8 +33,15 @@ export function useUserRideCheck({ matchId, refreshTrigger }: UseUserRideCheckPr
                 return;
             }
 
-            const existingRides = await rideRepository.findByDriver(session.user.id);
-            const hasRideForMatch = existingRides.some((ride) => ride.matchDayId === matchId);
+            // Lade Fahrten über die API-Route
+            const response = await fetch(`/api/rides/driver/${session.user.id}`);
+
+            if (!response.ok) {
+                throw new Error("Fehler beim Laden der Fahrerfahrten");
+            }
+
+            const existingRides = await response.json();
+            const hasRideForMatch = existingRides.some((ride: any) => ride.matchDayId === matchId);
 
             setHasExistingRide(hasRideForMatch);
         } catch (err) {

@@ -1,9 +1,6 @@
 // src/hooks/rides/useUserParticipationCheck.tsx
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { RideRepository } from "@/lib/repositories/rideRepository";
-
-const rideRepository = new RideRepository();
 
 interface UseUserParticipationCheckProps {
     matchId: string | string[] | undefined;
@@ -39,8 +36,14 @@ export function useUserParticipationCheck({ matchId, refreshTrigger }: UseUserPa
             }
 
             // Überprüfe, ob User als Mitfahrer in einer Fahrt für diesen Spieltag angemeldet ist
-            const passengerRides = await rideRepository.findByPassenger(session.user.id);
-            const participationInMatch = passengerRides.find((pr) => pr.ride.matchDayId === matchId);
+            const response = await fetch(`/api/rides/passenger/${session.user.id}`);
+
+            if (!response.ok) {
+                throw new Error("Fehler beim Laden der Mitfahrerfahrten");
+            }
+
+            const passengerRides = await response.json();
+            const participationInMatch = passengerRides.find((pr: any) => pr.ride.matchDayId === matchId);
 
             const hasParticipation = !!participationInMatch;
             setIsParticipating(hasParticipation);

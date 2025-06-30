@@ -1,9 +1,6 @@
 // src/hooks/auth/useUserProfile.tsx
 import { useState, useEffect } from "react";
 import { UserProfile } from "@/entities/UserProfile";
-import { UserProfileRepository } from "@/lib/repositories/userProfileRepository";
-
-const userProfileRepository = new UserProfileRepository();
 
 export function useUserProfile(userId?: string) {
     const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -18,7 +15,17 @@ export function useUserProfile(userId?: string) {
             }
 
             try {
-                const userProfile = await userProfileRepository.findById(userId);
+                const response = await fetch(`/api/user/${userId}`);
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        setProfile(null);
+                        return;
+                    }
+                    throw new Error("Fehler beim Laden des Benutzerprofils");
+                }
+
+                const userProfile = await response.json();
                 setProfile(userProfile);
             } catch (err) {
                 console.error("Error fetching user profile:", err);
@@ -48,7 +55,19 @@ export function useUserProfiles(userIds: string[]) {
             }
 
             try {
-                const userProfiles = await userProfileRepository.findByIds(userIds);
+                const response = await fetch("/api/user/profiles", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ userIds }),
+                });
+
+                if (!response.ok) {
+                    throw new Error("Fehler beim Laden der Benutzerprofile");
+                }
+
+                const userProfiles = await response.json();
                 setProfiles(userProfiles);
             } catch (err) {
                 console.error("Error fetching user profiles:", err);
