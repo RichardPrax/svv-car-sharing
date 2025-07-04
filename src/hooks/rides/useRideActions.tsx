@@ -1,5 +1,6 @@
 // src/hooks/rides/useRideActions.tsx
 import { useCallback } from "react";
+import { Ride } from "@/entities/Ride";
 
 interface UseRideActionsProps {
     currentUserId: string | null;
@@ -19,7 +20,7 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
                     throw new Error("Fehler beim Laden der Fahrerfahrten");
                 }
                 const existingDriverRides = await driverResponse.json();
-                const hasExistingRide = existingDriverRides.some((ride: any) => ride.matchDayId === matchId);
+                const hasExistingRide = existingDriverRides.some((ride: Ride) => ride.matchDayId === matchId);
 
                 if (hasExistingRide) {
                     return { error: "Sie können sich nicht als Mitfahrer anmelden, da Sie bereits eine Fahrt anbieten" };
@@ -31,7 +32,7 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
                     throw new Error("Fehler beim Laden der Mitfahrerfahrten");
                 }
                 const passengerRides = await passengerResponse.json();
-                const isAlreadyPassenger = passengerRides.some((pr: any) => pr.ride.matchDayId === matchId);
+                const isAlreadyPassenger = passengerRides.some((pr: { ride: Ride }) => pr.ride.matchDayId === matchId);
 
                 if (isAlreadyPassenger) {
                     return { error: "Sie sind bereits als Mitfahrer in einer anderen Fahrt angemeldet" };

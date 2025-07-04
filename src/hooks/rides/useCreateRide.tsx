@@ -1,6 +1,7 @@
 // src/hooks/rides/useCreateRide.tsx
 import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { Ride } from "@/entities/Ride";
 
 export interface CreateRideData {
     departureTime: string; // String for form input, will be converted to Date
@@ -57,7 +58,7 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
                 throw new Error("Fehler beim Laden der Fahrerfahrten");
             }
             const existingDriverRides = await driverResponse.json();
-            const hasExistingRide = existingDriverRides.some((ride: any) => ride.matchDayId === matchId);
+            const hasExistingRide = existingDriverRides.some((ride: Ride) => ride.matchDayId === matchId);
 
             if (hasExistingRide) {
                 setError("Sie können nur eine Fahrt pro Spieltag anbieten");
@@ -70,7 +71,7 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
                 throw new Error("Fehler beim Laden der Mitfahrerfahrten");
             }
             const passengerRides = await passengerResponse.json();
-            const isPassenger = passengerRides.some((pr: any) => pr.ride.matchDayId === matchId);
+            const isPassenger = passengerRides.some((pr: { ride: Ride }) => pr.ride.matchDayId === matchId);
 
             if (isPassenger) {
                 setError("Sie können keine Fahrt anbieten, da Sie bereits als Mitfahrer in einer anderen Fahrt angemeldet sind");

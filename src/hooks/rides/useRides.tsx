@@ -27,22 +27,38 @@ export function useRides({ matchId, refreshTrigger }: UseRidesProps) {
             const ridesData = await response.json();
 
             // Transform the data to match RideWithDetails interface
-            const ridesWithDetails: RideWithDetails[] = ridesData.map((ride: any) => ({
-                id: ride.id,
-                matchDayId: ride.matchDayId,
-                driverId: ride.driverId,
-                departureTime: ride.departureTime,
-                departureLocation: ride.departureLocation,
-                availableSeats: ride.availableSeats,
-                additionalInfo: ride.additionalInfo,
-                createdAt: ride.createdAt,
-                updatedAt: ride.updatedAt,
-                driver: ride.driver,
-                matchDay: ride.matchDayId, // Use matchDayId instead of matchDay object
-                passengers: ride.passengers,
-                passengerCount: ride.passengers?.length || 0,
-                passengerNames: [], // TODO: Fix typing for passenger names
-            }));
+            const ridesWithDetails: RideWithDetails[] = ridesData.map(
+                (ride: {
+                    id: string;
+                    matchDayId: string;
+                    driverId: string;
+                    departureTime: string;
+                    departureLocation: string;
+                    availableSeats: number;
+                    additionalInfo?: string | null;
+                    createdAt: string;
+                    updatedAt: string;
+                    driver: unknown;
+                    passengers: unknown[];
+                    passengerCount: number;
+                    passengerNames?: string[];
+                }) => ({
+                    id: ride.id,
+                    matchDayId: ride.matchDayId,
+                    driverId: ride.driverId,
+                    departureTime: ride.departureTime,
+                    departureLocation: ride.departureLocation,
+                    availableSeats: ride.availableSeats,
+                    additionalInfo: ride.additionalInfo,
+                    createdAt: ride.createdAt,
+                    updatedAt: ride.updatedAt,
+                    driver: ride.driver,
+                    matchDay: ride.matchDayId, // Use matchDayId instead of matchDay object
+                    passengers: ride.passengers,
+                    passengerCount: ride.passengers?.length || 0,
+                    passengerNames: [], // TODO: Fix typing for passenger names
+                })
+            );
 
             setRides(ridesWithDetails);
         } catch (error) {

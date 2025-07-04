@@ -1,6 +1,7 @@
 // src/hooks/rides/useUserRideCheck.tsx
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { Ride } from "@/entities/Ride";
 
 interface UseUserRideCheckProps {
     matchId: string | string[] | undefined;
@@ -41,7 +42,7 @@ export function useUserRideCheck({ matchId, refreshTrigger }: UseUserRideCheckPr
             }
 
             const existingRides = await response.json();
-            const hasRideForMatch = existingRides.some((ride: any) => ride.matchDayId === matchId);
+            const hasRideForMatch = existingRides.some((ride: Ride) => ride.matchDayId === matchId);
 
             setHasExistingRide(hasRideForMatch);
         } catch (err) {

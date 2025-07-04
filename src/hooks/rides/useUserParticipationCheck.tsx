@@ -1,6 +1,7 @@
 // src/hooks/rides/useUserParticipationCheck.tsx
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { Ride } from "@/entities/Ride";
 
 interface UseUserParticipationCheckProps {
     matchId: string | string[] | undefined;
@@ -43,7 +44,7 @@ export function useUserParticipationCheck({ matchId, refreshTrigger }: UseUserPa
             }
 
             const passengerRides = await response.json();
-            const participationInMatch = passengerRides.find((pr: any) => pr.ride.matchDayId === matchId);
+            const participationInMatch = passengerRides.find((pr: { ride: Ride; rideId: string }) => pr.ride.matchDayId === matchId);
 
             const hasParticipation = !!participationInMatch;
             setIsParticipating(hasParticipation);
