@@ -31,7 +31,7 @@ export function useLogin() {
         e.preventDefault();
         setState((prev) => ({ ...prev, loading: true, error: "" }));
 
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
             email: state.email,
             password: state.password,
         });
@@ -39,6 +39,32 @@ export function useLogin() {
         if (error) {
             setState((prev) => ({ ...prev, error: error.message, loading: false }));
         } else {
+            // Prüfe, ob User-Profil existiert, und erstelle es falls nötig
+            if (data.user) {
+                try {
+                    const profileResponse = await fetch(`/api/user/${data.user.id}`);
+                    if (!profileResponse.ok) {
+                        // User-Profil existiert nicht, erstelle es
+                        const userMeta = data.user.user_metadata;
+                        if (userMeta?.first_name && userMeta?.last_name) {
+                            await fetch("/api/user/create-profile", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                    userId: data.user.id,
+                                    firstName: userMeta.first_name,
+                                    lastName: userMeta.last_name,
+                                }),
+                            });
+                        }
+                    }
+                } catch (profileError) {
+                    console.error("Error checking/creating user profile:", profileError);
+                }
+            }
+
             setState((prev) => ({ ...prev, loading: false, success: true }));
             router.push("/");
         }
@@ -112,7 +138,7 @@ export function useRegister() {
             return;
         }
 
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
             email: state.email,
             password: state.password,
             options: {
@@ -126,6 +152,29 @@ export function useRegister() {
         if (error) {
             setState((prev) => ({ ...prev, error: error.message, loading: false }));
         } else {
+            // User-Profil erstellen
+            if (data.user) {
+                try {
+                    const response = await fetch("/api/user/create-profile", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            userId: data.user.id,
+                            firstName: state.firstName.trim(),
+                            lastName: state.lastName.trim(),
+                        }),
+                    });
+
+                    if (!response.ok) {
+                        console.error("Failed to create user profile");
+                    }
+                } catch (profileError) {
+                    console.error("Error creating user profile:", profileError);
+                }
+            }
+
             setState((prev) => ({ ...prev, loading: false, success: true }));
             setTimeout(() => {
                 router.push("/login");

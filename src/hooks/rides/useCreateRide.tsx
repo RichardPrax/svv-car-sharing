@@ -52,7 +52,14 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
                 return { error: "Sie müssen angemeldet sein" };
             }
 
-            // 1. Überprüfe, ob User bereits eine Fahrt als Fahrer für diesen Spieltag anbietet
+            // 1. Hole die Match-Day Daten um das Datum zu bekommen
+            const matchResponse = await fetch(`/api/matches/${matchId}`);
+            if (!matchResponse.ok) {
+                throw new Error("Fehler beim Laden des Spieltags");
+            }
+            const matchDay = await matchResponse.json();
+
+            // 2. Überprüfe, ob User bereits eine Fahrt als Fahrer für diesen Spieltag anbietet
             const driverResponse = await fetch(`/api/rides/driver/${session.user.id}`);
             if (!driverResponse.ok) {
                 throw new Error("Fehler beim Laden der Fahrerfahrten");
@@ -65,7 +72,7 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
                 return { error: "Sie können nur eine Fahrt pro Spieltag anbieten" };
             }
 
-            // 2. Überprüfe, ob User bereits als Mitfahrer in einer anderen Fahrt angemeldet ist
+            // 3. Überprüfe, ob User bereits als Mitfahrer in einer anderen Fahrt angemeldet ist
             const passengerResponse = await fetch(`/api/rides/passenger/${session.user.id}`);
             if (!passengerResponse.ok) {
                 throw new Error("Fehler beim Laden der Mitfahrerfahrten");
@@ -78,11 +85,16 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
                 return { error: "Sie können keine Fahrt anbieten, da Sie bereits als Mitfahrer in einer anderen Fahrt angemeldet sind" };
             }
 
-            // 3. Erstelle die neue Fahrt
+            // 4. Erstelle die neue Fahrt mit korrekter Datums/Zeit-Kombination
+            const matchDate = new Date(matchDay.date);
+            const [hours, minutes] = data.departureTime.split(":").map(Number);
+            const departureDateTime = new Date(matchDate);
+            departureDateTime.setHours(hours, minutes, 0, 0);
+
             const rideData = {
                 matchDayId: matchId,
                 driverId: session.user.id,
-                departureTime: new Date(data.departureTime).toISOString(),
+                departureTime: departureDateTime.toISOString(),
                 departureLocation: data.departureLocation,
                 availableSeats: data.availableSeats,
                 additionalInfo: data.additionalInfo || null,
@@ -121,3 +133,4 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
         createRide,
     };
 }
+

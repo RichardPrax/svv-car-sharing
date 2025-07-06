@@ -61,6 +61,13 @@ export class UserProfileRepository {
         });
     }
 
+    // Create new user profile with specific ID (for auth webhook)
+    async createWithId(data: Omit<UserProfile, "createdAt" | "updatedAt">): Promise<UserProfile> {
+        return await prisma.userProfile.create({
+            data,
+        });
+    }
+
     // Update user profile
     async update(id: string, data: Partial<Pick<UserProfile, "firstName" | "lastName">>): Promise<UserProfile> {
         return await prisma.userProfile.update({
@@ -86,3 +93,4 @@ export class UserProfileRepository {
         });
     }
 }
+
