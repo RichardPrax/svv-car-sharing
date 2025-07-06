@@ -1,5 +1,5 @@
 import pandas as pd
-from supabase import create_client, Client
+import psycopg2
 from datetime import datetime
 import os
 from dotenv import load_dotenv
@@ -7,12 +7,26 @@ from dotenv import load_dotenv
 # .env laden
 load_dotenv()
 
-# Supabase-Konfiguration aus .env
-SUPABASE_URL = os.getenv("NEXT_PUBLIC_SUPABASE_URL")
-SUPABASE_KEY = os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+DATABASE_URL = os.getenv("DIRECT_URL")
 
-# 📄 CSV einlesen
+print("📋 Verbinde mit PostgreSQL...")
+
+try:
+    # connect to database
+    conn = psycopg2.connect(DATABASE_URL)
+    cursor = conn.cursor()
+    print("✅ PostgreSQL-Verbindung erfolgreich")
+    
+    # test request
+    cursor.execute("SELECT COUNT(*) FROM match_days;")
+    count = cursor.fetchone()[0]
+    print(f"📊 Aktuelle Anzahl Spieltage: {count}")
+    
+except Exception as e:
+    print(f"❌ Verbindung fehlgeschlagen: {e}")
+    exit(1)
+
+# read csv file
 df = pd.read_csv("spielplan.csv", sep=";", encoding="latin1")
 
 # 🧠 Eigene Teamkennung (zur Erkennung von Heimspielen)
@@ -34,8 +48,8 @@ for _, row in df.iterrows():
         # Heimspiel → mehrere Gegner möglich
         if key not in match_days:
             match_days[key] = {
-                "date": datum.isoformat(),
-                "time": zeit.strftime("%H:%M:%S"),
+                "date": datum,
+                "time": zeit,
                 "location": ort,
                 "opponents": [gegner]
             }
@@ -44,23 +58,33 @@ for _, row in df.iterrows():
     else:
         # Auswärtsspiel → einzeln speichern
         match_days[key] = {
-            "date": datum.isoformat(),
-            "time": zeit.strftime("%H:%M:%S"),
+            "date": datum,
+            "time": zeit,
             "location": ort,
             "opponents": [heimteam]
         }
 
-# 🚀 Spieltage in Supabase einfügen
+# 🚀 insert match days into database
 for data in match_days.values():
-    response = supabase.table("match_days").insert({
-    "date": data["date"],
-    "time": data["time"],
-    "location": data["location"],
-    "opponent": " / ".join(data["opponents"])
-    }).execute()
+    try:
+        cursor.execute("""
+            INSERT INTO match_days (id, date, time, location, opponent)
+            VALUES (gen_random_uuid(), %s, %s, %s, %s)
+        """, (
+            data["date"],
+            data["time"].strftime("%H:%M:%S"),
+            data["location"],
+            " / ".join(data["opponents"])
+        ))
+        
+        print(f"✅ Eingefügt: {data['date']} - {data['location']} - {' / '.join(data['opponents'])}")
+        
+    except Exception as e:
+        print(f"❌ Fehler beim Einfügen von {data}: {e}")
 
-    # result.data enthält die zurückgegebene Zeile oder Fehler
-    if response.data:
-        print("✅ Eingefügt:", data)
-    else:
-        print("❌ Fehler beim Einfügen:", response)
+# Änderungen speichern
+conn.commit()
+cursor.close()
+conn.close()
+
+print("🎉 Alle Spieltage erfolgreich eingefügt!")
