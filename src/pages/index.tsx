@@ -25,16 +25,34 @@ export default function HomePage() {
                     backgroundColor: "var(--background)",
                 }}
             >
-            <div
-                style={{
-                    maxWidth: "1200px",
-                    margin: "0 auto",
-                    padding: "0 var(--spacing-md)",
-                }}
-            >
-                {/* Nächster Spieltag Section */}
-                {nextMatch && (
-                    <section style={{ marginBottom: "var(--spacing-xl)" }}>
+                <div
+                    style={{
+                        maxWidth: "1200px",
+                        margin: "0 auto",
+                        padding: "0 var(--spacing-md)",
+                    }}
+                >
+                    {/* Nächster Spieltag Section */}
+                    {nextMatch && (
+                        <section style={{ marginBottom: "var(--spacing-xl)" }}>
+                            <h2
+                                style={{
+                                    fontSize: "1.75rem",
+                                    fontWeight: "700",
+                                    marginBottom: "var(--spacing-lg)",
+                                    color: "var(--text-primary)",
+                                    textAlign: "center",
+                                    padding: "0 var(--spacing-md)",
+                                }}
+                            >
+                                Nächster Spieltag
+                            </h2>
+                            <NextMatchCard match={nextMatch} />
+                        </section>
+                    )}
+
+                    {/* Alle Spieltage Section */}
+                    <section>
                         <h2
                             style={{
                                 fontSize: "1.75rem",
@@ -45,30 +63,12 @@ export default function HomePage() {
                                 padding: "0 var(--spacing-md)",
                             }}
                         >
-                            Nächster Spieltag
+                            Alle Spieltage
                         </h2>
-                        <NextMatchCard match={nextMatch} />
+                        <MatchDayList matchDays={sortedMatchDays} />
                     </section>
-                )}
-
-                {/* Alle Spieltage Section */}
-                <section>
-                    <h2
-                        style={{
-                            fontSize: "1.75rem",
-                            fontWeight: "700",
-                            marginBottom: "var(--spacing-lg)",
-                            color: "var(--text-primary)",
-                            textAlign: "center",
-                            padding: "0 var(--spacing-md)",
-                        }}
-                    >
-                        Alle Spieltage
-                    </h2>
-                    <MatchDayList matchDays={sortedMatchDays} />
-                </section>
+                </div>
             </div>
-        </div>
         </>
     );
 }

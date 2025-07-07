@@ -33,12 +33,14 @@ export default function LoginForm() {
                 </Button>
             </form>
 
-            <div style={{ 
-                textAlign: 'center', 
-                marginTop: 'var(--spacing-lg)', 
-                fontSize: '0.9rem', 
-                color: 'var(--text-secondary)' 
-            }}>
+            <div
+                style={{
+                    textAlign: "center",
+                    marginTop: "var(--spacing-lg)",
+                    fontSize: "0.9rem",
+                    color: "var(--text-secondary)",
+                }}
+            >
                 Bei Problemen wende dich an den Administrator
             </div>
         </AuthContainer>
