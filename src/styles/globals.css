@@ -209,11 +209,11 @@ body {
     .app-header {
         padding: var(--spacing-md) !important;
     }
-    
+
     .app-header__title {
         font-size: 1.25rem !important;
     }
-    
+
     .app-header__logout-btn {
         font-size: 0.85rem !important;
         padding: var(--spacing-xs) var(--spacing-sm) !important;

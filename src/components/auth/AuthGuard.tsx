@@ -1,5 +1,5 @@
 // src/components/auth/AuthGuard.tsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabaseClient";
 import { User } from "@supabase/supabase-js";
@@ -13,8 +13,8 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
-    // Seiten, die ohne Login zugänglich sind
-    const publicRoutes = ["/login"];
+    // Seiten, die ohne Login zugänglich sind - useMemo für Performance
+    const publicRoutes = useMemo(() => ["/login"], []);
 
     useEffect(() => {
         const checkUser = async () => {

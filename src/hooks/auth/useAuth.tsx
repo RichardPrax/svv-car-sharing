@@ -31,42 +31,69 @@ export function useLogin() {
         e.preventDefault();
         setState((prev) => ({ ...prev, loading: true, error: "" }));
 
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: state.email,
-            password: state.password,
-        });
+        try {
+            // Pre-validation API call für Security und Rate Limiting
+            const preValidation = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "User-Agent": navigator.userAgent,
+                    Accept: "application/json",
+                    "Accept-Language": navigator.language,
+                },
+                body: JSON.stringify({
+                    email: state.email,
+                    password: state.password,
+                }),
+            });
 
-        if (error) {
-            setState((prev) => ({ ...prev, error: error.message, loading: false }));
-        } else {
-            // Prüfe, ob User-Profil existiert, und erstelle es falls nötig
-            if (data.user) {
-                try {
-                    const profileResponse = await fetch(`/api/user/${data.user.id}`);
-                    if (!profileResponse.ok) {
-                        // User-Profil existiert nicht, erstelle es
-                        const userMeta = data.user.user_metadata;
-                        if (userMeta?.first_name && userMeta?.last_name) {
-                            await fetch("/api/user/create-profile", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify({
-                                    userId: data.user.id,
-                                    firstName: userMeta.first_name,
-                                    lastName: userMeta.last_name,
-                                }),
-                            });
-                        }
-                    }
-                } catch (profileError) {
-                    console.error("Error checking/creating user profile:", profileError);
+            if (!preValidation.ok) {
+                const errorData = await preValidation.json();
+                if (preValidation.status === 429) {
+                    setState((prev) => ({
+                        ...prev,
+                        error: `Zu viele Login-Versuche. Versuche es in ${errorData.retryAfter || 60} Sekunden erneut.`,
+                        loading: false,
+                    }));
+                    return;
+                } else if (preValidation.status === 403) {
+                    setState((prev) => ({
+                        ...prev,
+                        error: "Login temporär blockiert. Bitte wende dich an den Administrator.",
+                        loading: false,
+                    }));
+                    return;
+                } else {
+                    setState((prev) => ({
+                        ...prev,
+                        error: errorData.error || "Login-Validierung fehlgeschlagen",
+                        loading: false,
+                    }));
+                    return;
                 }
             }
 
+            // Supabase Auth nach erfolgreicher Pre-Validation
+            const { error } = await supabase.auth.signInWithPassword({
+                email: state.email,
+                password: state.password,
+            });
+
+            if (error) {
+                setState((prev) => ({ ...prev, error: "Ungültige E-Mail oder Passwort", loading: false }));
+                return;
+            }
+
+            // Erfolgreicher Login - leite direkt weiter
             setState((prev) => ({ ...prev, loading: false, success: true }));
             router.push("/");
+        } catch (error) {
+            console.error("Login error:", error);
+            setState((prev) => ({
+                ...prev,
+                error: "Netzwerkfehler. Bitte versuche es später erneut.",
+                loading: false,
+            }));
         }
     };
 
