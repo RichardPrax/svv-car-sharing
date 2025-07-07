@@ -5,7 +5,6 @@ import AuthContainer from "./AuthContainer";
 import AuthHeader from "./AuthHeader";
 import AuthField from "./AuthField";
 import AuthError from "./AuthError";
-import AuthLink from "./AuthLink";
 
 export default function LoginForm() {
     const { email, password, error, loading, setEmail, setPassword, login } = useLogin();

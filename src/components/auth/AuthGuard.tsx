@@ -63,7 +63,7 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
         return () => {
             subscription.unsubscribe();
         };
-    }, [router]);
+    }, [router, publicRoutes]);
 
     // Loading state
     if (loading) {
