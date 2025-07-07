@@ -9,6 +9,7 @@
         "build": "prisma generate && next build",
         "build:local": "dotenv -e .env.local -- prisma generate && dotenv -e .env.local -- next build",
         "build:production": "dotenv -e .env.production -- prisma generate && dotenv -e .env.production -- next build",
+        "build:vercel": "prisma generate && next build",
         "postinstall": "prisma generate",
         "start": "next start",
         "lint": "next lint",

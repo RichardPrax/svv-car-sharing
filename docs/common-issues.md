@@ -507,3 +507,33 @@ cp .env.local .env.local.backup
 
 💡 **Tipp**: Die meisten Probleme lösen sich mit `./dev-setup.sh reset` und `./dev-setup.sh local` - das ist der "Universal-Fix"!
 
+---
+
+## 🚀 Deployment-Probleme
+
+### Problem: "Prisma Query Engine not found" auf Vercel
+
+**Symptome:**
+
+```bash
+Error: Query engine binary for current platform "rhel-openssl-1.0.x" could not be found
+Error: Prisma Client could not locate the Query Engine for runtime "rhel-openssl-1.0.x"
+```
+
+**Ursache:** Prisma Query Engine Binary ist nicht für Vercel's Runtime-Umgebung verfügbar
+
+**Lösung:**
+
+Dieses Problem wurde in unserem Projekt bereits behoben durch:
+
+1. **Prisma Schema Update** (bereits erledigt):
+    ```prisma
+    generator client {
+      provider = "prisma-client-js"
+      binaryTargets = ["native", "rhel-openssl-1.0.x", "rhel-openssl-3.0.x"]
+    }
+    ```
+
+2. **Vercel-Konfiguration** (`vercel.json` bereits erstellt):
+    ```json
+    {
