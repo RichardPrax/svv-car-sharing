@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         // Check Supabase connection
         try {
-            const { data, error } = await supabase.from("UserProfile").select("count").limit(1);
+            const { error } = await supabase.from("UserProfile").select("count").limit(1);
 
             if (error) {
                 checks.supabase.status = "error";
