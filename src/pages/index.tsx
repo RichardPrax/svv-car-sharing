@@ -1,4 +1,5 @@
 import { MatchDayList, NextMatchCard } from "@/components/matches";
+import { Header } from "@/components/layout";
 import { useMatches } from "@/hooks/matches/useMatches";
 import { isMatchInFuture, sortMatchesByDateTime } from "@/utils/dateTime";
 
@@ -15,13 +16,15 @@ export default function HomePage() {
     if (error) return <p>Fehler beim Laden der Spieltage: {error}</p>;
 
     return (
-        <div
-            style={{
-                padding: "var(--spacing-lg) 0",
-                minHeight: "100vh",
-                backgroundColor: "var(--background)",
-            }}
-        >
+        <>
+            <Header />
+            <div
+                style={{
+                    padding: "var(--spacing-lg) 0",
+                    minHeight: "100vh",
+                    backgroundColor: "var(--background)",
+                }}
+            >
             <div
                 style={{
                     maxWidth: "1200px",
@@ -66,6 +69,7 @@ export default function HomePage() {
                 </section>
             </div>
         </div>
+        </>
     );
 }
 
