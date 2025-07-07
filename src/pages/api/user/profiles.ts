@@ -1,9 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { UserProfileRepository } from "@/lib/repositories/userProfileRepository";
+import { recordUserApiCall } from "../admin/session-analytics";
+import { withRateLimit, profileBatchRateLimiter } from "@/lib/middleware/rateLimiter";
 
 const userProfileRepository = new UserProfileRepository();
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function profilesHandler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "POST") {
         try {
             const { userIds } = req.body;
@@ -11,6 +13,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (!userIds || !Array.isArray(userIds)) {
                 return res.status(400).json({ error: "User IDs Array ist erforderlich" });
             }
+
+            // Track batch profile API call for analytics
+            userIds.forEach((userId) => recordUserApiCall(userId));
 
             const userProfiles = await userProfileRepository.findByIds(userIds);
             res.status(200).json(userProfiles);
@@ -23,3 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 }
+
+// Apply rate limiting for batch profile requests
+export default withRateLimit(profileBatchRateLimiter)(profilesHandler);
+

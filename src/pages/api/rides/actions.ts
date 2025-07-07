@@ -1,9 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { RideRepository } from "@/lib/repositories/rideRepository";
+import { withRateLimit, apiRateLimiter } from "@/lib/middleware/rateLimiter";
 
 const rideRepository = new RideRepository();
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default withRateLimit(apiRateLimiter)(handler);
+
+async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "POST") {
         try {
             const { rideId, userId } = req.body;
@@ -37,3 +40,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 }
+

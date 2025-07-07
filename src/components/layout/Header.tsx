@@ -1,10 +1,12 @@
 // src/components/layout/Header.tsx
 import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import { useRouter } from "next/router";
 
 const Header = () => {
     const [loading, setLoading] = useState(false);
+    const { userProfile } = useOptimizedAuth();
     const router = useRouter();
 
     const handleLogout = async () => {
@@ -48,18 +50,26 @@ const Header = () => {
                     SVV Car Sharing
                 </h1>
 
-                <button
-                    onClick={handleLogout}
-                    disabled={loading}
-                    className="app-header__logout-btn"
-                    style={{
-                        padding: "var(--spacing-sm) var(--spacing-md)",
-                        borderRadius: "var(--radius-sm)",
-                        fontSize: "0.9rem",
-                    }}
-                >
-                    {loading ? "Abmelden..." : "Abmelden"}
-                </button>
+                <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-md)" }}>
+                    {userProfile && (
+                        <span style={{ fontSize: "0.9rem" }}>
+                            👤 {userProfile.firstName} {userProfile.lastName}
+                        </span>
+                    )}
+
+                    <button
+                        onClick={handleLogout}
+                        disabled={loading}
+                        className="app-header__logout-btn"
+                        style={{
+                            padding: "var(--spacing-sm) var(--spacing-md)",
+                            borderRadius: "var(--radius-sm)",
+                            fontSize: "0.9rem",
+                        }}
+                    >
+                        {loading ? "Abmelden..." : "Abmelden"}
+                    </button>
+                </div>
             </div>
         </header>
     );

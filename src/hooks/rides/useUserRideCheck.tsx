@@ -1,6 +1,6 @@
 // src/hooks/rides/useUserRideCheck.tsx
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import { Ride } from "@/entities/Ride";
 
 interface UseUserRideCheckProps {
@@ -12,6 +12,7 @@ export function useUserRideCheck({ matchId, refreshTrigger }: UseUserRideCheckPr
     const [hasExistingRide, setHasExistingRide] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { user } = useOptimizedAuth();
 
     const checkExistingRide = useCallback(async () => {
         // Warte bis matchId verfügbar ist
@@ -24,18 +25,14 @@ export function useUserRideCheck({ matchId, refreshTrigger }: UseUserRideCheckPr
         setError(null);
 
         try {
-            const {
-                data: { session },
-            } = await supabase.auth.getSession();
-
-            if (!session) {
+            if (!user) {
                 setHasExistingRide(false);
                 setLoading(false);
                 return;
             }
 
             // Lade Fahrten über die API-Route
-            const response = await fetch(`/api/rides/driver/${session.user.id}`);
+            const response = await fetch(`/api/rides/driver/${user.id}`);
 
             if (!response.ok) {
                 throw new Error("Fehler beim Laden der Fahrerfahrten");
@@ -51,7 +48,7 @@ export function useUserRideCheck({ matchId, refreshTrigger }: UseUserRideCheckPr
         } finally {
             setLoading(false);
         }
-    }, [matchId]);
+    }, [matchId, user]);
 
     useEffect(() => {
         if (matchId && !Array.isArray(matchId)) {
@@ -66,3 +63,4 @@ export function useUserRideCheck({ matchId, refreshTrigger }: UseUserRideCheckPr
         recheckExistingRide: checkExistingRide,
     };
 }
+

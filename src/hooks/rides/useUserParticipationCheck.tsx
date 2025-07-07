@@ -1,6 +1,6 @@
 // src/hooks/rides/useUserParticipationCheck.tsx
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import { Ride } from "@/entities/Ride";
 
 interface UseUserParticipationCheckProps {
@@ -13,6 +13,7 @@ export function useUserParticipationCheck({ matchId, refreshTrigger }: UseUserPa
     const [participatingRideId, setParticipatingRideId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { user } = useOptimizedAuth();
 
     const checkParticipation = useCallback(async () => {
         // Warte bis matchId verfügbar ist
@@ -25,11 +26,7 @@ export function useUserParticipationCheck({ matchId, refreshTrigger }: UseUserPa
         setError(null);
 
         try {
-            const {
-                data: { session },
-            } = await supabase.auth.getSession();
-
-            if (!session) {
+            if (!user) {
                 setIsParticipating(false);
                 setParticipatingRideId(null);
                 setLoading(false);
@@ -37,7 +34,7 @@ export function useUserParticipationCheck({ matchId, refreshTrigger }: UseUserPa
             }
 
             // Überprüfe, ob User als Mitfahrer in einer Fahrt für diesen Spieltag angemeldet ist
-            const response = await fetch(`/api/rides/passenger/${session.user.id}`);
+            const response = await fetch(`/api/rides/passenger/${user.id}`);
 
             if (!response.ok) {
                 throw new Error("Fehler beim Laden der Mitfahrerfahrten");
@@ -55,7 +52,7 @@ export function useUserParticipationCheck({ matchId, refreshTrigger }: UseUserPa
         } finally {
             setLoading(false);
         }
-    }, [matchId]);
+    }, [matchId, user]);
 
     useEffect(() => {
         if (matchId && !Array.isArray(matchId)) {
@@ -71,3 +68,4 @@ export function useUserParticipationCheck({ matchId, refreshTrigger }: UseUserPa
         recheckParticipation: checkParticipation,
     };
 }
+

@@ -1,14 +1,20 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import DebugPanel from "../components/DebugPanel";
-import AuthGuard from "../components/auth/AuthGuard";
+import { AuthProvider } from "@/hooks/auth/useOptimizedAuth";
+import { UserProfileProvider } from "@/hooks/auth/useUserProfileCache";
+import OptimizedAuthGuard from "../components/auth/OptimizedAuthGuard";
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
-        <AuthGuard>
-            <Component {...pageProps} />
-            <DebugPanel />
-        </AuthGuard>
+        <AuthProvider>
+            <UserProfileProvider>
+                <OptimizedAuthGuard>
+                    <Component {...pageProps} />
+                    <DebugPanel />
+                </OptimizedAuthGuard>
+            </UserProfileProvider>
+        </AuthProvider>
     );
 }
 

@@ -110,6 +110,20 @@ class RateLimiter {
 export const authRateLimiter = new RateLimiter(60000, 5, 600000); // 5 Versuche pro Minute, 10 Min Block
 export const apiRateLimiter = new RateLimiter(60000, 30, 300000); // 30 Requests pro Minute, 5 Min Block
 
+// User-spezifische Rate Limiter (weniger streng als Auth)
+export const userRateLimiter = new RateLimiter(
+    60000, // 1 Minute Window
+    50, // Max 50 Requests pro Minute
+    300000 // 5 Minuten Block
+);
+
+// Batch-Profile Rate Limiter (noch weniger streng)
+export const profileBatchRateLimiter = new RateLimiter(
+    60000, // 1 Minute Window
+    10, // Max 10 Batch-Requests pro Minute
+    600000 // 10 Minuten Block
+);
+
 export function withRateLimit(rateLimiter: RateLimiter) {
     return function (handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void> | void) {
         return async function (req: NextApiRequest, res: NextApiResponse) {

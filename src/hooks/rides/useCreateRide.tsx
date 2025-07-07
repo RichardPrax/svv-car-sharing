@@ -1,6 +1,6 @@
 // src/hooks/rides/useCreateRide.tsx
 import { useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import { Ride } from "@/entities/Ride";
 
 export interface CreateRideData {
@@ -18,6 +18,7 @@ interface UseCreateRideProps {
 export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { user } = useOptimizedAuth();
     const [formData, setFormData] = useState<CreateRideData>({
         departureTime: "",
         departureLocation: "",
@@ -43,11 +44,7 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
         setError(null);
 
         try {
-            const {
-                data: { session },
-            } = await supabase.auth.getSession();
-
-            if (!session) {
+            if (!user) {
                 setError("Sie müssen angemeldet sein");
                 return { error: "Sie müssen angemeldet sein" };
             }
@@ -60,7 +57,7 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
             const matchDay = await matchResponse.json();
 
             // 2. Überprüfe, ob User bereits eine Fahrt als Fahrer für diesen Spieltag anbietet
-            const driverResponse = await fetch(`/api/rides/driver/${session.user.id}`);
+            const driverResponse = await fetch(`/api/rides/driver/${user.id}`);
             if (!driverResponse.ok) {
                 throw new Error("Fehler beim Laden der Fahrerfahrten");
             }
@@ -73,7 +70,7 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
             }
 
             // 3. Überprüfe, ob User bereits als Mitfahrer in einer anderen Fahrt angemeldet ist
-            const passengerResponse = await fetch(`/api/rides/passenger/${session.user.id}`);
+            const passengerResponse = await fetch(`/api/rides/passenger/${user.id}`);
             if (!passengerResponse.ok) {
                 throw new Error("Fehler beim Laden der Mitfahrerfahrten");
             }
@@ -93,7 +90,7 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
 
             const rideData = {
                 matchDayId: matchId,
-                driverId: session.user.id,
+                driverId: user.id,
                 departureTime: departureDateTime.toISOString(),
                 departureLocation: data.departureLocation,
                 availableSeats: data.availableSeats,

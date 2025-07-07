@@ -1,9 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { UserProfileRepository } from "@/lib/repositories/userProfileRepository";
+import { recordUserApiCall } from "../admin/session-analytics";
+import { withRateLimit, userRateLimiter } from "@/lib/middleware/rateLimiter";
 
 const userProfileRepository = new UserProfileRepository();
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function userHandler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "GET") {
         try {
             const { userId } = req.query;
@@ -11,6 +13,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (!userId || typeof userId !== "string") {
                 return res.status(400).json({ error: "User ID ist erforderlich" });
             }
+
+            // Track API call for analytics
+            recordUserApiCall(userId);
 
             const userProfile = await userProfileRepository.findById(userId);
 
@@ -43,3 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 }
+
+// Apply rate limiting
+export default withRateLimit(userRateLimiter)(userHandler);
+
