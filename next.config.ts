@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
     experimental: {
         // This helps with better environment variable handling
         optimizePackageImports: ["@supabase/supabase-js", "@prisma/client"],
+        // Ensure Prisma client is bundled correctly for serverless
+        serverComponentsExternalPackages: ["@prisma/client"],
     },
 
     // Ensure environment variables are properly loaded
@@ -19,6 +21,12 @@ const nextConfig: NextConfig = {
         // This is available on both server and client
         supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
         supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    },
+
+    // Webpack configuration for Prisma
+    webpack: (config) => {
+        config.externals.push("@prisma/client");
+        return config;
     },
 };
 
