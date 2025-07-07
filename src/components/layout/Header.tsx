@@ -21,9 +21,8 @@ const Header = () => {
 
     return (
         <header
+            className="app-header"
             style={{
-                background: "var(--background)",
-                borderBottom: "1px solid var(--border)",
                 padding: "var(--spacing-md)",
                 position: "sticky",
                 top: 0,
@@ -40,10 +39,9 @@ const Header = () => {
                 }}
             >
                 <h1
+                    className="app-header__title"
                     style={{
                         fontSize: "1.5rem",
-                        fontWeight: "700",
-                        color: "var(--text-primary)",
                         margin: 0,
                     }}
                 >
@@ -53,15 +51,11 @@ const Header = () => {
                 <button
                     onClick={handleLogout}
                     disabled={loading}
+                    className="app-header__logout-btn"
                     style={{
-                        background: "var(--accent)",
-                        color: "white",
-                        border: "none",
                         padding: "var(--spacing-sm) var(--spacing-md)",
-                        borderRadius: "var(--radius)",
-                        cursor: loading ? "not-allowed" : "pointer",
+                        borderRadius: "var(--radius-sm)",
                         fontSize: "0.9rem",
-                        opacity: loading ? 0.7 : 1,
                     }}
                 >
                     {loading ? "Abmelden..." : "Abmelden"}
