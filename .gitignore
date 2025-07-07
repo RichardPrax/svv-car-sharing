@@ -19,14 +19,33 @@
 .DS_Store
 *.pem
 
+# Environment files (NEVER commit these!)
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.staging
+
+# Temporary files
+test-env.js
+backup_*.sql
+
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
+# Environment files - specific handling
+# Never commit real environment files
 .env*.local
+.env.production
+.env.development
+.env.test
 .env
+
+# But allow example files to be committed
+!.env.example
 
 # vercel
 .vercel
@@ -34,8 +53,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
 /node_modules
@@ -67,9 +84,6 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
-
 # vercel
 .vercel
 
@@ -79,3 +93,9 @@ next-env.d.ts
 
 /venv
 /src/generated/prisma
+
+# Supabase
+.branches
+.temp
+.vscode
+supabase/.env
