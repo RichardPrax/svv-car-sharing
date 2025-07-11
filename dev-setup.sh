@@ -91,6 +91,8 @@ setup_local() {
     npm run db:local:seed
     
     print_status "Local environment setup complete!"
+    print_warning "WICHTIG: Für Login-Funktionalität müssen noch Auth-Benutzer angelegt werden!"
+    print_status "Siehe GETTING_STARTED.md → Abschnitt 'Testbenutzer einrichten'"
     print_status "You can now run: npm run dev:local"
 }
 

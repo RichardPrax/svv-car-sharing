@@ -45,8 +45,25 @@ Das Setup-Skript macht automatisch folgendes:
 
 1. **Lokale Datenbank starten** (Supabase mit PostgreSQL)
 2. **Datenbank-Schema einrichten** (Tabellen für Nutzer, Fahrten, etc.)
-3. **Testdaten einfügen** (Beispiel-Spieltage und Nutzer)
+3. **Testdaten einfügen** (Beispiel-Spieltage und 2 Testbenutzer)
 4. **Entwicklungsserver starten** (Next.js auf Port 3000)
+
+### 🔑 Testbenutzer einrichten
+
+Das Seeding erstellt automatisch 2 Testbenutzer in der Datenbank. Für die vollständige Funktionalität müssen diese auch in Supabase Auth angelegt werden.
+
+> 📖 **Detaillierte Anleitung**: Siehe [`docs/auth-setup.md`](docs/auth-setup.md)
+
+**Kurzanleitung:**
+
+1. Öffne Supabase Studio: `npm run db:local:studio`
+2. Gehe zu **Authentication** → **Users**
+3. Erstelle 2 Benutzer mit den **exakten** User IDs:
+    - `550e8400-e29b-41d4-a716-446655440001` → `max@test.com`
+    - `550e8400-e29b-41d4-a716-446655440002` → `anna@test.com`
+4. Passwort für beide: `password123`
+
+> ⚠️ **Wichtig**: Die User IDs müssen exakt übereinstimmen!
 
 ## 📱 Die Anwendung verwenden
 
