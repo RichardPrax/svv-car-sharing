@@ -52,7 +52,7 @@ const Header = () => {
 
                 <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-md)" }}>
                     {userProfile && (
-                        <span style={{ fontSize: "0.9rem" }}>
+                        <span className="app-header__profile" style={{ fontSize: "0.9rem" }}>
                             👤 {userProfile.firstName} {userProfile.lastName}
                         </span>
                     )}
