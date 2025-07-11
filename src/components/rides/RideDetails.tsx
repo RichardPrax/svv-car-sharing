@@ -27,7 +27,11 @@ export default function RideDetails({ ride, isRideFull }: RideDetailsProps) {
                         margin: "0 0 var(--spacing-xs) 0",
                     }}
                 >
-                    Abfahrt: {ride.departureTime instanceof Date ? ride.departureTime.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) : ride.departureTime}
+                    Abfahrt:{" "}
+                    {(() => {
+                        const date = new Date(ride.departureTime);
+                        return `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")} Uhr`;
+                    })()}
                 </h4>
                 <p
                     style={{
@@ -71,3 +75,4 @@ export default function RideDetails({ ride, isRideFull }: RideDetailsProps) {
         </div>
     );
 }
+

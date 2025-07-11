@@ -20,7 +20,13 @@ export function useEditRide({ ride, onSuccess, onDelete }: UseEditRideProps) {
     const [error, setError] = useState<string | null>(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [formData, setFormData] = useState<EditRideData>({
-        departureTime: new Date(ride.departureTime).toISOString().slice(0, 16), // Format for datetime-local input
+        departureTime: (() => {
+            const date = new Date(ride.departureTime);
+            // Format für time input: HH:MM
+            const hours = date.getHours().toString().padStart(2, "0");
+            const minutes = date.getMinutes().toString().padStart(2, "0");
+            return `${hours}:${minutes}`;
+        })(),
         departureLocation: ride.departureLocation,
         availableSeats: ride.availableSeats,
         additionalInfo: ride.additionalInfo || "",
@@ -39,8 +45,15 @@ export function useEditRide({ ride, onSuccess, onDelete }: UseEditRideProps) {
         setError(null);
 
         try {
+            // Das ursprüngliche Datum beibehalten, nur die Zeit ändern
+            const originalDate = new Date(ride.departureTime);
+            const [hours, minutes] = formData.departureTime.split(":").map(Number);
+
+            const updatedDateTime = new Date(originalDate);
+            updatedDateTime.setHours(hours, minutes, 0, 0);
+
             const updateData = {
-                departureTime: new Date(formData.departureTime).toISOString(),
+                departureTime: updatedDateTime.toISOString(),
                 departureLocation: formData.departureLocation,
                 availableSeats: formData.availableSeats,
                 additionalInfo: formData.additionalInfo || null,
@@ -107,3 +120,4 @@ export function useEditRide({ ride, onSuccess, onDelete }: UseEditRideProps) {
         handleDeleteConfirm,
     };
 }
+
