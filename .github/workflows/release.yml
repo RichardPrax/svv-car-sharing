@@ -1,0 +1,43 @@
+name: Release to Main
+
+on:
+    push:
+        branches:
+            - dev
+
+jobs:
+    release:
+        if: contains(github.event.head_commit.message, 'release')
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0 # wichtig für Git-Tags
+
+            - name: Set up Git
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            - name: Merge dev into main
+              run: |
+                  git checkout main
+                  git pull origin main
+                  git merge dev --no-ff -m "chore: release from dev"
+
+            - name: Bump Version and Tag
+              run: |
+                  LAST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+                  echo "Last tag: $LAST_TAG"
+                  IFS='.' read -r -a VERSION <<< "$LAST_TAG"
+                  NEW_VERSION="${VERSION[0]}.${VERSION[1]}.$((VERSION[2]+1))"
+                  echo "New Version: $NEW_VERSION"
+                  git tag $NEW_VERSION -m "Release $NEW_VERSION"
+
+            - name: Push to main with tag
+              run: |
+                  git push origin main
+                  git push origin $NEW_VERSION
+
