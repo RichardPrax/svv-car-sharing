@@ -82,7 +82,7 @@ class RateLimiter {
             entry.blockUntil = now + this.blockDurationMs;
 
             // Log Security Event
-            logRateLimitExceeded(this.getClientIP(req), req.headers["user-agent"], `Rate limit exceeded: ${entry.count}/${this.maxRequests} requests`);
+            logRateLimitExceeded(this.getClientIP(req));
 
             console.warn(`Rate limit exceeded for client ${clientId}. Blocked until ${new Date(entry.blockUntil).toISOString()}`);
             return { allowed: false, blockUntil: entry.blockUntil, resetTime: entry.resetTime };

@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { UserProfileRepository } from "@/lib/repositories/userProfileRepository";
-import { recordUserApiCall } from "../admin/session-analytics";
 import { withRateLimit, profileBatchRateLimiter } from "@/lib/middleware/rateLimiter";
 
 const userProfileRepository = new UserProfileRepository();
@@ -13,9 +12,6 @@ async function profilesHandler(req: NextApiRequest, res: NextApiResponse) {
             if (!userIds || !Array.isArray(userIds)) {
                 return res.status(400).json({ error: "User IDs Array ist erforderlich" });
             }
-
-            // Track batch profile API call for analytics
-            userIds.forEach((userId) => recordUserApiCall(userId));
 
             const userProfiles = await userProfileRepository.findByIds(userIds);
             res.status(200).json(userProfiles);

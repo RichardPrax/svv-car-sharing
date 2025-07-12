@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { UserProfileRepository } from "@/lib/repositories/userProfileRepository";
-import { recordUserApiCall } from "../admin/session-analytics";
 import { withRateLimit, userRateLimiter } from "@/lib/middleware/rateLimiter";
 
 const userProfileRepository = new UserProfileRepository();
@@ -13,9 +12,6 @@ async function userHandler(req: NextApiRequest, res: NextApiResponse) {
             if (!userId || typeof userId !== "string") {
                 return res.status(400).json({ error: "User ID ist erforderlich" });
             }
-
-            // Track API call for analytics
-            recordUserApiCall(userId);
 
             const userProfile = await userProfileRepository.findById(userId);
 

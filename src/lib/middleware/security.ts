@@ -71,7 +71,7 @@ export class SecurityValidator {
             }, 3600000); // 1 Stunde
         } else if (newCount >= 5) {
             // Log verdächtige Aktivität ab 5 Versuchen
-            logSuspiciousRequest(ip, undefined, `${newCount} failed attempts`);
+            logSuspiciousRequest(ip, undefined);
         }
     }
 
@@ -114,7 +114,7 @@ export function withSecurity() {
                 SecurityValidator.recordFailedAttempt(req);
 
                 // Log als verdächtige Anfrage
-                logSuspiciousRequest(SecurityValidator.getClientIP(req), req.headers["user-agent"] as string, securityCheck.reason);
+                logSuspiciousRequest(SecurityValidator.getClientIP(req), req.headers["user-agent"] as string);
 
                 return res.status(403).json({
                     error: "Request blocked",
@@ -137,7 +137,7 @@ export function withAuthSecurity() {
                 SecurityValidator.recordFailedAttempt(req);
 
                 // Log als Auth-Fehler
-                logAuthFailure(SecurityValidator.getClientIP(req), req.headers["user-agent"] as string, securityCheck.reason);
+                logAuthFailure(SecurityValidator.getClientIP(req), req.headers["user-agent"] as string);
 
                 return res.status(403).json({
                     error: "Authentication blocked",
