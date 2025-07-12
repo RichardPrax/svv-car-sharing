@@ -3,7 +3,7 @@ import { useOptimizedCurrentUser } from "@/hooks/rides/useOptimizedCurrentUser";
 import { useOptimizedUserProfiles } from "@/hooks/auth/useUserProfileCache";
 import { useRides } from "@/hooks/rides";
 import { useRideActions } from "@/hooks/rides";
-import { RideWithDetails } from "@/entities/Ride";
+import { useUserRideCheck, useUserParticipationCheck } from "@/hooks/rides";
 import RideCard from "./RideCard";
 
 interface RidesListProps {
@@ -15,9 +15,11 @@ interface RidesListProps {
 export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: RidesListProps) {
     const { currentUserId } = useOptimizedCurrentUser();
     const { rides, loading, error, refetch } = useRides({ matchId, refreshTrigger });
+    const { hasExistingRide } = useUserRideCheck({ matchId, refreshTrigger });
+    const { isParticipating } = useUserParticipationCheck({ matchId, refreshTrigger });
 
     // Sammle alle User-IDs aus den Rides für optimiertes Preloading
-    const allUserIds = rides.flatMap((ride) => [ride.driverId, ...(ride.passengers?.map((p) => (p as { passengerId: string }).passengerId) || [])]).filter(Boolean);
+    const allUserIds = rides.flatMap((ride) => [ride.driverId, ...ride.passengers.map((p) => p.passengerId)]).filter(Boolean);
 
     // Preload alle benötigten User-Profile in einem Batch
     const { getProfileName } = useOptimizedUserProfiles(allUserIds);
@@ -30,13 +32,6 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
             onRideUpdated?.();
         },
     });
-
-    // Enriche Rides mit gecachten User-Namen
-    const enrichedRides = rides.map((ride) => ({
-        ...ride,
-        driverName: getProfileName(ride.driverId),
-        passengerNames: ride.passengers?.map((p) => getProfileName((p as { passengerId: string }).passengerId)) || [],
-    }));
 
     const handleRideUpdated = () => {
         refetch();
@@ -59,6 +54,13 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
         }
     };
 
+    // Enriche Rides mit gecachten User-Namen
+    const enrichedRides = rides.map((ride) => ({
+        ...ride,
+        driverName: getProfileName(ride.driverId),
+        passengerNames: ride.passengers.map((p) => getProfileName(p.passengerId)),
+    }));
+
     if (loading) {
         return (
             <div
@@ -79,10 +81,7 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
                 style={{
                     textAlign: "center",
                     padding: "var(--spacing-xl)",
-                    color: "#dc2626",
-                    backgroundColor: "#fef2f2",
-                    borderRadius: "var(--radius-md)",
-                    border: "1px solid #fecaca",
+                    color: "var(--danger)",
                 }}
             >
                 {error}
@@ -99,7 +98,13 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
                     color: "var(--text-secondary)",
                 }}
             >
-                Noch keine Fahrten verfügbar. Seien Sie der Erste und bieten Sie eine Fahrt an!
+                Noch keine Fahrten erstellt.
+                {!hasExistingRide && !isParticipating && (
+                    <>
+                        <br />
+                        Erstelle die erste Fahrt!
+                    </>
+                )}
             </div>
         );
     }
@@ -107,15 +112,15 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
     return (
         <div
             style={{
-                display: "grid",
+                display: "flex",
+                flexDirection: "column",
                 gap: "var(--spacing-md)",
-                marginTop: "var(--spacing-lg)",
             }}
         >
-            {enrichedRides.map((ride: RideWithDetails) => {
+            {enrichedRides.map((ride) => {
                 // Check ob User bereits Fahrer oder Mitfahrer ist
                 const isUserDriver = ride.driverId === currentUserId;
-                const isUserParticipating = ride.passengers?.some((p) => (p as { passengerId: string }).passengerId === currentUserId) || false;
+                const isUserParticipating = ride.passengers.some((p) => p.passengerId === currentUserId);
 
                 return (
                     <RideCard

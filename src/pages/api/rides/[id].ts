@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { RideRepository } from "@/lib/repositories/rideRepository";
+import { RideUpdateData } from "@/entities/Ride";
 
 const rideRepository = new RideRepository();
 
@@ -12,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (req.method === "PUT") {
         try {
-            const updateData = req.body;
+            const updateData: RideUpdateData = req.body;
 
             // Validierung
             if (!updateData.departureTime || !updateData.departureLocation || !updateData.availableSeats) {
@@ -38,3 +39,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 }
+

@@ -1,6 +1,6 @@
 // src/lib/repositories/rideRepository.ts
 import { prisma } from "../prisma";
-import { Ride, RidePassenger } from "../../entities/Ride";
+import { Ride, RidePassenger, RideCreateData, RideUpdateData } from "../../entities/Ride";
 
 export class RideRepository {
     // Get all rides with details
@@ -25,6 +25,7 @@ export class RideRepository {
             where: { matchDayId },
             include: {
                 driver: true,
+                matchDay: true,
                 passengers: {
                     include: {
                         passenger: true,
@@ -52,14 +53,14 @@ export class RideRepository {
     }
 
     // Create new ride
-    async create(data: Omit<Ride, "id" | "createdAt" | "updatedAt">): Promise<Ride> {
+    async create(data: RideCreateData): Promise<Ride> {
         return await prisma.ride.create({
             data,
         });
     }
 
     // Update ride
-    async update(id: string, data: Partial<Omit<Ride, "id" | "createdAt" | "updatedAt">>): Promise<Ride> {
+    async update(id: string, data: RideUpdateData): Promise<Ride> {
         return await prisma.ride.update({
             where: { id },
             data,
@@ -152,3 +153,4 @@ export class RideRepository {
         });
     }
 }
+

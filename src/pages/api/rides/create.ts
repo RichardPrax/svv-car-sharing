@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { RideRepository } from "@/lib/repositories/rideRepository";
+import { RideCreateData } from "@/entities/Ride";
 
 const rideRepository = new RideRepository();
 
@@ -35,14 +36,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         // Mitfahrgelegenheit erstellen
-        const ride = await rideRepository.create({
+        const rideData: RideCreateData = {
             matchDayId: matchDayId.trim(),
             driverId: driverId.trim(),
             departureTime: parsedDepartureTime,
             departureLocation: departureLocation.trim(),
             availableSeats: parseInt(availableSeats.toString()),
             additionalInfo: additionalInfo ? additionalInfo.trim() : null,
-        });
+        };
+
+        const ride = await rideRepository.create(rideData);
 
         console.log("Ride created:", ride);
         return res.status(201).json({

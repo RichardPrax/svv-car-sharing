@@ -50,8 +50,7 @@ export default function RideDetails({ ride, isRideFull }: RideDetailsProps) {
                         fontWeight: "600",
                     }}
                 >
-                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                    Fahrer: {(ride.driver as any)?.firstName} {(ride.driver as any)?.lastName}
+                    Fahrer: {ride.driver.firstName} {ride.driver.lastName}
                 </p>
             </div>
             <div
@@ -69,7 +68,7 @@ export default function RideDetails({ ride, isRideFull }: RideDetailsProps) {
                         borderRadius: "var(--radius-sm)",
                     }}
                 >
-                    {ride.passengerCount}/{ride.availableSeats} Plätze
+                    {ride.passengers.length}/{ride.availableSeats} Plätze
                 </span>
             </div>
         </div>

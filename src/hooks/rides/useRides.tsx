@@ -1,10 +1,34 @@
 // src/hooks/rides/useRides.tsx
 import { useEffect, useState, useCallback } from "react";
 import { RideWithDetails } from "@/entities/Ride";
+import { UserProfile } from "@/entities/UserProfile";
+import { MatchDay } from "@/entities/MatchDay";
 
 interface UseRidesProps {
     matchId: string;
     refreshTrigger: number;
+}
+
+// API response type for rides
+interface RideApiResponse {
+    id: string;
+    matchDayId: string;
+    driverId: string;
+    departureTime: string;
+    departureLocation: string;
+    availableSeats: number;
+    additionalInfo: string | null;
+    createdAt: string;
+    updatedAt: string;
+    driver: UserProfile;
+    matchDay: MatchDay;
+    passengers: Array<{
+        id: string;
+        rideId: string;
+        passengerId: string;
+        joinedAt: string;
+        passenger: UserProfile;
+    }>;
 }
 
 export function useRides({ matchId, refreshTrigger }: UseRidesProps) {
@@ -24,41 +48,35 @@ export function useRides({ matchId, refreshTrigger }: UseRidesProps) {
                 throw new Error("Fehler beim Laden der Fahrten");
             }
 
-            const ridesData = await response.json();
+            const ridesData: RideApiResponse[] = await response.json();
 
-            // Transform the data to match RideWithDetails interface
-            const ridesWithDetails: RideWithDetails[] = ridesData.map(
-                (ride: {
-                    id: string;
-                    matchDayId: string;
-                    driverId: string;
-                    departureTime: string;
-                    departureLocation: string;
-                    availableSeats: number;
-                    additionalInfo?: string | null;
-                    createdAt: string;
-                    updatedAt: string;
-                    driver: unknown;
-                    passengers: unknown[];
-                    passengerCount: number;
-                    passengerNames?: string[];
-                }) => ({
-                    id: ride.id,
-                    matchDayId: ride.matchDayId,
-                    driverId: ride.driverId,
-                    departureTime: ride.departureTime,
-                    departureLocation: ride.departureLocation,
-                    availableSeats: ride.availableSeats,
-                    additionalInfo: ride.additionalInfo,
-                    createdAt: ride.createdAt,
-                    updatedAt: ride.updatedAt,
-                    driver: ride.driver,
-                    matchDay: ride.matchDayId, // Use matchDayId instead of matchDay object
-                    passengers: ride.passengers,
-                    passengerCount: ride.passengers?.length || 0,
-                    passengerNames: [], // TODO: Fix typing for passenger names
-                })
-            );
+            // Transform API response to proper RideWithDetails
+            const ridesWithDetails: RideWithDetails[] = ridesData.map((ride) => ({
+                id: ride.id,
+                matchDayId: ride.matchDayId,
+                driverId: ride.driverId,
+                departureTime: new Date(ride.departureTime),
+                departureLocation: ride.departureLocation,
+                availableSeats: ride.availableSeats,
+                additionalInfo: ride.additionalInfo,
+                createdAt: new Date(ride.createdAt),
+                updatedAt: new Date(ride.updatedAt),
+                driver: ride.driver,
+                matchDay: {
+                    ...ride.matchDay,
+                    date: new Date(ride.matchDay.date),
+                },
+                passengers: ride.passengers.map((p) => ({
+                    id: p.id,
+                    rideId: p.rideId,
+                    passengerId: p.passengerId,
+                    joinedAt: new Date(p.joinedAt),
+                    passenger: p.passenger,
+                })),
+                passengerCount: ride.passengers.length,
+                passengerNames: ride.passengers.map((p) => `${p.passenger.firstName} ${p.passenger.lastName}`),
+                driverName: `${ride.driver.firstName} ${ride.driver.lastName}`,
+            }));
 
             setRides(ridesWithDetails);
         } catch (error) {
@@ -80,3 +98,4 @@ export function useRides({ matchId, refreshTrigger }: UseRidesProps) {
         refetch: fetchRides,
     };
 }
+

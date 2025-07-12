@@ -20,12 +20,11 @@ export default function RideCard({ ride, currentUserId, isUserDriver, isUserPart
     const [editingRideId, setEditingRideId] = useState<string | null>(null);
 
     const isUserInRide = (): boolean => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return ride.passengers?.some((p: any) => p.passengerId === currentUserId) || false;
+        return ride.passengers.some((p) => p.passengerId === currentUserId);
     };
 
     const isRideFull = (): boolean => {
-        return ride.passengerCount >= ride.availableSeats;
+        return ride.passengers.length >= ride.availableSeats;
     };
 
     const isOwnRide = (): boolean => {
@@ -104,3 +103,4 @@ export default function RideCard({ ride, currentUserId, isUserDriver, isUserPart
         </div>
     );
 }
+
