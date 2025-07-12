@@ -119,16 +119,17 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
         >
             {enrichedRides.map((ride) => {
                 // Check ob User bereits Fahrer oder Mitfahrer ist
-                const isUserDriver = ride.driverId === currentUserId;
-                const isUserParticipating = ride.passengers.some((p) => p.passengerId === currentUserId);
+                const isUserDriverOfThisRide = ride.driverId === currentUserId;
+                const isUserPassengerOfThisRide = ride.passengers.some((p) => p.passengerId === currentUserId);
 
                 return (
                     <RideCard
                         key={ride.id}
                         ride={ride}
-                        currentUserId={currentUserId}
-                        isUserDriver={isUserDriver}
-                        isUserParticipating={isUserParticipating}
+                        isUserDriverOfThisRide={isUserDriverOfThisRide}
+                        isUserPassengerOfThisRide={isUserPassengerOfThisRide}
+                        hasExistingRide={hasExistingRide}
+                        isParticipating={isParticipating}
                         onJoinRide={handleJoinRide}
                         onLeaveRide={handleLeaveRide}
                         onRideUpdated={handleRideUpdated}

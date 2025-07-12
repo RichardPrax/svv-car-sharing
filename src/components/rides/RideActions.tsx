@@ -12,7 +12,10 @@ interface RideActionsProps {
 
 export default function RideActions({ isOwnRide, isUserInRide, isRideFull, isUserDriver, isUserParticipating, onEdit, onJoin, onLeave }: RideActionsProps) {
     // Bestimme, ob der "Mitfahren" Button deaktiviert werden soll
-    const canJoin = !isRideFull && !isUserDriver && !isUserParticipating;
+    // isUserDriver bedeutet hier: "Bietet der User bereits eine Fahrt für diesen Spieltag an"
+    // isUserParticipating bedeutet: "Ist der User bereits Mitfahrer in einer anderen Fahrt"
+    const canJoin = !isRideFull && !isUserDriver && !isUserParticipating && !isOwnRide;
+
     const getJoinButtonText = () => {
         if (isRideFull) return "Voll";
         if (isUserDriver) return "Sie fahren bereits";

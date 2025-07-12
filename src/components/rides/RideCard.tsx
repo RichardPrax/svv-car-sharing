@@ -8,27 +8,29 @@ import { EditRideForm } from "@/components/forms";
 
 interface RideCardProps {
     ride: RideWithDetails;
-    currentUserId: string | null;
-    isUserDriver: boolean;
-    isUserParticipating: boolean;
+    isUserDriverOfThisRide: boolean;
+    isUserPassengerOfThisRide: boolean;
+    hasExistingRide: boolean;
+    isParticipating: boolean;
     onJoinRide: (rideId: string) => void;
     onLeaveRide: (rideId: string) => void;
     onRideUpdated: () => void;
 }
 
-export default function RideCard({ ride, currentUserId, isUserDriver, isUserParticipating, onJoinRide, onLeaveRide, onRideUpdated }: RideCardProps) {
+export default function RideCard({
+    ride,
+    isUserDriverOfThisRide,
+    isUserPassengerOfThisRide,
+    hasExistingRide,
+    isParticipating,
+    onJoinRide,
+    onLeaveRide,
+    onRideUpdated,
+}: RideCardProps) {
     const [editingRideId, setEditingRideId] = useState<string | null>(null);
-
-    const isUserInRide = (): boolean => {
-        return ride.passengers.some((p) => p.passengerId === currentUserId);
-    };
 
     const isRideFull = (): boolean => {
         return ride.passengers.length >= ride.availableSeats;
-    };
-
-    const isOwnRide = (): boolean => {
-        return ride.driverId === currentUserId;
     };
 
     const handleEditRide = () => {
@@ -91,11 +93,11 @@ export default function RideCard({ ride, currentUserId, isUserDriver, isUserPart
             )}
 
             <RideActions
-                isOwnRide={isOwnRide()}
-                isUserInRide={isUserInRide()}
+                isOwnRide={isUserDriverOfThisRide}
+                isUserInRide={isUserPassengerOfThisRide}
                 isRideFull={isRideFull()}
-                isUserDriver={isUserDriver}
-                isUserParticipating={isUserParticipating}
+                isUserDriver={hasExistingRide}
+                isUserParticipating={isParticipating}
                 onEdit={handleEditRide}
                 onJoin={() => onJoinRide(ride.id)}
                 onLeave={() => onLeaveRide(ride.id)}
