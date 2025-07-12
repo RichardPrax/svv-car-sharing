@@ -37,7 +37,7 @@ export class MatchDayRepository {
         });
     }
 
-    // get upcoming match days
+    // Get upcoming match days
     async findUpcoming(limit?: number) {
         const now = new Date();
         return await prisma.matchDay.findMany({
