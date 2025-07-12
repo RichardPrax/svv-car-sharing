@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x", "rhel-openssl-3.0.x", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model UserProfile {
+  id         String   @id @default(cuid())
+  firstName  String   @map("first_name")
+  lastName   String   @map("last_name")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  drivenRides     Ride[]           @relation("RideDriver")
+  ridePassengers  RidePassenger[]
+
+  @@map("user_profiles")
+}
+
+model MatchDay {
+  id       String @id @default(cuid())
+  date     DateTime
+  time     String
+  location String
+  opponent String
+
+  // Relations
+  rides Ride[]
+
+  @@map("match_days")
+}
+
+model Ride {
+  id                 String   @id @default(cuid())
+  matchDayId         String   @map("match_day_id")
+  driverId           String   @map("driver_id")
+  departureTime      DateTime @map("departure_time")
+  departureLocation  String   @map("departure_location")
+  availableSeats     Int      @map("available_seats")
+  additionalInfo     String?  @map("additional_info")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  matchDay   MatchDay        @relation(fields: [matchDayId], references: [id], onDelete: Cascade)
+  driver     UserProfile     @relation("RideDriver", fields: [driverId], references: [id], onDelete: Cascade)
+  passengers RidePassenger[]
+
+  @@map("rides")
+}
+
+model RidePassenger {
+  id          String   @id @default(cuid())
+  rideId      String   @map("ride_id")
+  passengerId String   @map("passenger_id")
+  joinedAt    DateTime @default(now()) @map("joined_at")
+
+  // Relations
+  ride      Ride        @relation(fields: [rideId], references: [id], onDelete: Cascade)
+  passenger UserProfile @relation(fields: [passengerId], references: [id], onDelete: Cascade)
+
+  // Ensure a user can only join a ride once
+  @@unique([rideId, passengerId])
+  @@map("ride_passengers")
+}
