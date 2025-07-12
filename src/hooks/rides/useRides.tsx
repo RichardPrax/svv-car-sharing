@@ -74,7 +74,11 @@ export function useRides({ matchId, refreshTrigger }: UseRidesProps) {
                     passenger: p.passenger,
                 })),
                 passengerCount: ride.passengers.length,
-                passengerNames: ride.passengers.map((p) => `${p.passenger.firstName} ${p.passenger.lastName}`),
+                passengerNames: ride.passengers.map((p) => {
+                    const fullName = `${p.passenger.firstName} ${p.passenger.lastName}`;
+                    console.log(`Passenger ${p.passengerId}: firstName="${p.passenger.firstName}", lastName="${p.passenger.lastName}", fullName="${fullName}"`);
+                    return fullName;
+                }),
                 driverName: `${ride.driver.firstName} ${ride.driver.lastName}`,
             }));
 

@@ -54,11 +54,11 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
         }
     };
 
-    // Enriche Rides mit gecachten User-Namen
+    // Enriche Rides mit gecachten User-Namen (nur für Driver, da Passengers bereits korrekt von API kommen)
     const enrichedRides = rides.map((ride) => ({
         ...ride,
         driverName: getProfileName(ride.driverId),
-        passengerNames: ride.passengers.map((p) => getProfileName(p.passengerId)),
+        // passengerNames kommen bereits korrekt von der API über useRides
     }));
 
     if (loading) {
