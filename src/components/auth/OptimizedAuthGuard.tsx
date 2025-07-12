@@ -2,6 +2,7 @@
 import { useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
+import { LoadingSpinner } from "@/components/ui";
 
 interface OptimizedAuthGuardProps {
     children: React.ReactNode;
@@ -30,19 +31,7 @@ const OptimizedAuthGuard = ({ children }: OptimizedAuthGuardProps) => {
 
     // Loading state
     if (loading) {
-        return (
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    minHeight: "100vh",
-                    fontSize: "1.2rem",
-                }}
-            >
-                Lade...
-            </div>
-        );
+        return <LoadingSpinner message="Authentifizierung..." fullScreen />;
     }
 
     // Show content für public routes auch ohne user

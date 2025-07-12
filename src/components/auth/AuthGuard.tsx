@@ -3,6 +3,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabaseClient";
 import { User } from "@supabase/supabase-js";
+import { LoadingSpinner } from "@/components/ui";
 
 interface AuthGuardProps {
     children: React.ReactNode;
@@ -67,19 +68,7 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
 
     // Loading state
     if (loading) {
-        return (
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    minHeight: "100vh",
-                    fontSize: "1.2rem",
-                }}
-            >
-                Lade...
-            </div>
-        );
+        return <LoadingSpinner message="Authentifizierung..." fullScreen />;
     }
 
     // If on login page, show it regardless of auth state

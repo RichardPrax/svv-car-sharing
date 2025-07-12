@@ -55,3 +55,4 @@ export function useMatchDetail(matchId: string | string[] | undefined) {
         error,
     };
 }
+

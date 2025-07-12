@@ -6,6 +6,7 @@ import { useUserRideCheck, useUserParticipationCheck } from "@/hooks/rides";
 import { formatDate, formatTime } from "@/utils/dateTime";
 import { CreateRideForm } from "@/components/forms";
 import { RidesList } from "@/components/rides";
+import { LoadingSpinner } from "@/components/ui";
 
 export default function MatchDetailPage() {
     const router = useRouter();
@@ -65,35 +66,11 @@ export default function MatchDetailPage() {
 
     // Warte bis Router geladen ist
     if (!router.isReady) {
-        return (
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    minHeight: "100vh",
-                    backgroundColor: "var(--background)",
-                }}
-            >
-                <p style={{ color: "var(--text-secondary)" }}>Lade...</p>
-            </div>
-        );
+        return <LoadingSpinner message="Lade Seite..." fullScreen />;
     }
 
     if (loading) {
-        return (
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    minHeight: "100vh",
-                    backgroundColor: "var(--background)",
-                }}
-            >
-                <p style={{ color: "var(--text-secondary)" }}>Lade Spieltag...</p>
-            </div>
-        );
+        return <LoadingSpinner message="Lade Spieltag..." fullScreen />;
     }
 
     if (error || !match) {

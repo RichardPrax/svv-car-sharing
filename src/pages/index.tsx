@@ -1,5 +1,6 @@
 import { MatchDayList, NextMatchCard } from "@/components/matches";
 import { Header } from "@/components/layout";
+import { LoadingSpinner } from "@/components/ui";
 import { useMatches } from "@/hooks/matches/useMatches";
 import { isMatchInFuture, sortMatchesByDateTime } from "@/utils/dateTime";
 
@@ -12,7 +13,7 @@ export default function HomePage() {
     // Find the next upcoming match
     const nextMatch = sortedMatchDays.find((match) => isMatchInFuture(match.date, match.time));
 
-    if (loading) return <p>Lade...</p>;
+    if (loading) return <LoadingSpinner message="Lade Spieltage..." fullScreen />;
     if (error) return <p>Fehler beim Laden der Spieltage: {error}</p>;
 
     return (

@@ -5,6 +5,7 @@ import { useRides } from "@/hooks/rides";
 import { useRideActions } from "@/hooks/rides";
 import { useUserRideCheck, useUserParticipationCheck } from "@/hooks/rides";
 import RideCard from "./RideCard";
+import { LoadingSpinner } from "@/components/ui";
 
 interface RidesListProps {
     matchId: string;
@@ -62,17 +63,7 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
     }));
 
     if (loading) {
-        return (
-            <div
-                style={{
-                    textAlign: "center",
-                    padding: "var(--spacing-xl)",
-                    color: "var(--text-secondary)",
-                }}
-            >
-                Lade Fahrten...
-            </div>
-        );
+        return <LoadingSpinner message="Lade Fahrten..." />;
     }
 
     if (error) {
