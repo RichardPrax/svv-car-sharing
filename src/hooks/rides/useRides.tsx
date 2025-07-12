@@ -50,7 +50,7 @@ export function useRides({ matchId, refreshTrigger }: UseRidesProps) {
 
             const ridesData: RideApiResponse[] = await response.json();
 
-            // Transform API response to proper RideWithDetails
+            // Transform API response to use proper RideWithDetails
             const ridesWithDetails: RideWithDetails[] = ridesData.map((ride) => ({
                 id: ride.id,
                 matchDayId: ride.matchDayId,
