@@ -37,7 +37,7 @@ export class MatchDayRepository {
         });
     }
 
-    // Get upcoming match days
+    // get upcoming match days
     async findUpcoming(limit?: number) {
         const now = new Date();
         return await prisma.matchDay.findMany({
@@ -101,3 +101,4 @@ export class MatchDayRepository {
         return await this.findByDateRange(startOfMonth, endOfMonth);
     }
 }
+
