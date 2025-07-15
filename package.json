@@ -44,7 +44,7 @@
         "clean": "rm -rf .next && rm -rf node_modules/.cache"
     },
     "dependencies": {
-        "@prisma/client": "^6.10.1",
+        "@prisma/client": "^6.11.1",
         "@supabase/supabase-js": "^2.50.5",
         "next": "15.3.5",
         "prisma": "^6.11.1",
