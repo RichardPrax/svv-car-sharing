@@ -47,7 +47,7 @@ export default function MatchesPage() {
                                 gap: "var(--spacing-sm)",
                             }}
                         >
-                            <span>⚽</span>
+                            <span>🏐</span>
                             Spieltage
                         </h1>
                         <p

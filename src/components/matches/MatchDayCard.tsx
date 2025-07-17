@@ -12,7 +12,7 @@ export default function MatchDayCard({ match }: Props) {
     const router = useRouter();
 
     const handleCardClick = () => {
-        router.push(`/match/${match.id}`);
+        router.push(`/matches/${match.id}`);
     };
 
     return (
@@ -131,3 +131,4 @@ export default function MatchDayCard({ match }: Props) {
         </div>
     );
 }
+

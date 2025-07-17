@@ -4,6 +4,16 @@
     --background: #f8fafc;
     --foreground: #171717;
 
+    /* Primary Colors */
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --error: #ef4444;
+    --error-hover: #dc2626;
+
+    /* Surface */
+    --surface: #ffffff;
+    --border: #e2e8f0;
+
     /* Match Day Card Variables */
     --card-background: #ffffff;
     --card-border: #e2e8f0;
@@ -225,5 +235,48 @@ body {
         font-size: 0.85rem !important;
         padding: var(--spacing-xs) var(--spacing-sm) !important;
     }
+}
+
+/* Header Navigation - Responsive */
+@media (min-width: 1024px) {
+    .desktop-nav {
+        display: flex !important;
+    }
+
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+}
+
+@media (max-width: 1023px) {
+    .desktop-nav {
+        display: none !important;
+    }
+
+    .mobile-menu-toggle {
+        display: block !important;
+    }
+}
+
+/* Mobile Menu Animation */
+.mobile-menu {
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header Styles */
+.app-header {
+    backdrop-filter: blur(8px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 

@@ -24,7 +24,7 @@ export default function HomePage() {
             title: "Spieltage",
             description: "Spielpläne und Fahrgemeinschaften",
             route: "/matches",
-            icon: "⚽",
+            icon: "🏐",
             color: "#10B981",
         },
         {
