@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout";
 import { useRouter } from "next/router";
+import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 
 interface CategoryCard {
     title: string;
@@ -11,6 +12,7 @@ interface CategoryCard {
 
 export default function HomePage() {
     const router = useRouter();
+    const { userProfile } = useOptimizedAuth();
 
     const categories: CategoryCard[] = [
         {
@@ -52,8 +54,8 @@ export default function HomePage() {
             <Header />
             <div
                 style={{
-                    padding: "var(--spacing-lg) 0",
-                    minHeight: "100vh",
+                    padding: "var(--spacing-xl) 0",
+                    minHeight: "calc(100vh - 80px)", // Account for header height
                     backgroundColor: "var(--background)",
                 }}
             >
@@ -66,31 +68,40 @@ export default function HomePage() {
                 >
                     {/* Willkommen Section */}
                     <section style={{ marginBottom: "var(--spacing-xl)", textAlign: "center" }}>
-                        <h1
+                        <div
                             style={{
-                                fontSize: "2.5rem",
-                                fontWeight: "800",
-                                marginBottom: "var(--spacing-md)",
-                                color: "var(--text-primary)",
-                                background: "linear-gradient(135deg, #3B82F6, #10B981)",
-                                backgroundClip: "text",
-                                WebkitBackgroundClip: "text",
-                                WebkitTextFillColor: "transparent",
+                                marginBottom: "var(--spacing-lg)",
                             }}
                         >
-                            SVV Teammanager
-                        </h1>
-                        <p
-                            style={{
-                                fontSize: "1.2rem",
-                                color: "var(--text-secondary)",
-                                maxWidth: "600px",
-                                margin: "0 auto",
-                                lineHeight: "1.6",
-                            }}
-                        >
-                            Willkommen! Wähle einen Bereich aus, um loszulegen.
-                        </p>
+                            <h1
+                                style={{
+                                    fontSize: "clamp(1.8rem, 4vw, 2.2rem)",
+                                    fontWeight: "700",
+                                    marginBottom: "var(--spacing-sm)",
+                                    color: "var(--text-primary)",
+                                    background: "linear-gradient(135deg, #3B82F6, #10B981)",
+                                    backgroundClip: "text",
+                                    WebkitBackgroundClip: "text",
+                                    WebkitTextFillColor: "transparent",
+                                    textAlign: "center",
+                                    lineHeight: "1.2",
+                                }}
+                            >
+                                {userProfile ? `Willkommen zurück, ${userProfile.firstName}!` : "Willkommen!"}
+                            </h1>
+                            <p
+                                style={{
+                                    fontSize: "clamp(1rem, 2.5vw, 1.1rem)",
+                                    color: "var(--text-secondary)",
+                                    maxWidth: "700px",
+                                    margin: "0 auto",
+                                    lineHeight: "1.6",
+                                    fontWeight: "400",
+                                }}
+                            >
+                                Wähle einen Bereich aus, um loszulegen:
+                            </p>
+                        </div>
                     </section>
 
                     {/* Kategorien Grid */}
