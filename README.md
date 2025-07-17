@@ -151,14 +151,6 @@ npm run clean                # Cache leeren
 └── public/                 # Statische Assets
 ```
 
-## 🎯 Features
-
--   **Spieltag-Management**: Übersicht und Details von Spieltagen
--   **Fahrgemeinschaften**: Erstellen und Verwalten von Fahrten
--   **Authentifizierung**: Sichere Benutzeranmeldung
--   **Responsive Design**: Funktioniert auf Desktop und Mobile
--   **Lokale Entwicklung**: Vollständig offline entwickelbar
-
 ## 🔧 Entwicklung
 
 ### Spieltage hinzufügen
@@ -208,21 +200,3 @@ npm run build:production
 ```bash
 npm run start
 ```
-
-## 🤝 Beitragen
-
-1. Fork des Repositories erstellen
-2. Feature-Branch erstellen (`git checkout -b feature/AmazingFeature`)
-3. Änderungen committen (`git commit -m 'Add some AmazingFeature'`)
-4. Branch pushen (`git push origin feature/AmazingFeature`)
-5. Pull Request erstellen
-
-## 📞 Support
-
-Bei Fragen oder Problemen:
-
--   Issue im GitHub-Repository erstellen
--   Dokumentation in `docs/` Ordner konsultieren
--   **[GETTING_STARTED.md](./GETTING_STARTED.md)** für Einsteiger
--   **[COMMANDS.md](./COMMANDS.md)** für Befehlsreferenz
-
