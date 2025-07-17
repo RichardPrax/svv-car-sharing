@@ -1,0 +1,160 @@
+/* Auth Components Shared Styles */
+
+/* Auth Container */
+.authContainer {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--background);
+    padding: var(--spacing-md);
+}
+
+.authCard {
+    width: 100%;
+    max-width: 400px;
+    background: var(--card-background);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--card-border);
+    padding: var(--spacing-xl);
+}
+
+/* Auth Header */
+.authHeader {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.authTitle {
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.875rem;
+    font-weight: 700;
+}
+
+.authSubtitle {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+/* Auth Field */
+.authField {
+    margin-bottom: var(--spacing-lg);
+}
+
+.authLabel {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Auth Error */
+.authError {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-lg);
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+/* Auth Success */
+.authSuccess {
+    text-align: center;
+}
+
+.successIcon {
+    width: 60px;
+    height: 60px;
+    background-color: #10b981;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-lg);
+    color: white;
+    font-size: 24px;
+}
+
+.successTitle {
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.successMessage {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: var(--spacing-xl);
+}
+
+.successButton {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.successButton:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Auth Link */
+.authLinkContainer {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--card-border);
+}
+
+.authLinkText {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.authLink {
+    color: var(--text-accent);
+    text-decoration: underline;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: color 0.2s ease;
+}
+
+.authLink:hover {
+    color: var(--primary-hover);
+}
+
+/* Login Form */
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.loginButton {
+    width: 100%;
+}
+
+.loginFooter {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
