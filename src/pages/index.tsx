@@ -1,4 +1,3 @@
-import { Header } from "@/components/layout";
 import { useRouter } from "next/router";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 
@@ -51,7 +50,6 @@ export default function HomePage() {
 
     return (
         <>
-            <Header />
             <div
                 style={{
                     padding: "var(--spacing-xl) 0",

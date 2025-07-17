@@ -1,9 +1,6 @@
-import { Header } from "@/components/layout";
-
 export default function StatisticsPage() {
     return (
         <>
-            <Header />
             <div
                 style={{
                     padding: "var(--spacing-lg) 0",
@@ -35,16 +32,6 @@ export default function StatisticsPage() {
                             <span>📊</span>
                             Statistiken
                         </h1>
-                        <p
-                            style={{
-                                fontSize: "1.1rem",
-                                color: "var(--text-secondary)",
-                                maxWidth: "600px",
-                                margin: "0 auto",
-                            }}
-                        >
-                            Spieler- und Teamstatistiken im Überblick
-                        </p>
                     </section>
 
                     {/* Coming Soon Content */}

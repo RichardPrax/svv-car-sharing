@@ -1,9 +1,6 @@
-import { Header } from "@/components/layout";
-
 export default function PenaltiesPage() {
     return (
         <>
-            <Header />
             <div
                 style={{
                     padding: "var(--spacing-lg) 0",
@@ -35,16 +32,6 @@ export default function PenaltiesPage() {
                             <span>⚖️</span>
                             Strafen
                         </h1>
-                        <p
-                            style={{
-                                fontSize: "1.1rem",
-                                color: "var(--text-secondary)",
-                                maxWidth: "600px",
-                                margin: "0 auto",
-                            }}
-                        >
-                            Strafenkatalog und Verwaltung von Vereinsstrafen
-                        </p>
                     </section>
 
                     {/* Coming Soon Content */}

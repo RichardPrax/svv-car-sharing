@@ -1,5 +1,4 @@
 import { MatchDayList, NextMatchCard } from "@/components/matches";
-import { Header } from "@/components/layout";
 import { LoadingSpinner } from "@/components/ui";
 import { useMatches } from "@/hooks/matches/useMatches";
 import { isMatchInFuture, sortMatchesByDateTime } from "@/utils/dateTime";
@@ -18,7 +17,6 @@ export default function MatchesPage() {
 
     return (
         <>
-            <Header />
             <div
                 style={{
                     padding: "var(--spacing-lg) 0",
@@ -50,16 +48,6 @@ export default function MatchesPage() {
                             <span>🏐</span>
                             Spieltage
                         </h1>
-                        <p
-                            style={{
-                                fontSize: "1.1rem",
-                                color: "var(--text-secondary)",
-                                maxWidth: "600px",
-                                margin: "0 auto",
-                            }}
-                        >
-                            Alle Spieltage und Fahrgemeinschaften im Überblick
-                        </p>
                     </section>
 
                     {/* Nächster Spieltag Section */}
