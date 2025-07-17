@@ -1,0 +1,105 @@
+import { MatchDayList, NextMatchCard } from "@/components/matches";
+import { Header } from "@/components/layout";
+import { LoadingSpinner } from "@/components/ui";
+import { useMatches } from "@/hooks/matches/useMatches";
+import { isMatchInFuture, sortMatchesByDateTime } from "@/utils/dateTime";
+
+export default function MatchesPage() {
+    const { matchDays, loading, error } = useMatches();
+
+    // Sort all matches by date and time
+    const sortedMatchDays = sortMatchesByDateTime(matchDays);
+
+    // Find the next upcoming match
+    const nextMatch = sortedMatchDays.find((match) => isMatchInFuture(match.date, match.time));
+
+    if (loading) return <LoadingSpinner message="Lade Spieltage..." fullScreen />;
+    if (error) return <p>Fehler beim Laden der Spieltage: {error}</p>;
+
+    return (
+        <>
+            <Header />
+            <div
+                style={{
+                    padding: "var(--spacing-lg) 0",
+                    minHeight: "100vh",
+                    backgroundColor: "var(--background)",
+                }}
+            >
+                <div
+                    style={{
+                        maxWidth: "1200px",
+                        margin: "0 auto",
+                        padding: "0 var(--spacing-md)",
+                    }}
+                >
+                    {/* Page Header */}
+                    <section style={{ marginBottom: "var(--spacing-xl)", textAlign: "center" }}>
+                        <h1
+                            style={{
+                                fontSize: "2.5rem",
+                                fontWeight: "800",
+                                marginBottom: "var(--spacing-md)",
+                                color: "var(--text-primary)",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                gap: "var(--spacing-sm)",
+                            }}
+                        >
+                            <span>⚽</span>
+                            Spieltage
+                        </h1>
+                        <p
+                            style={{
+                                fontSize: "1.1rem",
+                                color: "var(--text-secondary)",
+                                maxWidth: "600px",
+                                margin: "0 auto",
+                            }}
+                        >
+                            Alle Spieltage und Fahrgemeinschaften im Überblick
+                        </p>
+                    </section>
+
+                    {/* Nächster Spieltag Section */}
+                    {nextMatch && (
+                        <section style={{ marginBottom: "var(--spacing-xl)" }}>
+                            <h2
+                                style={{
+                                    fontSize: "1.75rem",
+                                    fontWeight: "700",
+                                    marginBottom: "var(--spacing-lg)",
+                                    color: "var(--text-primary)",
+                                    textAlign: "center",
+                                    padding: "0 var(--spacing-md)",
+                                }}
+                            >
+                                Nächster Spieltag
+                            </h2>
+                            <NextMatchCard match={nextMatch} />
+                        </section>
+                    )}
+
+                    {/* Alle Spieltage Section */}
+                    <section>
+                        <h2
+                            style={{
+                                fontSize: "1.75rem",
+                                fontWeight: "700",
+                                marginBottom: "var(--spacing-lg)",
+                                color: "var(--text-primary)",
+                                textAlign: "center",
+                                padding: "0 var(--spacing-md)",
+                            }}
+                        >
+                            Alle Spieltage
+                        </h2>
+                        <MatchDayList matchDays={sortedMatchDays} />
+                    </section>
+                </div>
+            </div>
+        </>
+    );
+}
+
