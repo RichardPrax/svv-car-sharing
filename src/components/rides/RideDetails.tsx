@@ -1,5 +1,6 @@
 // src/components/rides/RideDetails.tsx
 import { RideWithDetails } from "@/entities/Ride";
+import styles from "./Rides.module.css";
 
 interface RideDetailsProps {
     ride: RideWithDetails;
@@ -8,66 +9,22 @@ interface RideDetailsProps {
 
 export default function RideDetails({ ride, isRideFull }: RideDetailsProps) {
     return (
-        <div
-            style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "flex-start",
-                marginBottom: "var(--spacing-md)",
-                flexWrap: "wrap",
-                gap: "var(--spacing-sm)",
-            }}
-        >
-            <div>
-                <h4
-                    style={{
-                        fontSize: "1.125rem",
-                        fontWeight: "700",
-                        color: "var(--text-primary)",
-                        margin: "0 0 var(--spacing-xs) 0",
-                    }}
-                >
+        <div className={styles.rideDetails}>
+            <div className={styles.rideDetailsInfo}>
+                <h4 className={styles.rideDetailsTitle}>
                     Abfahrt:{" "}
                     {(() => {
                         const date = new Date(ride.departureTime);
                         return `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")} Uhr`;
                     })()}
                 </h4>
-                <p
-                    style={{
-                        fontSize: "0.875rem",
-                        color: "var(--text-secondary)",
-                        margin: 0,
-                    }}
-                >
-                    von {ride.departureLocation}
-                </p>
-                <p
-                    style={{
-                        fontSize: "0.75rem",
-                        color: "var(--text-accent)",
-                        margin: "var(--spacing-xs) 0 0 0",
-                        fontWeight: "600",
-                    }}
-                >
+                <p className={styles.rideDetailsLocation}>von {ride.departureLocation}</p>
+                <p className={styles.rideDetailsDriver}>
                     Fahrer: {ride.driver.firstName} {ride.driver.lastName}
                 </p>
             </div>
-            <div
-                style={{
-                    textAlign: "right",
-                }}
-            >
-                <span
-                    style={{
-                        fontSize: "0.875rem",
-                        fontWeight: "600",
-                        color: isRideFull ? "#dc2626" : "var(--text-accent)",
-                        backgroundColor: isRideFull ? "#fef2f2" : "#f0fdf4",
-                        padding: "var(--spacing-xs) var(--spacing-sm)",
-                        borderRadius: "var(--radius-sm)",
-                    }}
-                >
+            <div className={styles.rideDetailsSeats}>
+                <span className={`${styles.rideDetailsSeatsCount} ${isRideFull ? styles.rideDetailsSeatsFull : styles.rideDetailsSeatsAvailable}`}>
                     {ride.passengers.length}/{ride.availableSeats} Plätze
                 </span>
             </div>

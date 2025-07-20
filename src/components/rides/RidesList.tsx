@@ -6,6 +6,7 @@ import { useRideActions } from "@/hooks/rides";
 import { useUserRideCheck, useUserParticipationCheck } from "@/hooks/rides";
 import RideCard from "./RideCard";
 import { LoadingSpinner } from "@/components/ui";
+import styles from "./Rides.module.css";
 
 interface RidesListProps {
     matchId: string;
@@ -67,28 +68,12 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
     }
 
     if (error) {
-        return (
-            <div
-                style={{
-                    textAlign: "center",
-                    padding: "var(--spacing-xl)",
-                    color: "var(--danger)",
-                }}
-            >
-                {error}
-            </div>
-        );
+        return <div className={styles.ridesListError}>{error}</div>;
     }
 
     if (enrichedRides.length === 0) {
         return (
-            <div
-                style={{
-                    textAlign: "center",
-                    padding: "var(--spacing-xl)",
-                    color: "var(--text-secondary)",
-                }}
-            >
+            <div className={styles.ridesListEmpty}>
                 Noch keine Fahrten erstellt.
                 {!hasExistingRide && !isParticipating && (
                     <>
@@ -101,13 +86,7 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
     }
 
     return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "var(--spacing-md)",
-            }}
-        >
+        <div className={styles.ridesList}>
             {enrichedRides.map((ride) => {
                 // Check ob User bereits Fahrer oder Mitfahrer ist
                 const isUserDriverOfThisRide = ride.driverId === currentUserId;

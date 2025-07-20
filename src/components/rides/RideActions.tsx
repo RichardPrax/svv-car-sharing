@@ -1,4 +1,6 @@
 // src/components/rides/RideActions.tsx
+import styles from "./Rides.module.css";
+
 interface RideActionsProps {
     isOwnRide: boolean;
     isUserInRide: boolean;
@@ -31,67 +33,22 @@ export default function RideActions({ isOwnRide, isUserInRide, isRideFull, isUse
     };
 
     return (
-        <div
-            style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                flexWrap: "wrap",
-                gap: "var(--spacing-sm)",
-            }}
-        >
-            <div>
+        <div className={styles.rideActions}>
+            <div className={styles.rideActionsLeft}>
                 {isOwnRide && (
-                    <div style={{ display: "flex", gap: "var(--spacing-xs)" }}>
-                        <span
-                            style={{
-                                fontSize: "0.75rem",
-                                fontWeight: "600",
-                                color: "var(--text-accent)",
-                                backgroundColor: "#f0fdf4",
-                                padding: "var(--spacing-xs) var(--spacing-sm)",
-                                borderRadius: "var(--radius-sm)",
-                            }}
-                        >
-                            Ihre Fahrt
-                        </span>
-                        <button
-                            onClick={onEdit}
-                            style={{
-                                fontSize: "0.75rem",
-                                fontWeight: "600",
-                                color: "var(--text-primary)",
-                                backgroundColor: "var(--card-background)",
-                                border: "1px solid var(--card-border)",
-                                padding: "var(--spacing-xs) var(--spacing-sm)",
-                                borderRadius: "var(--radius-sm)",
-                                cursor: "pointer",
-                                transition: "all 0.2s ease-in-out",
-                            }}
-                        >
+                    <>
+                        <span className={styles.ownRideIndicator}>Ihre Fahrt</span>
+                        <button onClick={onEdit} className={styles.editButton}>
                             ✏️ Bearbeiten
                         </button>
-                    </div>
+                    </>
                 )}
             </div>
-            <div>
+            <div className={styles.rideActionsRight}>
                 {!isOwnRide && (
                     <>
                         {isUserInRide ? (
-                            <button
-                                onClick={onLeave}
-                                style={{
-                                    padding: "var(--spacing-xs) var(--spacing-sm)",
-                                    border: "1px solid #dc2626",
-                                    borderRadius: "var(--radius-sm)",
-                                    fontSize: "0.875rem",
-                                    fontWeight: "600",
-                                    color: "#dc2626",
-                                    backgroundColor: "white",
-                                    cursor: "pointer",
-                                    transition: "all 0.2s ease-in-out",
-                                }}
-                            >
+                            <button onClick={onLeave} className={styles.leaveButton}>
                                 Aussteigen
                             </button>
                         ) : (
@@ -99,18 +56,7 @@ export default function RideActions({ isOwnRide, isUserInRide, isRideFull, isUse
                                 onClick={onJoin}
                                 disabled={!canJoin}
                                 title={getJoinButtonTitle()}
-                                style={{
-                                    padding: "var(--spacing-xs) var(--spacing-sm)",
-                                    border: "none",
-                                    borderRadius: "var(--radius-sm)",
-                                    fontSize: "0.875rem",
-                                    fontWeight: "600",
-                                    color: "white",
-                                    backgroundColor: canJoin ? "var(--text-accent)" : "#9ca3af",
-                                    cursor: canJoin ? "pointer" : "not-allowed",
-                                    transition: "all 0.2s ease-in-out",
-                                    opacity: canJoin ? 1 : 0.7,
-                                }}
+                                className={`${styles.joinButton} ${canJoin ? styles.joinButtonEnabled : styles.joinButtonDisabled}`}
                             >
                                 {getJoinButtonText()}
                             </button>

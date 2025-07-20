@@ -5,6 +5,7 @@ import RideDetails from "./RideDetails";
 import RidePassengers from "./RidePassengers";
 import RideActions from "./RideActions";
 import { EditRideForm } from "@/components/forms";
+import styles from "./Rides.module.css";
 
 interface RideCardProps {
     ride: RideWithDetails;
@@ -56,39 +57,14 @@ export default function RideCard({
     }
 
     return (
-        <div
-            style={{
-                backgroundColor: "var(--card-background)",
-                border: "1px solid var(--card-border)",
-                borderRadius: "var(--radius-lg)",
-                padding: "var(--spacing-lg)",
-                transition: "all 0.2s ease-in-out",
-            }}
-        >
+        <div className={styles.rideCard}>
             <RideDetails ride={ride} isRideFull={isRideFull()} />
 
             <RidePassengers passengerCount={ride.passengerCount} passengerNames={ride.passengerNames} />
 
             {ride.additionalInfo && (
-                <div
-                    style={{
-                        backgroundColor: "var(--background)",
-                        padding: "var(--spacing-sm)",
-                        borderRadius: "var(--radius-sm)",
-                        marginBottom: "var(--spacing-md)",
-                        borderLeft: "3px solid var(--text-accent)",
-                    }}
-                >
-                    <p
-                        style={{
-                            fontSize: "0.875rem",
-                            color: "var(--text-secondary)",
-                            margin: 0,
-                            fontStyle: "italic",
-                        }}
-                    >
-                        &quot;{ride.additionalInfo}&quot;
-                    </p>
+                <div className={styles.rideAdditionalInfo}>
+                    <p className={styles.rideAdditionalInfoText}>&quot;{ride.additionalInfo}&quot;</p>
                 </div>
             )}
 
