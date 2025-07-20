@@ -1,0 +1,239 @@
+/* Forms Components Shared Styles */
+
+/* Form Field */
+.formField {
+    margin-bottom: var(--spacing-md);
+}
+
+.formLabel {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.formError {
+    font-size: 0.75rem;
+    color: #dc2626;
+    margin-top: var(--spacing-xs);
+    margin: var(--spacing-xs) 0 0 0;
+}
+
+/* Input */
+.input {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    background-color: var(--card-background);
+    color: var(--text-primary);
+    box-sizing: border-box;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--text-accent);
+}
+
+.inputError {
+    border-color: #dc2626;
+}
+
+/* Select */
+.select {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    background-color: var(--card-background);
+    color: var(--text-primary);
+    box-sizing: border-box;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.select:focus {
+    outline: none;
+    border-color: var(--text-accent);
+}
+
+.selectError {
+    border-color: #dc2626;
+}
+
+/* Textarea */
+.textarea {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    background-color: var(--card-background);
+    color: var(--text-primary);
+    resize: vertical;
+    box-sizing: border-box;
+    font-family: inherit;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.textarea:focus {
+    outline: none;
+    border-color: var(--text-accent);
+}
+
+.textareaError {
+    border-color: #dc2626;
+}
+
+/* Button */
+.button {
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Button Variants */
+.buttonPrimary {
+    background-color: var(--text-accent);
+    color: white;
+    border: none;
+}
+
+.buttonPrimary:hover {
+    background-color: var(--primary-hover);
+}
+
+.buttonSecondary {
+    background-color: var(--card-background);
+    color: var(--text-secondary);
+    border: 1px solid var(--card-border);
+}
+
+.buttonSecondary:hover {
+    background-color: var(--background);
+    color: var(--text-primary);
+}
+
+.buttonDanger {
+    background-color: #dc2626;
+    color: white;
+    border: none;
+}
+
+.buttonDanger:hover {
+    background-color: #b91c1c;
+}
+
+/* Button Sizes */
+.buttonSmall {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.75rem;
+}
+
+.buttonMedium {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.875rem;
+}
+
+.buttonLarge {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: 1rem;
+}
+
+/* Button States */
+.buttonDisabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Create/Edit Ride Form */
+.rideForm {
+    background-color: var(--card-background);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.rideFormTitle {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+}
+
+.rideFormError {
+    background-color: #fef2f2;
+    color: #dc2626;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-md);
+    font-size: 0.875rem;
+}
+
+.rideFormGrid {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+.rideFormActions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+.rideFormButton {
+    width: 100%;
+}
+
+/* Delete Confirmation */
+.deleteConfirm {
+    text-align: center;
+    padding: var(--spacing-lg);
+}
+
+.deleteConfirmTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #dc2626;
+    margin-bottom: var(--spacing-md);
+}
+
+.deleteConfirmMessage {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.5;
+}
+
+.deleteConfirmActions {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-xs);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.deleteConfirmButton {
+    flex: 1;
+    min-width: 80px;
+}
+
+.deleteConfirmButtonDanger {
+    flex: 1;
+    min-width: 100px;
+}
+
