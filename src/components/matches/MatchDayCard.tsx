@@ -2,6 +2,7 @@
 import { MatchDay } from "@/entities/MatchDay";
 import { useRouter } from "next/router";
 import { formatDate, formatTime, isMatchInPast } from "@/utils/dateTime";
+import styles from "./Matches.module.css";
 
 type Props = {
     match: MatchDay;
@@ -15,117 +16,27 @@ export default function MatchDayCard({ match }: Props) {
         router.push(`/matches/${match.id}`);
     };
 
+    const cardClasses = [styles.matchCard, isPast && styles.matchCardPast].filter(Boolean).join(" ");
+
     return (
-        <div
-            className={`match-card ${isPast ? "match-card--past" : ""}`}
-            onClick={handleCardClick}
-            style={{
-                backgroundColor: isPast ? "var(--card-past-background)" : "var(--card-background)",
-                borderColor: isPast ? "var(--card-past-border)" : "var(--card-border)",
-                borderWidth: "1px",
-                borderStyle: "solid",
-                borderRadius: "var(--radius-lg)",
-                boxShadow: "var(--card-shadow)",
-                padding: "var(--spacing-lg)",
-                width: "100%",
-                transition: "all 0.2s ease-in-out",
-                cursor: "pointer",
-            }}
-        >
-            <div className="match-card__content">
-                <div className="match-card__header">
-                    <div className="match-card__date-time">
-                        <p
-                            className="match-card__date"
-                            style={{
-                                fontSize: "1.125rem",
-                                fontWeight: "700",
-                                color: "var(--text-primary)",
-                                margin: "0 0 var(--spacing-xs) 0",
-                                lineHeight: "1.4",
-                            }}
-                        >
-                            {formatDate(match.date)}
-                        </p>
-                        <p
-                            className="match-card__time"
-                            style={{
-                                fontSize: "0.875rem",
-                                color: "var(--text-secondary)",
-                                margin: "0",
-                            }}
-                        >
-                            {formatTime(match.time)}
-                        </p>
-                    </div>
-                    {isPast && (
-                        <div
-                            className="match-card__past-indicator"
-                            style={{
-                                fontSize: "0.75rem",
-                                color: "var(--text-accent)",
-                                fontWeight: "600",
-                                backgroundColor: "var(--card-past-border)",
-                                padding: "var(--spacing-xs) var(--spacing-sm)",
-                                borderRadius: "var(--radius-sm)",
-                                whiteSpace: "nowrap",
-                            }}
-                        >
-                            Beendet
-                        </div>
-                    )}
+        <div className={cardClasses} onClick={handleCardClick}>
+            <div className={styles.matchCardHeader}>
+                <div className={styles.matchCardDateTime}>
+                    <p className={styles.matchCardDate}>{formatDate(match.date)}</p>
+                    <p className={styles.matchCardTime}>{formatTime(match.time)}</p>
+                </div>
+                {isPast && <div className={styles.matchCardPastIndicator}>Beendet</div>}
+            </div>
+
+            <div className={styles.matchCardDetails}>
+                <div className={styles.matchCardDetailRow}>
+                    <span className={styles.matchCardDetailLabel}>Gegner:</span>
+                    <span className={styles.matchCardDetailValue}>{match.opponent}</span>
                 </div>
 
-                <div
-                    className="match-card__details"
-                    style={{
-                        marginTop: "var(--spacing-md)",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "var(--spacing-xs)",
-                    }}
-                >
-                    <div className="match-card__detail-row">
-                        <span
-                            style={{
-                                fontSize: "0.875rem",
-                                fontWeight: "600",
-                                color: "var(--text-primary)",
-                            }}
-                        >
-                            Gegner:
-                        </span>
-                        <span
-                            style={{
-                                fontSize: "0.875rem",
-                                color: "var(--text-secondary)",
-                                marginLeft: "var(--spacing-xs)",
-                            }}
-                        >
-                            {match.opponent}
-                        </span>
-                    </div>
-
-                    <div className="match-card__detail-row">
-                        <span
-                            style={{
-                                fontSize: "0.875rem",
-                                fontWeight: "600",
-                                color: "var(--text-primary)",
-                            }}
-                        >
-                            Ort:
-                        </span>
-                        <span
-                            style={{
-                                fontSize: "0.875rem",
-                                color: "var(--text-secondary)",
-                                marginLeft: "var(--spacing-xs)",
-                            }}
-                        >
-                            {match.location}
-                        </span>
-                    </div>
+                <div className={styles.matchCardDetailRow}>
+                    <span className={styles.matchCardDetailLabel}>Ort:</span>
+                    <span className={styles.matchCardDetailValue}>{match.location}</span>
                 </div>
             </div>
         </div>

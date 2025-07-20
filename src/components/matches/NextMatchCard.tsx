@@ -2,6 +2,7 @@
 import { MatchDay } from "@/entities/MatchDay";
 import { useRouter } from "next/router";
 import { formatDate, formatTime } from "@/utils/dateTime";
+import styles from "./Matches.module.css";
 
 type Props = {
     match: MatchDay;
@@ -15,116 +16,21 @@ export default function NextMatchCard({ match }: Props) {
     };
 
     return (
-        <div
-            className="next-match-card"
-            onClick={handleCardClick}
-            style={{
-                backgroundColor: "var(--card-background)",
-                borderColor: "var(--card-border)",
-                borderWidth: "2px",
-                borderStyle: "solid",
-                borderRadius: "var(--radius-lg)",
-                boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
-                padding: "var(--spacing-xl)",
-                width: "100%",
-                maxWidth: "600px",
-                margin: "0 auto",
-                transition: "all 0.2s ease-in-out",
-                background: "linear-gradient(135deg, var(--card-background) 0%, #f1f5f9 100%)",
-                cursor: "pointer",
-            }}
-        >
-            <div className="next-match-card__content">
-                <div
-                    className="next-match-card__header"
-                    style={{
-                        textAlign: "center",
-                        marginBottom: "var(--spacing-lg)",
-                    }}
-                >
-                    <p
-                        className="next-match-card__date"
-                        style={{
-                            fontSize: "1.5rem",
-                            fontWeight: "700",
-                            color: "var(--text-primary)",
-                            margin: "0 0 var(--spacing-xs) 0",
-                            lineHeight: "1.4",
-                        }}
-                    >
-                        {formatDate(match.date)}
-                    </p>
-                    <p
-                        className="next-match-card__time"
-                        style={{
-                            fontSize: "1.125rem",
-                            color: "var(--text-accent)",
-                            fontWeight: "600",
-                            margin: "0",
-                        }}
-                    >
-                        {formatTime(match.time)}
-                    </p>
+        <div className={styles.nextMatchCard} onClick={handleCardClick}>
+            <div className={styles.nextMatchCardHeader}>
+                <p className={styles.nextMatchCardDate}>{formatDate(match.date)}</p>
+                <p className={styles.nextMatchCardTime}>{formatTime(match.time)}</p>
+            </div>
+
+            <div className={styles.nextMatchCardDetails}>
+                <div className={styles.nextMatchCardDetail}>
+                    <span className={styles.nextMatchCardDetailLabel}>Gegner</span>
+                    <span className={styles.nextMatchCardDetailValue}>{match.opponent}</span>
                 </div>
 
-                <div
-                    className="next-match-card__details"
-                    style={{
-                        display: "grid",
-                        gridTemplateColumns: "1fr 1fr",
-                        gap: "var(--spacing-lg)",
-                        textAlign: "center",
-                    }}
-                >
-                    <div className="next-match-card__detail">
-                        <span
-                            style={{
-                                fontSize: "0.875rem",
-                                fontWeight: "600",
-                                color: "var(--text-secondary)",
-                                display: "block",
-                                marginBottom: "var(--spacing-xs)",
-                                textTransform: "uppercase",
-                                letterSpacing: "0.025em",
-                            }}
-                        >
-                            Gegner
-                        </span>
-                        <span
-                            style={{
-                                fontSize: "1.125rem",
-                                fontWeight: "600",
-                                color: "var(--text-primary)",
-                            }}
-                        >
-                            {match.opponent}
-                        </span>
-                    </div>
-
-                    <div className="next-match-card__detail">
-                        <span
-                            style={{
-                                fontSize: "0.875rem",
-                                fontWeight: "600",
-                                color: "var(--text-secondary)",
-                                display: "block",
-                                marginBottom: "var(--spacing-xs)",
-                                textTransform: "uppercase",
-                                letterSpacing: "0.025em",
-                            }}
-                        >
-                            Ort
-                        </span>
-                        <span
-                            style={{
-                                fontSize: "1.125rem",
-                                fontWeight: "600",
-                                color: "var(--text-primary)",
-                            }}
-                        >
-                            {match.location}
-                        </span>
-                    </div>
+                <div className={styles.nextMatchCardDetail}>
+                    <span className={styles.nextMatchCardDetailLabel}>Ort</span>
+                    <span className={styles.nextMatchCardDetailValue}>{match.location}</span>
                 </div>
             </div>
         </div>
