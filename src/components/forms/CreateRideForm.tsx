@@ -17,8 +17,6 @@ export default function CreateRideForm({ matchId, onRideCreated, onCancel }: Pro
 
     return (
         <div className={styles.rideForm}>
-            <h3 className={styles.rideFormTitle}>Fahrt anbieten</h3>
-
             {error && <div className={styles.rideFormError}>{error}</div>}
 
             <form onSubmit={handleSubmit}>

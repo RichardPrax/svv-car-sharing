@@ -6,7 +6,7 @@ import { useUserRideCheck, useUserParticipationCheck } from "@/hooks/rides";
 import { formatDate, formatTime } from "@/utils/dateTime";
 import { CreateRideForm } from "@/components/forms";
 import { RidesList } from "@/components/rides";
-import { LoadingSpinner } from "@/components/ui";
+import { LoadingSpinner, Modal } from "@/components/ui";
 import styles from "../../styles/Pages.module.css";
 
 export default function MatchDetailPage() {
@@ -31,7 +31,7 @@ export default function MatchDetailPage() {
     });
 
     const handleBackClick = () => {
-        router.push("/");
+        router.push("/matches");
     };
 
     const handleRideCreated = () => {
@@ -165,13 +165,12 @@ export default function MatchDetailPage() {
                     </div>
 
                     <RidesList matchId={match.id} refreshTrigger={refreshTrigger} onRideUpdated={handleRideUpdated} />
-
-                    {showCreateForm && (
-                        <div className={styles.createFormContainer}>
-                            <CreateRideForm matchId={match.id} onRideCreated={handleRideCreated} onCancel={handleCancelCreate} />
-                        </div>
-                    )}
                 </div>
+
+                {/* Modal für CreateRideForm */}
+                <Modal isOpen={showCreateForm} onClose={handleCancelCreate} title="Fahrt anbieten" maxWidth="md">
+                    <CreateRideForm matchId={match.id} onRideCreated={handleRideCreated} onCancel={handleCancelCreate} />
+                </Modal>
             </div>
         </div>
     );
