@@ -23,7 +23,8 @@
 
 .matchCard:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--border-light);
 }
 
 .matchCardPast {
@@ -92,21 +93,34 @@
 
 /* Next Match Card */
 .nextMatchCard {
-    background: linear-gradient(135deg, var(--card-background) 0%, #f1f5f9 100%);
+    background: linear-gradient(135deg, var(--card-background) 0%, var(--surface) 100%);
     border-color: var(--card-border);
     border-width: 2px;
     border-style: solid;
     border-radius: var(--radius-lg);
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    box-shadow: var(--shadow-lg);
     padding: var(--spacing-xl);
     width: 100%;
     transition: all 0.2s ease-in-out;
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.nextMatchCard::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3ecf8e, #10b981);
 }
 
 .nextMatchCard:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-xl);
+    border-color: #3ecf8e;
 }
 
 .nextMatchCardHeader {

@@ -4,19 +4,24 @@ import { useRouter } from "next/router";
 import { AuthProvider } from "@/hooks/auth/useOptimizedAuth";
 import { UserProfileProvider } from "@/hooks/auth/useUserProfileCache";
 import OptimizedAuthGuard from "../components/auth/OptimizedAuthGuard";
-import { Header } from "@/components/layout";
+import { AppLayout } from "@/components/layout";
 
 function AppContent({ Component, pageProps }: AppProps) {
     const router = useRouter();
-    
-    // Seiten ohne Header (Login/Auth Seiten)
-    const routesWithoutHeader = ["/login"];
-    const showHeader = !routesWithoutHeader.includes(router.pathname);
+
+    // Seiten ohne Layout (Login/Auth Seiten)
+    const routesWithoutLayout = ["/login"];
+    const showLayout = !routesWithoutLayout.includes(router.pathname);
 
     return (
         <OptimizedAuthGuard>
-            {showHeader && <Header />}
-            <Component {...pageProps} />
+            {showLayout ? (
+                <AppLayout>
+                    <Component {...pageProps} />
+                </AppLayout>
+            ) : (
+                <Component {...pageProps} />
+            )}
         </OptimizedAuthGuard>
     );
 }

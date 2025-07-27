@@ -6,13 +6,13 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
     padding: var(--spacing-lg);
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(4px);
     animation: modalOverlayFadeIn 0.2s ease-out;
 }
 
@@ -28,7 +28,8 @@
 .modalContent {
     background-color: var(--card-background);
     border-radius: var(--radius-lg);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--shadow-xl);
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;

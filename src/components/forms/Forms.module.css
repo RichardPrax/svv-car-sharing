@@ -103,13 +103,15 @@
 
 /* Button Variants */
 .buttonPrimary {
-    background-color: var(--text-accent);
+    background: linear-gradient(135deg, #3ecf8e, #10b981);
     color: white;
     border: none;
 }
 
 .buttonPrimary:hover {
-    background-color: var(--primary-hover);
+    background: linear-gradient(135deg, #10b981, #059669);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(62, 207, 142, 0.3);
 }
 
 .buttonSecondary {
