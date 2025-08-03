@@ -24,18 +24,18 @@ async function createAuthUser(email, password, userData) {
             email_confirm: true,
             user_metadata: {
                 firstName: userData.firstName,
-                lastName: userData.lastName
-            }
+                lastName: userData.lastName,
+            },
         });
 
         if (authError) {
             // Check if it's an "email already exists" error
-            if (authError.message && authError.message.includes('already been registered')) {
+            if (authError.message && authError.message.includes("already been registered")) {
                 console.log(`✅ Auth user already exists for ${email}`);
                 // Try to get the user by listing all users
                 const { data: users, error: listError } = await supabase.auth.admin.listUsers();
                 if (!listError && users.users) {
-                    const existingUser = users.users.find(user => user.email === email);
+                    const existingUser = users.users.find((user) => user.email === email);
                     if (existingUser) {
                         console.log(`✅ Found existing auth user for ${email}:`, existingUser.id);
                         return existingUser;
@@ -59,28 +59,58 @@ async function createAuthUser(email, password, userData) {
 async function main() {
     console.log("🔐 Creating authentication users...");
 
-    // Test users data (without predefined IDs)
+    // All test users data (7 users total with consistent email format)
     const testUsers = [
         {
-            email: "max.mustermann@example.com",
+            email: "max.mustermann@test.com",
             password: "test1234",
             firstName: "Max",
-            lastName: "Mustermann"
+            lastName: "Mustermann",
         },
         {
-            email: "anna.schmidt@example.com", 
+            email: "anna.schmidt@test.com",
             password: "test1234",
             firstName: "Anna",
-            lastName: "Schmidt"
-        }
+            lastName: "Schmidt",
+        },
+        {
+            email: "tom.mueller@test.com",
+            password: "test1234",
+            firstName: "Tom",
+            lastName: "Mueller",
+        },
+        {
+            email: "lisa.weber@test.com",
+            password: "test1234",
+            firstName: "Lisa",
+            lastName: "Weber",
+        },
+        {
+            email: "ben.schneider@test.com",
+            password: "test1234",
+            firstName: "Ben",
+            lastName: "Schneider",
+        },
+        {
+            email: "sara.fischer@test.com",
+            password: "test1234",
+            firstName: "Sara",
+            lastName: "Fischer",
+        },
+        {
+            email: "noah.hoffmann@test.com",
+            password: "test1234",
+            firstName: "Noah",
+            lastName: "Hoffmann",
+        },
     ];
 
     // Create auth users first, then database records
     for (const userData of testUsers) {
         console.log(`Creating auth user for ${userData.email}...`);
-        
+
         const authUser = await createAuthUser(userData.email, userData.password, userData);
-        
+
         if (authUser) {
             // Create database record using the auth user's UID
             try {
@@ -105,11 +135,15 @@ async function main() {
 
     console.log("🎉 Authentication users creation completed!");
     console.log("");
-    console.log("📧 Test user credentials:");
-    console.log("Email: max.mustermann@example.com, Password: test1234");
-    console.log("Email: anna.schmidt@example.com, Password: test1234");
+    console.log("📧 All 7 test users created with password: test1234");
+    console.log("📧 Email format: firstname.lastname@test.com");
     console.log("");
-    console.log("You can now log in with these credentials!");
+    console.log("Users created:");
+    testUsers.forEach((user) => {
+        console.log(`  - ${user.email}`);
+    });
+    console.log("");
+    console.log("You can now log in with any of these credentials!");
 }
 
 main()
@@ -119,4 +153,4 @@ main()
     })
     .finally(async () => {
         await prisma.$disconnect();
-    }); 
+    });

@@ -13,6 +13,37 @@
 ./dev-setup.sh reset          # ⚠️ ALLES löschen und neu
 ```
 
+## 🎭 Testdaten & Authentication
+
+### Testdaten erstellen
+
+```bash
+npm run auth:create-users     # Alle 7 Testnutzer (konsistent)
+npm run create:test-data      # Fahrgemeinschafts-Testdaten
+npm run import:spielplan      # Spielplan importieren (spielplan.csv)
+```
+
+### Testnutzer-Details
+
+**Alle 7 Nutzer** (konsistent mit @test.com):
+
+-   max.mustermann@test.com | test1234
+-   anna.schmidt@test.com | test1234
+-   tom.mueller@test.com | test1234
+-   lisa.weber@test.com | test1234
+-   ben.schneider@test.com | test1234
+-   sara.fischer@test.com | test1234
+-   noah.hoffmann@test.com | test1234
+
+**Automatische Fahrgemeinschaften**:
+
+-   **7 verschiedene Szenarien** zyklisch über alle Spieltage verteilt
+-   Von "keine Fahrten" bis "komplett ausgebucht"
+-   Realistische Abfahrtszeiten (1-4h vor Spielbeginn)
+-   Verschiedene Abfahrtsorte und Auslastungsgrade
+-   **Geschäftslogik**: Jeder Nutzer nur einmal pro Spieltag (entweder Fahrer oder Mitfahrer)
+-   **Testet alle UI-Zustände**: Leere Listen, volle Fahrten, gemischte Szenarien
+
 ## 💻 Entwicklung
 
 ### Development Server

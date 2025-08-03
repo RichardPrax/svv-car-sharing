@@ -212,10 +212,18 @@ setup_local() {
     run_command "Match data import" "npm run import:spielplan"
     print_debug "Match data import completed"
     
+    # Create comprehensive test data (users + rides)
+    print_progress "Creating comprehensive test data (additional users + ride data)..."
+    print_debug "About to run: npm run create:test-data"
+    run_command "Test data creation" "npm run create:test-data"
+    print_debug "Test data creation completed"
+    
     print_status "Local environment setup complete!"
     print_status "Test user credentials:"
-    echo "  Email: max.mustermann@example.com, Password: test1234"
-    echo "  Email: anna.schmidt@example.com, Password: test1234"
+    echo "  All 7 users have password: test1234"
+    echo "  Email format: firstname.lastname@test.com"
+    echo "  Users: max.mustermann, anna.schmidt, tom.mueller, lisa.weber,"
+    echo "         ben.schneider, sara.fischer, noah.hoffmann"
 
     print_status "You can now run: npm run dev:local"
 }
