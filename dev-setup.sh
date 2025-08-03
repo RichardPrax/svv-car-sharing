@@ -206,6 +206,12 @@ setup_local() {
     run_command "Auth user creation" "npm run auth:create-users"
     print_debug "Auth user creation completed"
     
+    # Import match data from spielplan.csv
+    print_progress "Importing match data from spielplan.csv..."
+    print_debug "About to run: npm run import:spielplan"
+    run_command "Match data import" "npm run import:spielplan"
+    print_debug "Match data import completed"
+    
     print_status "Local environment setup complete!"
     print_status "Test user credentials:"
     echo "  Email: max.mustermann@example.com, Password: test1234"
