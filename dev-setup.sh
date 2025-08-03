@@ -200,9 +200,17 @@ setup_local() {
     run_command "Database seeding" "npm run db:local:seed"
     print_debug "Database seeding completed"
     
+    # Create authentication users and database records
+    print_progress "Creating authentication users and database records..."
+    print_debug "About to run: npm run auth:create-users"
+    run_command "Auth user creation" "npm run auth:create-users"
+    print_debug "Auth user creation completed"
+    
     print_status "Local environment setup complete!"
-    print_warning "WICHTIG: Für Login-Funktionalität müssen noch Auth-Benutzer angelegt werden!"
-    print_status "Siehe GETTING_STARTED.md → Abschnitt 'Testbenutzer einrichten'"
+    print_status "Test user credentials:"
+    echo "  Email: max.mustermann@example.com, Password: test1234"
+    echo "  Email: anna.schmidt@example.com, Password: test1234"
+
     print_status "You can now run: npm run dev:local"
 }
 
