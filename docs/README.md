@@ -1,65 +1,34 @@
-# 📖 Dokumentations-Index
+# 📖 Technische Dokumentation
 
-Diese Dokumentation enthält alle technischen Details zum SVV Car-Sharing Projekt.
+Erweiterte technische Details zum SVV Team-Manager Projekt.
 
-## 🚀 Für Einsteiger
+## 🚀 Erste Schritte
 
--   **[GETTING_STARTED.md](../GETTING_STARTED.md)** - Schnellstart ohne Vorkenntnisse
+→ **[GETTING_STARTED.md](../GETTING_STARTED.md)** für den schnellen Einstieg
 
-## 🔧 Setup & Konfiguration
+## 🔧 Erweiterte Themen
 
--   **[setup-script.md](./setup-script.md)** - Detaillierte Erklärung des dev-setup.sh Skripts
--   **[environment-config.md](./environment-config.md)** - Umgebungsvariablen & .env Dateien
--   **[database-setup.md](./database-setup.md)** - Prisma, Supabase & Datenbank-Management
+-   **[Setup-Script Details](./setup-script.md)** - dev-setup.sh im Detail
+-   **[Environment Config](./environment-config.md)** - .env Dateien verstehen
+-   **[Database Setup](./database-setup.md)** - Prisma & Supabase
+-   **[Project Structure](./project-structure.md)** - Code-Organisation
+-   **[Common Issues](./common-issues.md)** - Problemlösungen
 
-## 🏗️ Architektur & Code
-
--   **[project-structure.md](./project-structure.md)** - Projektaufbau und Ordnerstruktur
-
-## 🆘 Troubleshooting
-
--   **[common-issues.md](./common-issues.md)** - Häufige Probleme und Lösungen
-
-## 📚 Weitere Dokumentation (geplant)
-
-Die folgenden Dokumentationen können bei Bedarf erweitert werden:
-
--   **API-Dokumentation** - Backend-Endpunkte und Schnittstellen
--   **Component-Guide** - Frontend-Komponenten Übersicht
--   **Development-Workflow** - Erweiterte Entwicklungsabläufe
--   **Deployment-Guide** - Produktions-Deployment
--   **Debugging-Guide** - Erweiterte Debug-Techniken
-
----
-
-## 📋 Schnelle Befehlsreferenz
-
-### Setup & Start
+## ⚡ Command Reference
 
 ```bash
-./dev-setup.sh local        # Komplettes lokales Setup
-./dev-setup.sh status       # Status aller Services
-./dev-setup.sh cleanup      # Aufräumen (behält Daten)
-./dev-setup.sh reset        # ⚠️ Alles löschen und neu
-```
+# Setup
+./dev-setup.sh local        # Alles einrichten
+./dev-setup.sh status       # Status prüfen
+./dev-setup.sh reset        # Neustart
 
-### Entwicklung
-
-```bash
-npm run dev:local           # Entwicklungsserver starten
-npm run db:studio           # Datenbank-Interface
-npm run supabase:status     # Supabase Status
-```
-
-### Datenbank
-
-```bash
-npm run db:push             # Schema zur DB pushen
-npm run db:seed             # Testdaten einfügen
-npm run db:migrate          # Migration erstellen
+# Development
+npm run dev:local           # Dev-Server
+npm run db:studio           # Datenbank GUI
+npm run db:push             # Schema pushen
 ```
 
 ---
 
-💡 **Navigation**: Nutze die Links oben um zur spezifischen Dokumentation zu springen.
+_Die meisten Fragen werden durch das automatische Setup-Script beantwortet._
 

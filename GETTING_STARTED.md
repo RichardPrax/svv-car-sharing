@@ -1,216 +1,107 @@
-# 🚗 SVV Car-Sharing - Getting Started
+# SVV Team-Manager - Getting Started
 
-**Willkommen!** Diese Anleitung führt dich Schritt für Schritt durch die Einrichtung des SVV Car-Sharing Projekts.
+**Willkommen!** Diese Anleitung führt dich Schritt für Schritt durch die Einrichtung.
 
-## 📋 Was du brauchst (Voraussetzungen)
+## 📋 Was du brauchst
 
--   **Node.js** (Version 18 oder höher) - [Download hier](https://nodejs.org/)
--   **Docker Desktop** (für lokale Datenbank) - [Download hier](https://www.docker.com/products/docker-desktop/)
--   **Git** (für Versionskontrolle)
--   Einen **Code-Editor** (z.B. VS Code)
+-   **Node.js** (Version 18+) - [Download](https://nodejs.org/)
+-   **Docker Desktop** - [Download](https://www.docker.com/products/docker-desktop/)
+-   **Git** und einen **Code-Editor** (z.B. VS Code)
 
-## ⚡ Schnellstart (5 Minuten Setup)
+## ⚡ 5-Minuten Setup
 
 ### 1. Projekt herunterladen
 
 ```bash
 git clone <repository-url>
 cd svv-car-sharing
-```
-
-### 2. Dependencies installieren
-
-```bash
 npm install
 ```
 
-### 3. Docker Desktop starten
+### 2. Docker Desktop starten
 
--   Öffne Docker Desktop und warte bis es komplett gestartet ist
--   Du siehst ein grünes Symbol wenn Docker bereit ist
+-   Öffne Docker Desktop und warte bis es bereit ist (grünes Symbol)
 
-### 4. Alles automatisch einrichten
+### 3. Alles automatisch einrichten
 
 ```bash
 ./dev-setup.sh local
+npm run dev:local
 ```
 
-**Das war's!** 🎉 Die Anwendung läuft jetzt unter `http://localhost:3000`
-
----
+**Das war's!** 🎉 App läuft unter `http://localhost:3000`
 
 ## 🔧 Was passiert beim Setup?
 
-Das Setup-Skript macht automatisch folgendes:
+Das Setup-Script macht automatisch:
 
-1. **Lokale Datenbank starten** (Supabase mit PostgreSQL)
-2. **Datenbank-Schema einrichten** (Tabellen für Nutzer, Fahrten, etc.)
-3. **Testdaten einfügen** (Beispiel-Spieltage und 2 Testbenutzer)
-4. **Entwicklungsserver starten** (Next.js auf Port 3000)
+1. **Lokale Datenbank starten**
+2. **Datenbank-Schema einrichten**
+3. **Spielplan importieren**
+4. **Testdaten erstellen**
 
-### 🔑 Testbenutzer einrichten
+### 🔑 Testbenutzer
 
-Das Seeding erstellt automatisch 2 Testbenutzer in der Datenbank. Für die vollständige Funktionalität müssen diese auch in Supabase Auth angelegt werden.
+Das Setup erstellt automatisch 7 vollständige Testbenutzer:
 
-> 📖 **Detaillierte Anleitung**: Siehe [`docs/auth-setup.md`](docs/auth-setup.md)
+-   **Emails**: `max.mustermann@test.com`, `anna.schmidt@test.com`, etc.
+-   **Passwort für alle**: `test1234`
+-   **Funktionen**: Login, Profil, Fahrten erstellen/teilnehmen
 
-**Kurzanleitung:**
+## 📱 Die App verwenden
 
-1. Öffne Supabase Studio: `npm run db:local:studio`
-2. Gehe zu **Authentication** → **Users**
-3. Erstelle 2 Benutzer mit den **exakten** User IDs:
-    - `550e8400-e29b-41d4-a716-446655440001` → `max@test.com`
-    - `550e8400-e29b-41d4-a716-446655440002` → `anna@test.com`
-4. Passwort für beide: `password123`
+Nach dem Setup:
 
-> ⚠️ **Wichtig**: Die User IDs müssen exakt übereinstimmen!
+-   **Hauptseite**: `http://localhost:3000` - Startseite mit Kacheln zur Navigation
+-   **Login**: Mit den Testbenutzern anmelden
+-   **Admin**: `http://localhost:54323` - Supabase Studio (Datenbank)
 
-## 📱 Die Anwendung verwenden
-
-Nach dem Setup kannst du:
-
--   **Hauptseite**: `http://localhost:3000` - Übersicht der Spieltage
--   **Admin-Panel**: `http://localhost:54323` - Datenbank verwalten (Supabase Studio)
--   **API-Dokumentation**: `http://localhost:3000/api` - Backend-Endpunkte
-
-## 🚀 Entwicklung starten
+## 🛠️ Entwicklung
 
 ### Code bearbeiten
 
 ```bash
-# Code-Editor öffnen (z.B. VS Code)
-code .
+code .  # VS Code öffnen
 
 # Wichtige Ordner:
-# - src/pages/          → Webseiten
-# - src/components/     → Wiederverwendbare UI-Komponenten
-# - src/lib/           → Backend-Logik
-# - prisma/schema.prisma → Datenbank-Schema
+# src/pages/       → Webseiten
+# src/components/  → UI-Bausteine
+# src/lib/         → Backend-Logic
+# prisma/          → Datenbank-Schema
 ```
 
-### Änderungen testen
-
--   **Automatisch**: Speichere eine Datei → Browser lädt automatisch neu
--   **Manuell**: Gehe zu `http://localhost:3000` und teste deine Änderungen
-
-### Datenbank anschauen
+### Wichtige Befehle
 
 ```bash
-# Datenbank-Interface öffnen
-npm run db:studio
-# Öffnet: http://localhost:5555
+# Entwicklung
+npm run dev:local          # Dev-Server starten
+npm run db:studio          # Datenbank GUI öffnen
+
+# Status & Wartung
+./dev-setup.sh status      # Alles läuft?
+./dev-setup.sh cleanup     # Aufräumen (behält Daten)
+./dev-setup.sh reset       # ⚠️ ALLES neu (löscht Daten!)
 ```
 
-## 🛠️ Wichtige Befehle
+## 🆘 Probleme?
 
-### Entwicklung
+**"Port bereits belegt"**
 
 ```bash
-npm run dev:local          # Entwicklungsserver starten
-npm run db:studio          # Datenbank-Interface öffnen
-./dev-setup.sh status      # Aktueller Status aller Services
+lsof -ti:3000 | xargs kill
 ```
 
-### Wenn etwas kaputt ist
+**"Docker-Fehler"**  
+→ Docker Desktop starten und warten
+
+**"Setup funktioniert nicht"**
 
 ```bash
-./dev-setup.sh cleanup     # Leichtes Aufräumen (behält Daten)
-./dev-setup.sh reset       # ⚠️ ALLES LÖSCHEN und neu starten
-./dev-setup.sh local       # Frisch einrichten
+chmod +x dev-setup.sh
+./dev-setup.sh reset  # Neustart
 ```
-
-### Services stoppen
-
-```bash
-npm run supabase:stop      # Datenbank stoppen
-# Entwicklungsserver: Strg+C im Terminal
-```
-
-## 📁 Projektstruktur (für Einsteiger)
-
-```
-svv-car-sharing/
-├── 📄 GETTING_STARTED.md     ← Du bist hier!
-├── 🎯 src/                   ← Hauptcode der Anwendung
-│   ├── pages/               ← Webseiten (index.js = Startseite)
-│   ├── components/          ← UI-Bausteine (Buttons, Listen, etc.)
-│   └── lib/                 ← Backend-Logik und Hilfsfunktionen
-├── 🗄️ prisma/               ← Datenbank-Schema und Migrationen
-├── ⚙️ .env.local            ← Lokale Konfiguration (wird automatisch erstellt)
-├── 🚀 dev-setup.sh          ← Setup-Automatisierung
-└── 📦 package.json          ← Projekt-Dependencies
-```
-
-## 🎯 Typische Arbeitsabläufe
-
-### Neue Funktion entwickeln
-
-1. **Feature-Branch erstellen**: `git checkout -b feature/meine-neue-funktion`
-2. **Code schreiben** in `src/`
-3. **Testen** unter `http://localhost:3000`
-4. **Committen**: `git commit -m "Neue Funktion hinzugefügt"`
-5. **Push**: `git push origin feature/meine-neue-funktion`
-
-### Datenbank-Schema ändern
-
-1. **Schema bearbeiten**: `prisma/schema.prisma`
-2. **Änderungen anwenden**: `npm run db:push`
-3. **Testen**: `npm run db:studio`
-
-### Nach längerem Pause
-
-```bash
-# Prüfen ob alles noch läuft
-./dev-setup.sh status
-
-# Falls nicht, neu starten
-./dev-setup.sh local
-```
-
-## 🆘 Hilfe & Problemlösung
-
-### Häufige Probleme
-
-**"Port 3000 ist bereits belegt"**
-
--   Ein anderer Service läuft auf Port 3000
--   Lösung: `lsof -ti:3000 | xargs kill` oder anderes Service stoppen
-
-**"Docker-Fehler"**
-
--   Docker Desktop ist nicht gestartet
--   Lösung: Docker Desktop öffnen und warten bis es bereit ist
-
-**"Datenbank-Verbindungsfehler"**
-
--   Supabase läuft nicht
--   Lösung: `npm run supabase:start`
-
-**"Das Setup-Skript funktioniert nicht"**
-
--   Möglicherweise sind Berechtigungen falsch
--   Lösung: `chmod +x dev-setup.sh`
-
-### Weitere Hilfe
-
--   **Detaillierte Docs**: Siehe `docs/` Ordner für technische Details
--   **Alle Befehle**: `COMMANDS.md` - Komplette Befehlsreferenz
--   **Setup-Details**: `docs/setup-script.md` - dev-setup.sh Erklärung
--   **Environment-Config**: `docs/environment-config.md` - .env Dateien
--   **Datenbank-Setup**: `docs/database-setup.md` - Supabase & Prisma
-
-## 🎉 Erfolgreich eingerichtet?
-
-Wenn alles funktioniert siehst du:
-
--   ✅ Die Webseite unter `http://localhost:3000`
--   ✅ Eine Liste von Spieltagen
--   ✅ Login/Register Funktionen
--   ✅ Keine Fehlermeldungen in der Konsole
-
-**Viel Spaß beim Entwickeln!** 🚀
 
 ---
 
-💡 **Tipp**: Bookmark diese Datei - sie ist dein Startpunkt für alles!
+**Viel Spaß!** 🚀 Bei Fragen → README.md für Quick-Infos.
 
