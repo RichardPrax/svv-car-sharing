@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
+import { useRoleGuard } from "@/hooks/auth/useRoleGuard";
 import styles from "../styles/Pages.module.css";
 
 interface CategoryCard {
@@ -13,8 +14,9 @@ interface CategoryCard {
 export default function HomePage() {
     const router = useRouter();
     const { userProfile } = useOptimizedAuth();
+    const { hasAdminAccess } = useRoleGuard();
 
-    const categories: CategoryCard[] = [
+    const baseCategories: CategoryCard[] = [
         {
             title: "Training",
             description: "Trainingspläne und Übungen verwalten",
@@ -44,6 +46,20 @@ export default function HomePage() {
             color: "#8B5CF6",
         },
     ];
+
+    // Admin-Kategorien (nur hinzufügen wenn Berechtigung vorhanden)
+    const adminCategories: CategoryCard[] = [
+        {
+            title: "Benutzer verwalten",
+            description: "Übersicht aller Benutzer und Rollenverwaltung",
+            route: "/admin/users",
+            icon: "👥",
+            color: "#F59E0B",
+        },
+    ];
+
+    // Alle Kategorien zusammenfügen basierend auf Berechtigung
+    const categories = hasAdminAccess() ? [...baseCategories, ...adminCategories] : baseCategories;
 
     const handleCategoryClick = (route: string) => {
         router.push(route);

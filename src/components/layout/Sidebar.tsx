@@ -1,7 +1,8 @@
 // src/components/layout/Sidebar.tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
+import { useRoleGuard } from "@/hooks/auth/useRoleGuard";
 import { useRouter } from "next/router";
 import styles from "./Sidebar.module.css";
 
@@ -15,7 +16,8 @@ const Sidebar = () => {
     const [loading, setLoading] = useState(false);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
-    const { userProfile } = useOptimizedAuth();
+    const { userProfile, loading: authLoading } = useOptimizedAuth();
+    const { hasAdminAccess } = useRoleGuard();
     const router = useRouter();
 
     const navigationItems: NavigationItem[] = [
@@ -25,6 +27,14 @@ const Sidebar = () => {
         { label: "Strafen", route: "/penalties", icon: "⚖️" },
         { label: "Statistiken", route: "/statistics", icon: "📊" },
     ];
+
+    // Add admin navigation items if user has admin access (only after auth is loaded)
+    const allNavigationItems = useMemo(() => {
+        if (authLoading || !userProfile) {
+            return navigationItems;
+        }
+        return hasAdminAccess() ? [...navigationItems, { label: "Benutzer verwalten", route: "/admin/users", icon: "👥" }] : navigationItems;
+    }, [authLoading, userProfile, hasAdminAccess]);
 
     // Close mobile menu on route change
     useEffect(() => {
@@ -42,6 +52,13 @@ const Sidebar = () => {
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+
+    const isRouteActive = (route: string): boolean => {
+        if (route === "/") {
+            return router.pathname === "/";
+        }
+        return router.pathname === route || router.pathname.startsWith(route + "/");
+    };
 
     const handleNavClick = (route: string) => {
         router.push(route);
@@ -96,11 +113,11 @@ const Sidebar = () => {
 
                 {/* Navigation Section */}
                 <nav className={styles.navigation}>
-                    {navigationItems.map((item) => (
+                    {allNavigationItems.map((item: NavigationItem) => (
                         <button
                             key={item.route}
                             onClick={() => handleNavClick(item.route)}
-                            className={`${styles.navItem} ${router.pathname === item.route ? styles.active : ""}`}
+                            className={`${styles.navItem} ${isRouteActive(item.route) ? styles.active : ""}`}
                             title={!isHovered ? item.label : undefined}
                         >
                             <span className={styles.navIcon}>{item.icon}</span>
@@ -121,7 +138,17 @@ const Sidebar = () => {
                                 <span className={styles.userName}>
                                     {userProfile.firstName} {userProfile.lastName}
                                 </span>
-                                <span className={styles.userRole}>Mitglied</span>
+                                <span className={styles.userRole}>
+                                    {userProfile.role === "ADMIN"
+                                        ? "Administrator"
+                                        : userProfile.role === "TRAINER"
+                                        ? "Trainer"
+                                        : userProfile.role === "PENALTY_MASTER"
+                                        ? "Strafenmeister"
+                                        : userProfile.role === "PLAYER"
+                                        ? "Spieler"
+                                        : "Mitglied"}
+                                </span>
                             </div>
                         </div>
                     )}

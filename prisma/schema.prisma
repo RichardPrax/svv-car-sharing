@@ -20,6 +20,7 @@ model UserProfile {
   id         String   @id @default(cuid())
   firstName  String   @map("first_name")
   lastName   String   @map("last_name")
+  role       UserRole @default(USER)
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
@@ -28,6 +29,14 @@ model UserProfile {
   ridePassengers  RidePassenger[]
 
   @@map("user_profiles")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  TRAINER
+  PENALTY_MASTER
+  PLAYER
 }
 
 model MatchDay {

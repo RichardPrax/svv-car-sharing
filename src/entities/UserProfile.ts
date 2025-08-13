@@ -1,10 +1,15 @@
 // src/entities/UserProfile.ts
+import { UserRole } from "@prisma/client";
+
+// Re-export Prisma's UserRole for convenience
+export { UserRole } from "@prisma/client";
 
 // Base UserProfile type based on Prisma schema
 export interface UserProfile {
     id: string;
     firstName: string;
     lastName: string;
+    role: UserRole;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -13,6 +18,7 @@ export interface UserProfileWithName {
     id: string;
     firstName: string;
     lastName: string;
+    role: UserRole;
     fullName: string;
 }
 
@@ -53,6 +59,25 @@ export function transformUserProfile(user: UserProfile): UserProfileWithName {
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
+        role: user.role,
         fullName: getUserFullName(user),
     };
 }
+
+// Role utility functions
+export function isAdmin(user: UserProfile | null | undefined): boolean {
+    return user?.role === UserRole.ADMIN;
+}
+
+export function isTrainer(user: UserProfile | null | undefined): boolean {
+    return user?.role === UserRole.TRAINER;
+}
+
+export function isPenaltyMaster(user: UserProfile | null | undefined): boolean {
+    return user?.role === UserRole.PENALTY_MASTER;
+}
+
+export function hasAdminAccess(user: UserProfile | null | undefined): boolean {
+    return isAdmin(user) || isTrainer(user);
+}
+

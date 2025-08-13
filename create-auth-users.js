@@ -66,42 +66,49 @@ async function main() {
             password: "test1234",
             firstName: "Max",
             lastName: "Mustermann",
+            role: "ADMIN", // Make Max an Admin
         },
         {
             email: "anna.schmidt@test.com",
             password: "test1234",
             firstName: "Anna",
             lastName: "Schmidt",
+            role: "TRAINER", // Make Anna a Trainer
         },
         {
             email: "tom.mueller@test.com",
             password: "test1234",
             firstName: "Tom",
             lastName: "Mueller",
+            role: "USER",
         },
         {
             email: "lisa.weber@test.com",
             password: "test1234",
             firstName: "Lisa",
             lastName: "Weber",
+            role: "USER",
         },
         {
             email: "ben.schneider@test.com",
             password: "test1234",
             firstName: "Ben",
             lastName: "Schneider",
+            role: "USER",
         },
         {
             email: "sara.fischer@test.com",
             password: "test1234",
             firstName: "Sara",
             lastName: "Fischer",
+            role: "USER",
         },
         {
             email: "noah.hoffmann@test.com",
             password: "test1234",
             firstName: "Noah",
             lastName: "Hoffmann",
+            role: "USER",
         },
     ];
 
@@ -119,11 +126,13 @@ async function main() {
                     update: {
                         firstName: userData.firstName,
                         lastName: userData.lastName,
+                        role: userData.role || "USER",
                     },
                     create: {
                         id: authUser.id, // Use the auth user's UID as the database ID
                         firstName: userData.firstName,
                         lastName: userData.lastName,
+                        role: userData.role || "USER",
                     },
                 });
                 console.log(`✅ Database record created/updated for ${userData.email} with ID: ${authUser.id}`);
@@ -154,3 +163,4 @@ main()
     .finally(async () => {
         await prisma.$disconnect();
     });
+

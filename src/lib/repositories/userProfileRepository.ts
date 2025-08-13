@@ -69,10 +69,18 @@ export class UserProfileRepository {
     }
 
     // Update user profile
-    async update(id: string, data: Partial<Pick<UserProfile, "firstName" | "lastName">>): Promise<UserProfile> {
+    async update(id: string, data: any): Promise<UserProfile> {
         return await prisma.userProfile.update({
             where: { id },
             data,
+        });
+    }
+
+    // Update user role (admin only)
+    async updateRole(id: string, role: string): Promise<UserProfile> {
+        return await prisma.userProfile.update({
+            where: { id },
+            data: { role } as any,
         });
     }
 

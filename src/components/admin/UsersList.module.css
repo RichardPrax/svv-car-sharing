@@ -1,0 +1,146 @@
+/* src/components/admin/UsersList.module.css */
+.usersContainer {
+    padding: 2rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.stats {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.refreshButton {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.refreshButton:hover {
+    background: #2563eb;
+}
+
+.refreshButton:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+}
+
+.usersList {
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+}
+
+.userItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #f3f4f6;
+    transition: background-color 0.2s;
+}
+
+.userItem:last-child {
+    border-bottom: none;
+}
+
+.userItem:hover {
+    background: #f9fafb;
+}
+
+.userInfo {
+    flex: 1;
+}
+
+.userName {
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+}
+
+.userDetails {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.userRole {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.roleAdmin {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.roleUser {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.roleTrainer {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.rolePenaltyMaster {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.rolePlayer {
+    background: #e0f2fe;
+    color: #0c4a6e;
+}
+
+.error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #dc2626;
+    text-align: center;
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 3rem;
+    color: #6b7280;
+}
+
+.emptyStateIcon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
