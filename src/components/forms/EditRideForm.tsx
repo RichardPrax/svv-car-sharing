@@ -20,8 +20,6 @@ export default function EditRideForm({ ride, onRideUpdated, onCancel, onDelete }
 
     return (
         <div className={styles.rideForm}>
-            <h3 className={styles.rideFormTitle}>Fahrt bearbeiten</h3>
-
             {error && <div className={styles.rideFormError}>{error}</div>}
 
             {showDeleteConfirm ? (
