@@ -119,7 +119,10 @@ export default function MatchDetailPage() {
                 </div>
 
                 {/* Participation Overview Section */}
-                <ParticipationOverview matchId={match.id} refreshTrigger={refreshTrigger} />
+                <ParticipationOverview 
+                    matchId={match.id} 
+                    refreshTrigger={refreshTrigger} 
+                />
 
                 {/* Rides Section */}
                 <div className={styles.ridesSection}>

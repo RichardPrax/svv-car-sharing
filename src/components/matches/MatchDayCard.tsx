@@ -1,6 +1,7 @@
 // src/components/matches/MatchDayCard.tsx
 import { MatchDay } from "@/entities/MatchDay";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { formatDate, formatTime, isMatchInPast } from "@/utils/dateTime";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import { useRoleGuard } from "@/hooks/auth/useRoleGuard";
@@ -17,7 +18,11 @@ export default function MatchDayCard({ match }: Props) {
     const router = useRouter();
     const { user, userProfile } = useOptimizedAuth();
     const { hasPlayerAccess } = useRoleGuard();
-    const { overview } = useParticipationOverview({ matchId: match.id });
+    const [participationRefreshTrigger, setParticipationRefreshTrigger] = useState(0);
+    const { overview } = useParticipationOverview({ 
+        matchId: match.id,
+        refreshTrigger: participationRefreshTrigger
+    });
 
     const handleCardClick = () => {
         router.push(`/matches/${match.id}`);
@@ -40,39 +45,39 @@ export default function MatchDayCard({ match }: Props) {
             </div>
 
             <div className={styles.matchCardDetails}>
-                                   <div className={styles.matchCardDetailRow}>
-                       <span className={styles.matchCardDetailLabel}>Gegner:</span>
-                       <span className={styles.matchCardDetailValue}>{match.opponent}</span>
-                   </div>
-
-                   {/* Participation Summary */}
-                   {overview && overview.counts.total > 0 && (
-                       <div className={styles.matchCardParticipationSummary}>
-                           <span className={styles.matchCardParticipationLabel}>Teilnahme:</span>
-                           <div className={styles.matchCardParticipationCounts}>
-                               {overview.counts.joining > 0 && (
-                                   <span className={styles.matchCardParticipationCount} style={{ color: '#10b981' }}>
-                                       👍 {overview.counts.joining}
-                                   </span>
-                               )}
-                               {overview.counts.tentative > 0 && (
-                                   <span className={styles.matchCardParticipationCount} style={{ color: '#f59e0b' }}>
-                                       ❓ {overview.counts.tentative}
-                                   </span>
-                               )}
-                               {overview.counts.declining > 0 && (
-                                   <span className={styles.matchCardParticipationCount} style={{ color: '#ef4444' }}>
-                                       👎 {overview.counts.declining}
-                                   </span>
-                               )}
-                           </div>
-                       </div>
-                   )}
+                <div className={styles.matchCardDetailRow}>
+                    <span className={styles.matchCardDetailLabel}>Gegner:</span>
+                    <span className={styles.matchCardDetailValue}>{match.opponent}</span>
+                </div>
 
                 <div className={styles.matchCardDetailRow}>
                     <span className={styles.matchCardDetailLabel}>Ort:</span>
                     <span className={styles.matchCardDetailValue}>{match.location}</span>
                 </div>
+
+                {/* Participation Summary - moved below Ort */}
+                {overview && overview.counts.total > 0 && (
+                    <div className={styles.matchCardParticipationSummary}>
+                        <span className={styles.matchCardParticipationLabel}>Teilnahme:</span>
+                        <div className={styles.matchCardParticipationCounts}>
+                            {overview.counts.joining > 0 && (
+                                <span className={styles.matchCardParticipationCount} style={{ color: '#10b981' }}>
+                                    👍 {overview.counts.joining}
+                                </span>
+                            )}
+                            {overview.counts.tentative > 0 && (
+                                <span className={styles.matchCardParticipationCount} style={{ color: '#f59e0b' }}>
+                                    ❓ {overview.counts.tentative}
+                                </span>
+                            )}
+                            {overview.counts.declining > 0 && (
+                                <span className={styles.matchCardParticipationCount} style={{ color: '#ef4444' }}>
+                                    👎 {overview.counts.declining}
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
 
 
@@ -82,9 +87,13 @@ export default function MatchDayCard({ match }: Props) {
                 <div onClick={handleParticipationClick}>
                     <GameParticipationButtons 
                         matchDayId={match.id}
+                        refreshTrigger={participationRefreshTrigger}
                         onParticipationChange={() => {
-                            // Optionally trigger a refresh of the match list
-                            // This could be passed down as a prop if needed
+                            // Trigger a refresh of the participation overview
+                            // Small delay to ensure the API call completes
+                            setTimeout(() => {
+                                setParticipationRefreshTrigger(prev => prev + 1);
+                            }, 100);
                         }}
                     />
                 </div>
