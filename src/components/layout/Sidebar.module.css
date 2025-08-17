@@ -341,7 +341,7 @@
     display: none;
     position: fixed;
     top: var(--spacing-lg);
-    left: var(--spacing-lg);
+    right: var(--spacing-lg);
     z-index: 1001;
     background: linear-gradient(135deg, #3ecf8e, #10b981);
     border: none;
