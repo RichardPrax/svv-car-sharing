@@ -1,4 +1,4 @@
-// src/pages/match/[id].tsx
+// src/pages/matches/[matchId].tsx
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useMatchDetail } from "@/hooks/matches/useMatchDetail";
@@ -7,26 +7,27 @@ import { formatDate, formatTime } from "@/utils/dateTime";
 import { CreateRideForm } from "@/components/forms";
 import { RidesList } from "@/components/rides";
 import { LoadingSpinner, Modal } from "@/components/ui";
+import { ParticipationOverview } from "@/components/matches";
 import styles from "../../styles/Pages.module.css";
 
 export default function MatchDetailPage() {
     const router = useRouter();
-    const { id } = router.query;
+    const { matchId } = router.query;
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [showExistingRideWarning, setShowExistingRideWarning] = useState(false);
 
-    const { match, loading, error } = useMatchDetail(id);
+    const { match, loading, error } = useMatchDetail(matchId);
     const {
         hasExistingRide,
         loading: checkingRide,
         recheckExistingRide,
     } = useUserRideCheck({
-        matchId: id as string,
+        matchId: matchId as string,
         refreshTrigger,
     });
     const { isParticipating, recheckParticipation } = useUserParticipationCheck({
-        matchId: id as string,
+        matchId: matchId as string,
         refreshTrigger,
     });
 
@@ -117,6 +118,9 @@ export default function MatchDetailPage() {
                     </div>
                 </div>
 
+                {/* Participation Overview Section */}
+                <ParticipationOverview matchId={match.id} refreshTrigger={refreshTrigger} />
+
                 {/* Rides Section */}
                 <div className={styles.ridesSection}>
                     <div className={styles.ridesSectionHeader}>
@@ -175,4 +179,3 @@ export default function MatchDetailPage() {
         </div>
     );
 }
-

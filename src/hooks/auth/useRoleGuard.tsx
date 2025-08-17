@@ -17,6 +17,10 @@ export function useRoleGuard() {
         return hasAdminAccess(userProfile);
     };
 
+    const hasPlayerAccess = (): boolean => {
+        return userProfile?.role === 'PLAYER' || userProfile?.role === 'USER' || userProfile?.role === 'ADMIN';
+    };
+
     const canAccessAdminPanel = (): boolean => {
         return !loading && hasAdminPermissions();
     };
@@ -27,6 +31,7 @@ export function useRoleGuard() {
         hasRole,
         isAdmin: isUserAdmin,
         hasAdminAccess: hasAdminPermissions,
+        hasPlayerAccess,
         canAccessAdminPanel,
         currentRole: userProfile?.role || UserRole.USER,
     };

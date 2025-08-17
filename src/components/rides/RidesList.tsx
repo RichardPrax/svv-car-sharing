@@ -21,7 +21,12 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
     const { isParticipating } = useUserParticipationCheck({ matchId, refreshTrigger });
 
     // Sammle alle User-IDs aus den Rides für optimiertes Preloading
-    const allUserIds = rides.flatMap((ride) => [ride.driverId, ...ride.passengers.map((p) => p.passengerId)]).filter(Boolean);
+    const allUserIds = rides
+        .flatMap((ride) => [
+            ride.driverId, 
+            ...(ride.passengers || []).map((p) => p.passengerId)
+        ])
+        .filter((id) => id && typeof id === 'string' && id.trim() !== '');
 
     // Preload alle benötigten User-Profile in einem Batch
     const { getProfileName } = useOptimizedUserProfiles(allUserIds);
@@ -59,7 +64,7 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
     // Enriche Rides mit gecachten User-Namen (nur für Driver, da Passengers bereits korrekt von API kommen)
     const enrichedRides = rides.map((ride) => ({
         ...ride,
-        driverName: getProfileName(ride.driverId),
+        driverName: ride.driverId ? getProfileName(ride.driverId) : 'Unbekannter Fahrer',
         // passengerNames kommen bereits korrekt von der API über useRides
     }));
 

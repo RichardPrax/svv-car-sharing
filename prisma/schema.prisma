@@ -27,6 +27,7 @@ model UserProfile {
   // Relations
   drivenRides     Ride[]           @relation("RideDriver")
   ridePassengers  RidePassenger[]
+  gameParticipations GameParticipation[]
 
   @@map("user_profiles")
 }
@@ -39,6 +40,12 @@ enum UserRole {
   PLAYER
 }
 
+enum GameParticipationStatus {
+  JOINING
+  DECLINING
+  TENTATIVE
+}
+
 model MatchDay {
   id       String @id @default(cuid())
   date     DateTime
@@ -48,6 +55,7 @@ model MatchDay {
 
   // Relations
   rides Ride[]
+  gameParticipations GameParticipation[]
 
   @@map("match_days")
 }
@@ -84,4 +92,21 @@ model RidePassenger {
   // Ensure a user can only join a ride once
   @@unique([rideId, passengerId])
   @@map("ride_passengers")
+}
+
+model GameParticipation {
+  id          String                 @id @default(cuid())
+  matchDayId  String                 @map("match_day_id")
+  playerId    String                 @map("player_id")
+  status      GameParticipationStatus
+  createdAt   DateTime               @default(now()) @map("created_at")
+  updatedAt   DateTime               @updatedAt @map("updated_at")
+
+  // Relations
+  matchDay MatchDay   @relation(fields: [matchDayId], references: [id], onDelete: Cascade)
+  player   UserProfile @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  // Ensure a player can only have one participation status per match day
+  @@unique([matchDayId, playerId])
+  @@map("game_participations")
 }

@@ -6,13 +6,13 @@ const matchDayRepository = new MatchDayRepository();
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "GET") {
         try {
-            const { id } = req.query;
+            const { matchId } = req.query;
 
-            if (!id || typeof id !== "string") {
+            if (!matchId || typeof matchId !== "string") {
                 return res.status(400).json({ error: "Match ID ist erforderlich" });
             }
 
-            const matchDay = await matchDayRepository.findById(id);
+            const matchDay = await matchDayRepository.findById(matchId);
 
             if (!matchDay) {
                 return res.status(404).json({ error: "Spieltag nicht gefunden" });
