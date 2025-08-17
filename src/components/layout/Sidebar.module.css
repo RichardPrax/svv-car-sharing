@@ -5,6 +5,8 @@
     top: 0;
     height: 100vh;
     width: 80px;
+    min-width: 80px;
+    max-width: 80px;
     background: linear-gradient(180deg, #1f1f1f 0%, #181818 100%);
     border-right: 1px solid var(--border);
     box-shadow: 4px 0 15px rgba(0, 0, 0, 0.5);
@@ -12,11 +14,12 @@
     flex-direction: column;
     transition: width 0.3s ease-in-out;
     z-index: 1000;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .sidebar:hover {
     width: 280px;
+    max-width: 280px;
 }
 
 /* Header Section */
@@ -32,7 +35,7 @@
 .logo {
     display: flex;
     align-items: center;
-    gap: var(--spacing-md);
+    gap: 0;
     cursor: pointer;
     transition: all 0.2s ease;
     flex: 1;
@@ -41,6 +44,7 @@
 
 .sidebar:hover .logo {
     justify-content: flex-start;
+    gap: var(--spacing-md);
 }
 
 .logo:hover {
@@ -51,6 +55,13 @@
     font-size: 2rem;
     line-height: 1;
     min-width: 32px;
+    width: 32px;
+    text-align: center;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .logoText {
@@ -60,11 +71,12 @@
     color: var(--text-primary);
     white-space: nowrap;
     opacity: 0;
-    transition: opacity 0.3s ease 0.1s;
+    transition: opacity 0s ease;
 }
 
 .sidebar:hover .logoText {
     opacity: 1;
+    transition: opacity 0.2s ease 0.1s;
 }
 
 /* Navigation Section */
@@ -75,6 +87,7 @@
     flex-direction: column;
     gap: var(--spacing-xs);
     overflow-y: auto;
+    overflow-x: visible;
 }
 
 .sidebar:hover .navigation {
@@ -84,8 +97,8 @@
 .navItem {
     display: flex;
     align-items: center;
-    gap: var(--spacing-md);
-    padding: var(--spacing-md);
+    gap: 0;
+    padding: var(--spacing-sm);
     border: none;
     background: transparent;
     color: var(--text-secondary);
@@ -96,15 +109,32 @@
     font-weight: 500;
     text-align: left;
     width: 100%;
+    max-width: 100%;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     justify-content: center;
     min-height: 48px;
+}
+
+.navItem .navIcon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .sidebar:hover .navItem {
     justify-content: flex-start;
     padding: var(--spacing-md) var(--spacing-lg);
+    gap: var(--spacing-md);
+}
+
+.sidebar:hover .navItem .navIcon {
+    position: static;
+    left: auto;
+    top: auto;
+    transform: none;
+    margin: 0;
 }
 
 .navItem:hover {
@@ -137,18 +167,28 @@
     font-size: 1.25rem;
     line-height: 1;
     min-width: 24px;
+    width: 24px;
     text-align: center;
     flex-shrink: 0;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
 }
 
 .navLabel {
     white-space: nowrap;
     opacity: 0;
-    transition: opacity 0.3s ease 0.1s;
+    transition: opacity 0s ease;
+    pointer-events: none;
 }
 
 .sidebar:hover .navLabel {
     opacity: 1;
+    transition: opacity 0.2s ease 0.1s;
+    pointer-events: auto;
 }
 
 /* User Section */
@@ -169,10 +209,12 @@
     border-radius: 12px;
     transition: all 0.2s ease;
     opacity: 0;
+    transition: opacity 0s ease;
 }
 
 .sidebar:hover .userInfo {
     opacity: 1;
+    transition: opacity 0.2s ease 0.1s;
 }
 
 .userInfo:hover {
@@ -219,8 +261,8 @@
 .logoutButton {
     display: flex;
     align-items: center;
-    gap: var(--spacing-md);
-    padding: var(--spacing-md);
+    gap: 0;
+    padding: var(--spacing-sm);
     border: 1px solid rgba(248, 113, 113, 0.3);
     background: rgba(248, 113, 113, 0.1);
     color: #fca5a5;
@@ -232,11 +274,28 @@
     width: 100%;
     justify-content: center;
     min-height: 48px;
+    position: relative;
+}
+
+.logoutButton .logoutIcon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .sidebar:hover .logoutButton {
     justify-content: flex-start;
     padding: var(--spacing-md) var(--spacing-lg);
+    gap: var(--spacing-md);
+}
+
+.sidebar:hover .logoutButton .logoutIcon {
+    position: static;
+    left: auto;
+    top: auto;
+    transform: none;
+    margin: 0;
 }
 
 .logoutButton:hover {
@@ -255,16 +314,26 @@
 .logoutIcon {
     font-size: 1.1rem;
     line-height: 1;
+    min-width: 24px;
+    width: 24px;
+    text-align: center;
     flex-shrink: 0;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
 }
 
 .logoutButton span:last-child {
     opacity: 0;
-    transition: opacity 0.3s ease 0.1s;
+    transition: opacity 0s ease;
 }
 
 .sidebar:hover .logoutButton span:last-child {
     opacity: 1;
+    transition: opacity 0.2s ease 0.1s;
 }
 
 /* Mobile Menu Button */
