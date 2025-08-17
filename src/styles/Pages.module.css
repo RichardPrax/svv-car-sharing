@@ -158,6 +158,9 @@
     margin-bottom: var(--spacing-md);
     filter: grayscale(0);
     transition: transform 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .categoryCard:hover .categoryCardIcon {

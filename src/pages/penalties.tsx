@@ -1,3 +1,4 @@
+import { Icon } from "@/components/ui";
 import styles from "../styles/Pages.module.css";
 
 export default function PenaltiesPage() {
@@ -8,7 +9,7 @@ export default function PenaltiesPage() {
                     {/* Page Header */}
                     <section className={styles.pageHeader}>
                         <h1 className={styles.pageTitle}>
-                            <span>⚖️</span>
+                            <Icon name="scales" size={32} color="#EF4444" />
                             Strafen
                         </h1>
                     </section>

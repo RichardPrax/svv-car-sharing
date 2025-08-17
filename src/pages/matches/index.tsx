@@ -1,5 +1,5 @@
 import { MatchDayList, NextMatchCard } from "@/components/matches";
-import { LoadingSpinner } from "@/components/ui";
+import { LoadingSpinner, Icon } from "@/components/ui";
 import { useMatches } from "@/hooks/matches/useMatches";
 import { isMatchInFuture, sortMatchesByDateTime } from "@/utils/dateTime";
 import styles from "../../styles/Pages.module.css";
@@ -23,7 +23,7 @@ export default function MatchesPage() {
                     {/* Page Header */}
                     <section className={styles.pageHeader}>
                         <h1 className={styles.pageTitle}>
-                            <span>🏐</span>
+                            <Icon name="volleyball" size={32} color="#10B981" />
                             Spieltage
                         </h1>
                     </section>

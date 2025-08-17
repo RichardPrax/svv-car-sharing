@@ -2,6 +2,7 @@
 import { useAdminUsers } from "@/hooks/admin/useAdminUsers";
 import { UserRole } from "@/entities/UserProfile";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { Icon } from "@/components/ui";
 import styles from "./UsersList.module.css";
 
 const getRoleDisplayName = (role: UserRole): string => {
@@ -68,13 +69,16 @@ export default function UsersList() {
                     </p>
                 </div>
                 <button onClick={refresh} className={styles.refreshButton} disabled={loading}>
-                    🔄 Aktualisieren
+                    <Icon name="refresh" size={16} color="currentColor" />
+                    Aktualisieren
                 </button>
             </div>
 
             {users.length === 0 ? (
                 <div className={styles.emptyState}>
-                    <div className={styles.emptyStateIcon}>👥</div>
+                    <div className={styles.emptyStateIcon}>
+                        <Icon name="users" size={48} color="#6B7280" />
+                    </div>
                     <p>Keine Benutzer gefunden.</p>
                 </div>
             ) : (

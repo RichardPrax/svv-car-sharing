@@ -52,16 +52,16 @@
 }
 
 .logoIcon {
-    font-size: 2rem;
-    line-height: 1;
     min-width: 32px;
     width: 32px;
+    height: 32px;
     text-align: center;
     opacity: 1;
     transition: opacity 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #3ecf8e;
 }
 
 .logoText {
@@ -164,10 +164,9 @@
 }
 
 .navIcon {
-    font-size: 1.25rem;
-    line-height: 1;
     min-width: 24px;
     width: 24px;
+    height: 24px;
     text-align: center;
     flex-shrink: 0;
     opacity: 1;
@@ -176,6 +175,12 @@
     align-items: center;
     justify-content: center;
     margin: 0 auto;
+    color: var(--text-secondary);
+}
+
+.navItem:hover .navIcon,
+.navItem.active .navIcon {
+    color: inherit;
 }
 
 .navLabel {
@@ -312,10 +317,9 @@
 }
 
 .logoutIcon {
-    font-size: 1.1rem;
-    line-height: 1;
-    min-width: 24px;
-    width: 24px;
+    min-width: 20px;
+    width: 20px;
+    height: 20px;
     text-align: center;
     flex-shrink: 0;
     opacity: 1;
@@ -324,6 +328,7 @@
     align-items: center;
     justify-content: center;
     margin: 0 auto;
+    color: #fca5a5;
 }
 
 .logoutButton span:last-child {

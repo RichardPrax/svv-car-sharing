@@ -1,4 +1,5 @@
 // src/components/rides/RideActions.tsx
+import { Icon } from "@/components/ui";
 import styles from "./Rides.module.css";
 
 interface RideActionsProps {
@@ -39,7 +40,8 @@ export default function RideActions({ isOwnRide, isUserInRide, isRideFull, isUse
                     <>
                         <span className={styles.ownRideIndicator}>Ihre Fahrt</span>
                         <button onClick={onEdit} className={styles.editButton}>
-                            ✏️ Bearbeiten
+                            <Icon name="edit" size={16} color="currentColor" />
+                            Bearbeiten
                         </button>
                     </>
                 )}

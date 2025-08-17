@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { AdminGuard } from "@/components/admin";
 import AppLayout from "@/components/layout/AppLayout";
 import { useAdminGuard } from "@/hooks/auth/useRoleGuard";
+import { Icon } from "@/components/ui";
 import styles from "@/styles/Pages.module.css";
 
 export default function AdminDashboardPage() {
@@ -23,25 +24,33 @@ export default function AdminDashboardPage() {
 
                     <div className={styles.grid}>
                         <div className={styles.card} onClick={() => router.push("/admin/users")} role="button" tabIndex={0}>
-                            <div className={styles.cardIcon}>👥</div>
+                            <div className={styles.cardIcon}>
+                                <Icon name="users" size={24} color="#10B981" />
+                            </div>
                             <h3 className={styles.cardTitle}>Benutzer verwalten</h3>
                             <p className={styles.cardDescription}>Übersicht aller registrierten Benutzer und deren Rollen</p>
                         </div>
 
                         <div className={`${styles.card} ${styles.cardDisabled}`}>
-                            <div className={styles.cardIcon}>🚗</div>
+                            <div className={styles.cardIcon}>
+                                <Icon name="car" size={24} color="#6B7280" />
+                            </div>
                             <h3 className={styles.cardTitle}>Fahrten verwalten</h3>
                             <p className={styles.cardDescription}>Alle Fahrten einsehen und verwalten (coming soon)</p>
                         </div>
 
                         <div className={`${styles.card} ${styles.cardDisabled}`}>
-                            <div className={styles.cardIcon}>⚽</div>
+                            <div className={styles.cardIcon}>
+                                <Icon name="volleyball" size={24} color="#6B7280" />
+                            </div>
                             <h3 className={styles.cardTitle}>Spiele verwalten</h3>
                             <p className={styles.cardDescription}>Spielplan und Termine verwalten (coming soon)</p>
                         </div>
 
                         <div className={`${styles.card} ${styles.cardDisabled}`}>
-                            <div className={styles.cardIcon}>📊</div>
+                            <div className={styles.cardIcon}>
+                                <Icon name="chart" size={24} color="#6B7280" />
+                            </div>
                             <h3 className={styles.cardTitle}>Statistiken</h3>
                             <p className={styles.cardDescription}>Übersicht über Nutzung und Statistiken (coming soon)</p>
                         </div>

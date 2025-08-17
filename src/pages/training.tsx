@@ -1,3 +1,4 @@
+import { Icon } from "@/components/ui";
 import styles from "../styles/Pages.module.css";
 
 export default function TrainingPage() {
@@ -8,7 +9,7 @@ export default function TrainingPage() {
                     {/* Page Header */}
                     <section className={styles.pageHeader}>
                         <h1 className={styles.pageTitle}>
-                            <span>🏃‍♂️</span>
+                            <Icon name="runner" size={32} color="#3B82F6" />
                             Training
                         </h1>
                     </section>

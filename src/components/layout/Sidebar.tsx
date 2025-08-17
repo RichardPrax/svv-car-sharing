@@ -4,12 +4,13 @@ import { supabase } from "@/lib/supabaseClient";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import { useRoleGuard } from "@/hooks/auth/useRoleGuard";
 import { useRouter } from "next/router";
+import { Icon, type IconName } from "@/components/ui";
 import styles from "./Sidebar.module.css";
 
 interface NavigationItem {
     label: string;
     route: string;
-    icon: string;
+    icon: IconName;
 }
 
 const Sidebar = () => {
@@ -21,19 +22,19 @@ const Sidebar = () => {
     const router = useRouter();
 
     // Add admin navigation items if user has admin access (only after auth is loaded)
-    const allNavigationItems = useMemo(() => {
+    const allNavigationItems: NavigationItem[] = useMemo(() => {
         const baseNavigationItems: NavigationItem[] = [
-            { label: "Dashboard", route: "/", icon: "🏠" },
-            { label: "Training", route: "/training", icon: "🏃‍♂️" },
-            { label: "Spieltage", route: "/matches", icon: "🏐" },
-            { label: "Strafen", route: "/penalties", icon: "⚖️" },
-            { label: "Statistiken", route: "/statistics", icon: "📊" },
+            { label: "Dashboard", route: "/", icon: "home" as IconName },
+            { label: "Training", route: "/training", icon: "runner" as IconName },
+            { label: "Spieltage", route: "/matches", icon: "volleyball" as IconName },
+            { label: "Strafen", route: "/penalties", icon: "scales" as IconName },
+            { label: "Statistiken", route: "/statistics", icon: "chart" as IconName },
         ];
-        
+
         if (authLoading || !userProfile) {
             return baseNavigationItems;
         }
-        return hasAdminAccess() ? [...baseNavigationItems, { label: "Benutzer verwalten", route: "/admin/users", icon: "👥" }] : baseNavigationItems;
+        return hasAdminAccess() ? [...baseNavigationItems, { label: "Benutzer verwalten", route: "/admin/users", icon: "users" as IconName }] : baseNavigationItems;
     }, [authLoading, userProfile, hasAdminAccess]);
 
     // Close mobile menu on route change
@@ -95,12 +96,8 @@ const Sidebar = () => {
     return (
         <>
             {/* Mobile Menu Button */}
-            <button 
-                className={`${styles.mobileMenuButton} ${isMobileOpen ? styles.menuOpen : ""}`} 
-                onClick={toggleMobileMenu} 
-                aria-label={isMobileOpen ? "Menu schließen" : "Menu öffnen"}
-            >
-                {isMobileOpen ? "✕" : "☰"}
+            <button className={styles.mobileMenuButton} onClick={toggleMobileMenu} aria-label="Menu öffnen">
+                <Icon name="menu" size={24} color="white" />
             </button>
 
             {/* Mobile Overlay */}
@@ -110,7 +107,9 @@ const Sidebar = () => {
                 {/* Header Section */}
                 <div className={styles.sidebarHeader}>
                     <div className={styles.logo} onClick={handleLogoClick}>
-                        <span className={styles.logoIcon}>🏐</span>
+                        <span className={styles.logoIcon}>
+                            <Icon name="volleyball" size={32} />
+                        </span>
                         <h1 className={styles.logoText}>SVV Manager</h1>
                     </div>
                 </div>
@@ -124,7 +123,9 @@ const Sidebar = () => {
                             className={`${styles.navItem} ${isRouteActive(item.route) ? styles.active : ""}`}
                             title={!isHovered ? item.label : undefined}
                         >
-                            <span className={styles.navIcon}>{item.icon}</span>
+                            <span className={styles.navIcon}>
+                                <Icon name={item.icon} size={24} />
+                            </span>
                             <span className={styles.navLabel}>{item.label}</span>
                         </button>
                     ))}
@@ -158,7 +159,9 @@ const Sidebar = () => {
                     )}
 
                     <button onClick={handleLogout} disabled={loading} className={styles.logoutButton} title={!isHovered ? "Abmelden" : undefined}>
-                        <span className={styles.logoutIcon}>🚪</span>
+                        <span className={styles.logoutIcon}>
+                            <Icon name="logout" size={20} />
+                        </span>
                         <span>{loading ? "Abmelden..." : "Abmelden"}</span>
                     </button>
                 </div>

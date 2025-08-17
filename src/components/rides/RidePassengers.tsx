@@ -1,4 +1,5 @@
 // src/components/rides/RidePassengers.tsx
+import { Icon } from "@/components/ui";
 import styles from "./Rides.module.css";
 
 interface RidePassengersProps {
@@ -15,7 +16,8 @@ export default function RidePassengers({ passengerCount, passengerNames }: RideP
             <div className={styles.ridePassengersList}>
                 {passengerNames?.map((name, index) => (
                     <span key={index} className={styles.ridePassengerTag}>
-                        👤 {name}
+                        <Icon name="user" size={16} color="currentColor" />
+                        {name}
                     </span>
                 ))}
             </div>
