@@ -125,7 +125,7 @@ export default function MatchDetailPage() {
                 />
 
                 {/* Rides Section */}
-                <div className={styles.ridesSection}>
+                <div className={styles.ridesSection} style={{ marginTop: '2rem' }}>
                     <div className={styles.ridesSectionHeader}>
                         <h2 className={styles.ridesSectionTitle}>Fahrten</h2>
                         <div style={{ position: "relative" }}>
