@@ -388,14 +388,47 @@
         transform: translateX(-100%);
         transition: transform 0.3s ease-in-out;
         width: 280px;
+        max-width: 280px;
     }
 
     .sidebar:hover {
         width: 280px;
+        max-width: 280px;
     }
 
     .sidebar.mobileOpen {
         transform: translateX(0);
+    }
+
+    /* Disable hover effects on mobile */
+    .sidebar:hover .navItem .navIcon,
+    .sidebar:hover .logoutButton .logoutIcon {
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        transform: none !important;
+        margin: 0 !important;
+    }
+
+    .sidebar:hover .navItem {
+        justify-content: flex-start !important;
+        padding: var(--spacing-md) var(--spacing-lg) !important;
+        gap: var(--spacing-md) !important;
+    }
+
+    .sidebar:hover .logoutButton {
+        justify-content: flex-start !important;
+        padding: var(--spacing-md) var(--spacing-lg) !important;
+        gap: var(--spacing-md) !important;
+    }
+
+    .sidebar:hover .logo {
+        justify-content: flex-start !important;
+        gap: var(--spacing-md) !important;
+    }
+
+    .sidebar:hover .navigation {
+        padding: var(--spacing-lg) var(--spacing-md) !important;
     }
 
     .sidebar.mobileOpen .logoText,
@@ -407,6 +440,44 @@
 
     .sidebar.mobileOpen .logoutButton {
         justify-content: flex-start;
+    }
+
+    /* Reset absolute positioning for mobile */
+    .sidebar.mobileOpen .navItem .navIcon {
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        transform: none !important;
+        margin: 0 !important;
+    }
+
+    .sidebar.mobileOpen .logoutButton .logoutIcon {
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        transform: none !important;
+        margin: 0 !important;
+    }
+
+    .sidebar.mobileOpen .navItem {
+        justify-content: flex-start !important;
+        padding: var(--spacing-md) var(--spacing-lg) !important;
+        gap: var(--spacing-md) !important;
+    }
+
+    .sidebar.mobileOpen .logoutButton {
+        justify-content: flex-start !important;
+        padding: var(--spacing-md) var(--spacing-lg) !important;
+        gap: var(--spacing-md) !important;
+    }
+
+    .sidebar.mobileOpen .logo {
+        justify-content: flex-start !important;
+        gap: var(--spacing-md) !important;
+    }
+
+    .sidebar.mobileOpen .navigation {
+        padding: var(--spacing-lg) var(--spacing-md) !important;
     }
 }
 
