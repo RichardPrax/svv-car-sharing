@@ -64,19 +64,19 @@ export default function MatchDayCard({ match }: Props) {
                             {overview.counts.joining > 0 && (
                                 <span className={styles.matchCardParticipationCount} style={{ color: '#10b981' }}>
                                     <ThumbsUpIcon size={16} />
-                                    <span>{overview.counts.joining}</span>
+                                    <span style={{ marginLeft: '4px' }}>{overview.counts.joining}</span>
                                 </span>
                             )}
                             {overview.counts.tentative > 0 && (
                                 <span className={styles.matchCardParticipationCount} style={{ color: '#f59e0b' }}>
                                     <QuestionMarkIcon size={16} />
-                                    <span>{overview.counts.tentative}</span>
+                                    <span style={{ marginLeft: '4px' }}>{overview.counts.tentative}</span>
                                 </span>
                             )}
                             {overview.counts.declining > 0 && (
                                 <span className={styles.matchCardParticipationCount} style={{ color: '#ef4444' }}>
                                     <ThumbsDownIcon size={16} />
-                                    <span>{overview.counts.declining}</span>
+                                    <span style={{ marginLeft: '4px' }}>{overview.counts.declining}</span>
                                 </span>
                             )}
                         </div>
