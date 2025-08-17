@@ -352,12 +352,23 @@
     cursor: pointer;
     font-size: 1.25rem;
     box-shadow: 0 4px 12px rgba(62, 207, 142, 0.3);
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
+    align-items: center;
+    justify-content: center;
 }
 
 .mobileMenuButton:hover {
     transform: scale(1.05);
     box-shadow: 0 6px 16px rgba(62, 207, 142, 0.4);
+}
+
+.mobileMenuButton.menuOpen {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.mobileMenuButton.menuOpen:hover {
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
 }
 
 .mobileOverlay {

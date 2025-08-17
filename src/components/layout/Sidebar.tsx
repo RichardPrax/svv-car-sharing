@@ -95,8 +95,12 @@ const Sidebar = () => {
     return (
         <>
             {/* Mobile Menu Button */}
-            <button className={styles.mobileMenuButton} onClick={toggleMobileMenu} aria-label="Menu öffnen">
-                ☰
+            <button 
+                className={`${styles.mobileMenuButton} ${isMobileOpen ? styles.menuOpen : ""}`} 
+                onClick={toggleMobileMenu} 
+                aria-label={isMobileOpen ? "Menu schließen" : "Menu öffnen"}
+            >
+                {isMobileOpen ? "✕" : "☰"}
             </button>
 
             {/* Mobile Overlay */}
