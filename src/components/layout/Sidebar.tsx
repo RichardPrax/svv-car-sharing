@@ -20,20 +20,20 @@ const Sidebar = () => {
     const { hasAdminAccess } = useRoleGuard();
     const router = useRouter();
 
-    const navigationItems: NavigationItem[] = [
-        { label: "Dashboard", route: "/", icon: "🏠" },
-        { label: "Training", route: "/training", icon: "🏃‍♂️" },
-        { label: "Spieltage", route: "/matches", icon: "🏐" },
-        { label: "Strafen", route: "/penalties", icon: "⚖️" },
-        { label: "Statistiken", route: "/statistics", icon: "📊" },
-    ];
-
     // Add admin navigation items if user has admin access (only after auth is loaded)
     const allNavigationItems = useMemo(() => {
+        const baseNavigationItems: NavigationItem[] = [
+            { label: "Dashboard", route: "/", icon: "🏠" },
+            { label: "Training", route: "/training", icon: "🏃‍♂️" },
+            { label: "Spieltage", route: "/matches", icon: "🏐" },
+            { label: "Strafen", route: "/penalties", icon: "⚖️" },
+            { label: "Statistiken", route: "/statistics", icon: "📊" },
+        ];
+        
         if (authLoading || !userProfile) {
-            return navigationItems;
+            return baseNavigationItems;
         }
-        return hasAdminAccess() ? [...navigationItems, { label: "Benutzer verwalten", route: "/admin/users", icon: "👥" }] : navigationItems;
+        return hasAdminAccess() ? [...baseNavigationItems, { label: "Benutzer verwalten", route: "/admin/users", icon: "👥" }] : baseNavigationItems;
     }, [authLoading, userProfile, hasAdminAccess]);
 
     // Close mobile menu on route change

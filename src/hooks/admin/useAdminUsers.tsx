@@ -1,5 +1,5 @@
 // src/hooks/admin/useAdminUsers.tsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { UserProfile } from "@/entities/UserProfile";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 
@@ -19,7 +19,7 @@ export function useAdminUsers() {
     const [error, setError] = useState<string | null>(null);
     const { session } = useOptimizedAuth();
 
-    const fetchUsers = async () => {
+    const fetchUsers = useCallback(async () => {
         if (!session?.access_token) {
             setError("No access token available");
             setLoading(false);
@@ -51,11 +51,11 @@ export function useAdminUsers() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [session?.access_token]);
 
     useEffect(() => {
         fetchUsers();
-    }, [session?.access_token]);
+    }, [fetchUsers]);
 
     const refresh = () => {
         fetchUsers();

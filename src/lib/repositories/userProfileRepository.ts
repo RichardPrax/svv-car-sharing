@@ -1,6 +1,7 @@
 // src/lib/repositories/userProfileRepository.ts
 import { prisma } from "../prisma";
 import { UserProfile } from "../../entities/UserProfile";
+import { UserRole } from "@prisma/client";
 
 export class UserProfileRepository {
     // Get all user profiles
@@ -61,15 +62,8 @@ export class UserProfileRepository {
         });
     }
 
-    // Create new user profile with specific ID (for auth webhook)
-    async createWithId(data: Omit<UserProfile, "createdAt" | "updatedAt">): Promise<UserProfile> {
-        return await prisma.userProfile.create({
-            data,
-        });
-    }
-
     // Update user profile
-    async update(id: string, data: any): Promise<UserProfile> {
+    async update(id: string, data: Partial<Omit<UserProfile, "id" | "createdAt" | "updatedAt">>): Promise<UserProfile> {
         return await prisma.userProfile.update({
             where: { id },
             data,
@@ -77,10 +71,10 @@ export class UserProfileRepository {
     }
 
     // Update user role (admin only)
-    async updateRole(id: string, role: string): Promise<UserProfile> {
+    async updateRole(id: string, role: UserRole): Promise<UserProfile> {
         return await prisma.userProfile.update({
             where: { id },
-            data: { role } as any,
+            data: { role },
         });
     }
 
