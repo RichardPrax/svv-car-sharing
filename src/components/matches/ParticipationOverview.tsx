@@ -1,7 +1,7 @@
-import React from 'react';
-import { useParticipationOverview, ParticipationData } from '@/hooks/matches/useParticipationOverview';
-import { ThumbsUpIcon, ThumbsDownIcon, QuestionMarkIcon } from '@/components/ui/GameParticipationIcons';
-import styles from './Matches.module.css';
+import React from "react";
+import { useParticipationOverview, ParticipationData } from "@/hooks/matches/useParticipationOverview";
+import { ThumbsUpIcon, ThumbsDownIcon, QuestionMarkIcon } from "@/components/ui/GameParticipationIcons";
+import styles from "./Matches.module.css";
 
 interface ParticipationOverviewProps {
     matchId: string;
@@ -13,24 +13,15 @@ interface ParticipationSectionProps {
     icon: React.ReactNode;
     participations: ParticipationData[];
     count: number;
-    className: string;
 }
 
-const ParticipationSection: React.FC<ParticipationSectionProps> = ({ 
-    title, 
-    icon, 
-    participations, 
-    count, 
-    className 
-}) => {
+const ParticipationSection: React.FC<ParticipationSectionProps> = ({ title, icon, participations, count }) => {
     if (count === 0) return null;
 
     return (
         <div className={styles.participationSection}>
             <div className={styles.participationSectionHeader}>
-                <div className={styles.participationSectionIcon}>
-                    {icon}
-                </div>
+                <div className={styles.participationSectionIcon}>{icon}</div>
                 <h3 className={styles.participationSectionTitle}>
                     {title} ({count})
                 </h3>
@@ -42,16 +33,17 @@ const ParticipationSection: React.FC<ParticipationSectionProps> = ({
                             <span className={styles.participationItemName}>
                                 {participation.player.firstName} {participation.player.lastName}
                             </span>
-                            <span className={styles.participationItemRole}>
-                                {participation.player.role}
-                            </span>
+                            <span className={styles.participationItemRole}>{participation.player.role}</span>
+                            {(participation.status === "DECLINING" || participation.status === "TENTATIVE") && participation.reason && (
+                                <span className={styles.participationItemReason}>Grund: {participation.reason}</span>
+                            )}
                         </div>
                         <div className={styles.participationItemTime}>
-                            {new Date(participation.updatedAt).toLocaleDateString('de-DE', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                hour: '2-digit',
-                                minute: '2-digit'
+                            {new Date(participation.updatedAt).toLocaleDateString("de-DE", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                hour: "2-digit",
+                                minute: "2-digit",
                             })}
                         </div>
                     </div>
@@ -67,9 +59,7 @@ export default function ParticipationOverview({ matchId, refreshTrigger }: Parti
     if (loading) {
         return (
             <div className={styles.participationOverviewContainer}>
-                <div className={styles.participationOverviewLoading}>
-                    Lade Teilnahme-Übersicht...
-                </div>
+                <div className={styles.participationOverviewLoading}>Lade Teilnahme-Übersicht...</div>
             </div>
         );
     }
@@ -78,9 +68,7 @@ export default function ParticipationOverview({ matchId, refreshTrigger }: Parti
         return (
             <div className={styles.participationOverviewContainer}>
                 <div className={styles.participationOverviewError}>
-                    {error.includes('Database migration')
-                        ? 'Teilnahme-System wird eingerichtet...'
-                        : 'Teilnahme-Übersicht nicht verfügbar'}
+                    {error.includes("Database migration") ? "Teilnahme-System wird eingerichtet..." : "Teilnahme-Übersicht nicht verfügbar"}
                 </div>
             </div>
         );
@@ -91,9 +79,7 @@ export default function ParticipationOverview({ matchId, refreshTrigger }: Parti
             <div className={styles.participationOverviewContainer}>
                 <div className={styles.participationOverviewEmpty}>
                     <h3 className={styles.participationOverviewEmptyTitle}>Teilnahme-Übersicht</h3>
-                    <p className={styles.participationOverviewEmptyText}>
-                        Noch keine Teilnahme-Anmeldungen vorhanden.
-                    </p>
+                    <p className={styles.participationOverviewEmptyText}>Noch keine Teilnahme-Anmeldungen vorhanden.</p>
                 </div>
             </div>
         );
@@ -104,27 +90,18 @@ export default function ParticipationOverview({ matchId, refreshTrigger }: Parti
             <div className={styles.participationOverviewHeader}>
                 <h3 className={styles.participationOverviewTitle}>Teilnahme-Übersicht</h3>
                 <div className={styles.participationOverviewStats}>
-                    <span className={styles.participationOverviewTotal}>
-                        Gesamt: {overview.counts.total}
-                    </span>
+                    <span className={styles.participationOverviewTotal}>Gesamt: {overview.counts.total}</span>
                 </div>
             </div>
 
             <div className={styles.participationOverviewContent}>
-                <ParticipationSection
-                    title="Dabei"
-                    icon={<ThumbsUpIcon size={20} />}
-                    participations={overview.participations.JOINING}
-                    count={overview.counts.joining}
-                    className={styles.participationSectionJoining}
-                />
+                <ParticipationSection title="Dabei" icon={<ThumbsUpIcon size={20} />} participations={overview.participations.JOINING} count={overview.counts.joining} />
 
                 <ParticipationSection
                     title="Vielleicht"
                     icon={<QuestionMarkIcon size={20} />}
                     participations={overview.participations.TENTATIVE}
                     count={overview.counts.tentative}
-                    className={styles.participationSectionTentative}
                 />
 
                 <ParticipationSection
@@ -132,9 +109,9 @@ export default function ParticipationOverview({ matchId, refreshTrigger }: Parti
                     icon={<ThumbsDownIcon size={20} />}
                     participations={overview.participations.DECLINING}
                     count={overview.counts.declining}
-                    className={styles.participationSectionDeclining}
                 />
             </div>
         </div>
     );
 }
+

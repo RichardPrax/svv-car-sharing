@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useOptimizedAuth } from '@/hooks/auth/useOptimizedAuth';
+import { useState, useEffect, useCallback } from "react";
+import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 
 export interface ParticipationPlayer {
     id: string;
@@ -12,7 +12,8 @@ export interface ParticipationData {
     id: string;
     matchDayId: string;
     playerId: string;
-    status: 'JOINING' | 'TENTATIVE' | 'DECLINING';
+    status: "JOINING" | "TENTATIVE" | "DECLINING";
+    reason?: string | null; // Grund für Absage
     createdAt: string;
     updatedAt: string;
     player: ParticipationPlayer;
@@ -62,14 +63,14 @@ export function useParticipationOverview({ matchId, refreshTrigger = 0 }: UsePar
         try {
             const token = session?.access_token;
             if (!token) {
-                console.log('No access token available, skipping overview fetch');
+                console.log("No access token available, skipping overview fetch");
                 setOverview(null);
                 return;
             }
 
             const response = await fetch(`/api/matches/${matchId}/participation/overview`, {
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
 
@@ -79,29 +80,30 @@ export function useParticipationOverview({ matchId, refreshTrigger = 0 }: UsePar
             } else if (response.status === 404) {
                 setOverview(null);
             } else if (response.status === 500) {
-                console.log('Server error - database migration might not be applied yet');
+                console.log("Server error - database migration might not be applied yet");
                 setOverview(null);
             } else {
                 throw new Error(`Failed to fetch participation overview: ${response.status}`);
             }
         } catch (err) {
-            console.error('Error fetching participation overview:', err);
-            setError('Failed to load participation overview');
+            console.error("Error fetching participation overview:", err);
+            setError("Failed to load participation overview");
         } finally {
             setLoading(false);
         }
     }, [matchId, session]);
 
-      useEffect(() => {
-    if (matchId) {
-      fetchOverview();
-    }
-  }, [fetchOverview, refreshTrigger]);
+    useEffect(() => {
+        if (matchId) {
+            fetchOverview();
+        }
+    }, [fetchOverview, refreshTrigger, matchId]);
 
     return {
         overview,
         loading,
         error,
-        refetch: fetchOverview
+        refetch: fetchOverview,
     };
 }
+

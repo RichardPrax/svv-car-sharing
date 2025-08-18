@@ -1,107 +1,126 @@
-import React, { useMemo } from 'react';
-import { useGameParticipation, GameParticipationStatus } from '@/hooks/matches/useGameParticipation';
-import { ThumbsUpIcon, ThumbsDownIcon, QuestionMarkIcon } from '@/components/ui/GameParticipationIcons';
-import styles from './Matches.module.css';
+import React, { useMemo, useState } from "react";
+import { useGameParticipation, GameParticipationStatus } from "@/hooks/matches/useGameParticipation";
+import { ThumbsUpIcon, ThumbsDownIcon, QuestionMarkIcon } from "@/components/ui/GameParticipationIcons";
+import DeclineReasonModal from "./DeclineReasonModal";
+import styles from "./Matches.module.css";
 
 interface GameParticipationButtonsProps {
-  matchDayId: string;
-  refreshTrigger?: number;
-  onParticipationChange?: () => void;
+    matchDayId: string;
+    refreshTrigger?: number;
+    onParticipationChange?: () => void;
 }
 
-export default function GameParticipationButtons({ 
-  matchDayId, 
-  refreshTrigger, 
-  onParticipationChange 
-}: GameParticipationButtonsProps) {
-  const { 
-    participation, 
-    loading, 
-    error,
-    updating, 
-    updateParticipation, 
-    removeParticipation 
-  } = useGameParticipation({ matchDayId, refreshTrigger });
+export default function GameParticipationButtons({ matchDayId, refreshTrigger, onParticipationChange }: GameParticipationButtonsProps) {
+    const [showDeclineModal, setShowDeclineModal] = useState(false);
+    const [pendingStatus, setPendingStatus] = useState<GameParticipationStatus | null>(null);
 
-  const handleParticipationClick = async (status: GameParticipationStatus) => {
-    // If clicking the same status, remove participation
-    if (participation?.status === status) {
-      const result = await removeParticipation();
-      if (result.success) {
-        onParticipationChange?.();
-      }
-      return;
-    }
+    const { participation, loading, error, updating, updateParticipation, removeParticipation } = useGameParticipation({ matchDayId, refreshTrigger });
 
-    // Otherwise, update to new status
-    const result = await updateParticipation(status);
-    if (result.success) {
-      onParticipationChange?.();
-    }
-  };
+    const handleParticipationClick = async (status: GameParticipationStatus) => {
+        // If clicking the same status, remove participation
+        if (participation?.status === status) {
+            const result = await removeParticipation();
+            if (result.success) {
+                onParticipationChange?.();
+            }
+            return;
+        }
 
-  const buttonClasses = useMemo(() => ({
-    joining: `${styles.participationButton} ${participation?.status === 'JOINING' ? styles.participationButtonActive : ''} ${styles.participationButtonJOINING}`.trim(),
-    tentative: `${styles.participationButton} ${participation?.status === 'TENTATIVE' ? styles.participationButtonActive : ''} ${styles.participationButtonTENTATIVE}`.trim(),
-    declining: `${styles.participationButton} ${participation?.status === 'DECLINING' ? styles.participationButtonActive : ''} ${styles.participationButtonDECLINING}`.trim(),
-  }), [participation?.status]);
+        // For DECLINING and TENTATIVE status, show modal to get reason
+        if (status === "DECLINING" || status === "TENTATIVE") {
+            setPendingStatus(status);
+            setShowDeclineModal(true);
+            return;
+        } // Otherwise, update to new status
+        const result = await updateParticipation(status);
+        if (result.success) {
+            onParticipationChange?.();
+        }
+    };
 
-  // Show buttons immediately, with loading state overlay if needed
-  const showLoadingOverlay = loading && !participation;
+    const handleDeclineConfirm = async (reason: string) => {
+        if (!pendingStatus) return;
 
-  // If there's an error, show a simple message
-  if (error) {
-    return (
-      <div className={styles.participationButtonsContainer}>
-        <div className={styles.participationButtonsLoading}>
-          {error.includes('Database migration') 
-            ? 'Teilnahme-System wird eingerichtet...' 
-            : 'Teilnahme-System nicht verfügbar'}
-        </div>
-      </div>
+        const result = await updateParticipation(pendingStatus, reason);
+        if (result.success) {
+            setShowDeclineModal(false);
+            setPendingStatus(null);
+            onParticipationChange?.();
+        }
+    };
+
+    const handleModalClose = () => {
+        setShowDeclineModal(false);
+        setPendingStatus(null);
+    };
+    const buttonClasses = useMemo(
+        () => ({
+            joining: `${styles.participationButton} ${participation?.status === "JOINING" ? styles.participationButtonActive : ""} ${styles.participationButtonJOINING}`.trim(),
+            tentative: `${styles.participationButton} ${participation?.status === "TENTATIVE" ? styles.participationButtonActive : ""} ${
+                styles.participationButtonTENTATIVE
+            }`.trim(),
+            declining: `${styles.participationButton} ${participation?.status === "DECLINING" ? styles.participationButtonActive : ""} ${
+                styles.participationButtonDECLINING
+            }`.trim(),
+        }),
+        [participation?.status]
     );
-  }
 
-  return (
-    <div className={styles.participationButtonsContainer}>
-      {showLoadingOverlay && (
-        <div className={styles.participationButtonsLoading}>Lade...</div>
-      )}
-      <div className={styles.participationButtonsLabel}>Teilnahme:</div>
-      <div className={styles.participationButtons}>
-        <button
-          className={buttonClasses.joining}
-          onClick={() => handleParticipationClick('JOINING')}
-          disabled={updating}
-          title="Ich komme zum Spiel"
-          aria-label="Ich komme zum Spiel"
-        >
-          <ThumbsUpIcon size={20} />
-          <span className={styles.participationButtonText}>Dabei</span>
-        </button>
+    // Show buttons immediately, with loading state overlay if needed
+    const showLoadingOverlay = loading && !participation;
 
-        <button
-          className={buttonClasses.tentative}
-          onClick={() => handleParticipationClick('TENTATIVE')}
-          disabled={updating}
-          title="Ich bin mir nicht sicher"
-          aria-label="Ich bin mir nicht sicher"
-        >
-          <QuestionMarkIcon size={20} />
-          <span className={styles.participationButtonText}>Vielleicht</span>
-        </button>
+    // If there's an error, show a simple message
+    if (error) {
+        return (
+            <div className={styles.participationButtonsContainer}>
+                <div className={styles.participationButtonsLoading}>
+                    {error.includes("Database migration") ? "Teilnahme-System wird eingerichtet..." : "Teilnahme-System nicht verfügbar"}
+                </div>
+            </div>
+        );
+    }
 
-        <button
-          className={buttonClasses.declining}
-          onClick={() => handleParticipationClick('DECLINING')}
-          disabled={updating}
-          title="Ich kann nicht kommen"
-          aria-label="Ich kann nicht kommen"
-        >
-          <ThumbsDownIcon size={20} />
-          <span className={styles.participationButtonText}>Nicht dabei</span>
-        </button>
-      </div>
-    </div>
-  );
+    return (
+        <div className={styles.participationButtonsContainer}>
+            {showLoadingOverlay && <div className={styles.participationButtonsLoading}>Lade...</div>}
+            <div className={styles.participationButtonsLabel}>Teilnahme:</div>
+            <div className={styles.participationButtons}>
+                <button
+                    className={buttonClasses.joining}
+                    onClick={() => handleParticipationClick("JOINING")}
+                    disabled={updating}
+                    title="Ich komme zum Spiel"
+                    aria-label="Ich komme zum Spiel"
+                >
+                    <ThumbsUpIcon size={20} />
+                    <span className={styles.participationButtonText}>Dabei</span>
+                </button>
+
+                <button
+                    className={buttonClasses.tentative}
+                    onClick={() => handleParticipationClick("TENTATIVE")}
+                    disabled={updating}
+                    title="Ich bin mir nicht sicher"
+                    aria-label="Ich bin mir nicht sicher"
+                >
+                    <QuestionMarkIcon size={20} />
+                    <span className={styles.participationButtonText}>Vielleicht</span>
+                </button>
+
+                <button
+                    className={buttonClasses.declining}
+                    onClick={() => handleParticipationClick("DECLINING")}
+                    disabled={updating}
+                    title="Ich kann nicht kommen"
+                    aria-label="Ich kann nicht kommen"
+                >
+                    <ThumbsDownIcon size={20} />
+                    <span className={styles.participationButtonText}>Nicht dabei</span>
+                </button>
+            </div>
+
+            <DeclineReasonModal isOpen={showDeclineModal} onClose={handleModalClose} onConfirm={handleDeclineConfirm} isLoading={updating} statusType={pendingStatus} />
+        </div>
+    );
 }
+

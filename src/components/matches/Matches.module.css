@@ -121,8 +121,6 @@
     gap: 4px;
 }
 
-
-
 /* Next Match Card */
 .nextMatchCard {
     background: linear-gradient(135deg, var(--card-background) 0%, var(--surface) 100%);
@@ -461,8 +459,22 @@
 .participationItemRole {
     font-size: 0.75rem;
     color: var(--text-secondary);
+    background-color: var(--background-secondary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-md);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.5px;
+}
+
+.participationItemReason {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-top: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background-color: var(--background-muted, #f8f9fa);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--error-color, #ef4444);
 }
 
 .participationItemTime {
@@ -516,5 +528,59 @@
     .participationItemTime {
         align-self: flex-end;
     }
+}
+
+/* Decline Reason Modal Specific Styles */
+.modalDescription {
+    color: var(--text-secondary);
+    margin: 0 0 var(--spacing-lg) 0;
+    line-height: 1.5;
+}
+
+.formField {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.formLabel {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+.formTextarea {
+    padding: var(--spacing-md);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 1rem;
+    background-color: var(--input-background, white);
+    color: var(--text-primary);
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.2s;
+}
+
+.formTextarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.formError {
+    color: var(--error-color, #ef4444);
+    font-size: 0.875rem;
+    margin-top: var(--spacing-xs);
+}
+
+.modalFooter {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border-light);
 }
 

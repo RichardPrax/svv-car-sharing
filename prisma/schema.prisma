@@ -99,6 +99,7 @@ model GameParticipation {
   matchDayId  String                 @map("match_day_id")
   playerId    String                 @map("player_id")
   status      GameParticipationStatus
+  reason      String?                @map("reason") // Grund für Absage (nur bei DECLINING erforderlich)
   createdAt   DateTime               @default(now()) @map("created_at")
   updatedAt   DateTime               @updatedAt @map("updated_at")
 

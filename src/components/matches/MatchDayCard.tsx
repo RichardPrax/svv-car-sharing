@@ -17,12 +17,12 @@ type Props = {
 export default function MatchDayCard({ match }: Props) {
     const isPast = isMatchInPast(match.date, match.time);
     const router = useRouter();
-    const { user, userProfile } = useOptimizedAuth();
+    const { user } = useOptimizedAuth();
     const { hasPlayerAccess } = useRoleGuard();
     const [participationRefreshTrigger, setParticipationRefreshTrigger] = useState(0);
-    const { overview } = useParticipationOverview({ 
+    const { overview } = useParticipationOverview({
         matchId: match.id,
-        refreshTrigger: participationRefreshTrigger
+        refreshTrigger: participationRefreshTrigger,
     });
 
     const handleCardClick = () => {
@@ -62,21 +62,21 @@ export default function MatchDayCard({ match }: Props) {
                         <span className={styles.matchCardParticipationLabel}>Teilnahme:</span>
                         <div className={styles.matchCardParticipationCounts}>
                             {overview.counts.joining > 0 && (
-                                <span className={styles.matchCardParticipationCount} style={{ color: '#10b981' }}>
+                                <span className={styles.matchCardParticipationCount} style={{ color: "#10b981" }}>
                                     <ThumbsUpIcon size={16} />
-                                    <span style={{ marginLeft: '4px' }}>{overview.counts.joining}</span>
+                                    <span style={{ marginLeft: "4px" }}>{overview.counts.joining}</span>
                                 </span>
                             )}
                             {overview.counts.tentative > 0 && (
-                                <span className={styles.matchCardParticipationCount} style={{ color: '#f59e0b' }}>
+                                <span className={styles.matchCardParticipationCount} style={{ color: "#f59e0b" }}>
                                     <QuestionMarkIcon size={16} />
-                                    <span style={{ marginLeft: '4px' }}>{overview.counts.tentative}</span>
+                                    <span style={{ marginLeft: "4px" }}>{overview.counts.tentative}</span>
                                 </span>
                             )}
                             {overview.counts.declining > 0 && (
-                                <span className={styles.matchCardParticipationCount} style={{ color: '#ef4444' }}>
+                                <span className={styles.matchCardParticipationCount} style={{ color: "#ef4444" }}>
                                     <ThumbsDownIcon size={16} />
-                                    <span style={{ marginLeft: '4px' }}>{overview.counts.declining}</span>
+                                    <span style={{ marginLeft: "4px" }}>{overview.counts.declining}</span>
                                 </span>
                             )}
                         </div>
@@ -84,19 +84,17 @@ export default function MatchDayCard({ match }: Props) {
                 )}
             </div>
 
-
-
             {/* Show participation buttons only for players and future matches */}
             {user && hasPlayerAccess() && !isPast && (
                 <div onClick={handleParticipationClick}>
-                    <GameParticipationButtons 
+                    <GameParticipationButtons
                         matchDayId={match.id}
                         refreshTrigger={participationRefreshTrigger}
                         onParticipationChange={() => {
                             // Trigger a refresh of the participation overview
                             // Small delay to ensure the API call completes
                             setTimeout(() => {
-                                setParticipationRefreshTrigger(prev => prev + 1);
+                                setParticipationRefreshTrigger((prev) => prev + 1);
                             }, 100);
                         }}
                     />
