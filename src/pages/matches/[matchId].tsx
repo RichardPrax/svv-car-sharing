@@ -7,7 +7,7 @@ import { formatDate, formatTime } from "@/utils/dateTime";
 import { CreateRideForm } from "@/components/forms";
 import { RidesList } from "@/components/rides";
 import { LoadingSpinner, Modal, Tabs, TabList, Tab, TabPanel, UsersIcon, CarIcon, BagIcon } from "@/components/ui";
-import { ParticipationSummary, BringItemsPlaceholder } from "@/components/matches";
+import { ParticipationSummary, BringItems } from "@/components/matches";
 import { useParticipationOverview } from "@/hooks/matches/useParticipationOverview";
 import styles from "../../styles/Pages.module.css";
 
@@ -195,7 +195,7 @@ export default function MatchDetailPage() {
                     </TabPanel>
 
                     <TabPanel value="bring-items">
-                        <BringItemsPlaceholder matchId={match.id} />
+                        <BringItems matchId={match.id} />
                     </TabPanel>
                 </Tabs>
 

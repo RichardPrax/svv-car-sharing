@@ -28,6 +28,7 @@ model UserProfile {
   drivenRides     Ride[]           @relation("RideDriver")
   ridePassengers  RidePassenger[]
   gameParticipations GameParticipation[]
+  bringItems      BringItem[]
 
   @@map("user_profiles")
 }
@@ -56,6 +57,7 @@ model MatchDay {
   // Relations
   rides Ride[]
   gameParticipations GameParticipation[]
+  bringItems BringItem[]
 
   @@map("match_days")
 }
@@ -110,4 +112,20 @@ model GameParticipation {
   // Ensure a player can only have one participation status per match day
   @@unique([matchDayId, playerId])
   @@map("game_participations")
+}
+
+model BringItem {
+  id          String   @id @default(cuid())
+  matchDayId  String   @map("match_day_id")
+  userId      String   @map("user_id")
+  itemName    String   @map("item_name")
+  description String?  @map("description")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  matchDay MatchDay    @relation(fields: [matchDayId], references: [id], onDelete: Cascade)
+  user     UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("bring_items")
 }

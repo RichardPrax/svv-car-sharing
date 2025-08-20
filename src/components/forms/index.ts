@@ -6,4 +6,5 @@ export { default as Textarea } from "./Textarea";
 export { default as Button } from "./Button";
 export { default as CreateRideForm } from "./CreateRideForm";
 export { default as EditRideForm } from "./EditRideForm";
+export { default as CreateBringItemForm } from "./CreateBringItemForm";
 
