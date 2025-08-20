@@ -6,8 +6,9 @@ import { useUserRideCheck, useUserParticipationCheck } from "@/hooks/rides";
 import { formatDate, formatTime } from "@/utils/dateTime";
 import { CreateRideForm } from "@/components/forms";
 import { RidesList } from "@/components/rides";
-import { LoadingSpinner, Modal } from "@/components/ui";
-import { ParticipationOverview } from "@/components/matches";
+import { LoadingSpinner, Modal, Tabs, TabList, Tab, TabPanel, UsersIcon, CarIcon, BagIcon } from "@/components/ui";
+import { ParticipationSummary, BringItemsPlaceholder } from "@/components/matches";
+import { useParticipationOverview } from "@/hooks/matches/useParticipationOverview";
 import styles from "../../styles/Pages.module.css";
 
 export default function MatchDetailPage() {
@@ -27,6 +28,12 @@ export default function MatchDetailPage() {
         refreshTrigger,
     });
     const { isParticipating, recheckParticipation } = useUserParticipationCheck({
+        matchId: matchId as string,
+        refreshTrigger,
+    });
+
+    // Get participation overview for badge counts
+    const { overview } = useParticipationOverview({
         matchId: matchId as string,
         refreshTrigger,
     });
@@ -118,61 +125,79 @@ export default function MatchDetailPage() {
                     </div>
                 </div>
 
-                {/* Participation Overview Section */}
-                <ParticipationOverview 
-                    matchId={match.id} 
-                    refreshTrigger={refreshTrigger} 
-                />
+                {/* Tab Navigation */}
+                <Tabs defaultTab="participation" className={styles.matchTabs}>
+                    <TabList>
+                        <Tab value="participation" icon={<UsersIcon size={18} />} badge={overview?.counts.open}>
+                            Teilnahme
+                        </Tab>
+                        <Tab value="rides" icon={<CarIcon size={18} />}>
+                            Fahrten
+                        </Tab>
+                        <Tab value="bring-items" icon={<BagIcon size={18} />}>
+                            Mitbringen
+                        </Tab>
+                    </TabList>
 
-                {/* Rides Section */}
-                <div className={styles.ridesSection} style={{ marginTop: '2rem' }}>
-                    <div className={styles.ridesSectionHeader}>
-                        <h2 className={styles.ridesSectionTitle}>Fahrten</h2>
-                        <div style={{ position: "relative" }}>
-                            <button
-                                onClick={handleShowCreateForm}
-                                disabled={hasExistingRide || isParticipating || checkingRide}
-                                title={
-                                    hasExistingRide
-                                        ? "Sie haben bereits eine Fahrt für diesen Spieltag angeboten"
-                                        : isParticipating
-                                        ? "Sie können keine eigene Fahrt anbieten, da Sie bereits als Mitfahrer angemeldet sind"
-                                        : "Neue Fahrt anbieten"
-                                }
-                                className={styles.createRideButton}
-                                style={{
-                                    backgroundColor: hasExistingRide || isParticipating ? "#9ca3af" : "var(--text-accent)",
-                                    cursor: hasExistingRide || isParticipating ? "not-allowed" : "pointer",
-                                    opacity: hasExistingRide || isParticipating ? 0.7 : 1,
-                                }}
-                            >
-                                {checkingRide ? "Überprüfe..." : hasExistingRide ? "Bereits angeboten" : isParticipating ? "Als Mitfahrer angemeldet" : "+ Fahrt anbieten"}
-                            </button>
+                    <TabPanel value="participation">
+                        <ParticipationSummary matchId={match.id} refreshTrigger={refreshTrigger} />
+                    </TabPanel>
 
-                            {showExistingRideWarning && (
-                                <div
-                                    className={styles.warningAlert}
-                                    style={{
-                                        position: "absolute",
-                                        top: "calc(100% + 8px)",
-                                        right: "0",
-                                        fontSize: "0.875rem",
-                                        boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-                                        zIndex: 10,
-                                        maxWidth: "300px",
-                                        whiteSpace: "normal",
-                                    }}
-                                >
-                                    {hasExistingRide
-                                        ? "Sie haben bereits eine Fahrt für diesen Spieltag angeboten"
-                                        : "Sie können keine eigene Fahrt anbieten, da Sie bereits als Mitfahrer angemeldet sind"}
+                    <TabPanel value="rides">
+                        <div className={styles.ridesTabContent}>
+                            <div className={styles.ridesSectionHeader}>
+                                <h2 className={styles.ridesSectionTitle}>Verfügbare Fahrten</h2>
+                                <div style={{ position: "relative" }}>
+                                    <button
+                                        onClick={handleShowCreateForm}
+                                        disabled={hasExistingRide || isParticipating || checkingRide}
+                                        title={
+                                            hasExistingRide
+                                                ? "Sie haben bereits eine Fahrt für diesen Spieltag angeboten"
+                                                : isParticipating
+                                                ? "Sie können keine eigene Fahrt anbieten, da Sie bereits als Mitfahrer angemeldet sind"
+                                                : "Neue Fahrt anbieten"
+                                        }
+                                        className={styles.createRideButton}
+                                        style={{
+                                            backgroundColor: hasExistingRide || isParticipating ? "#9ca3af" : "var(--text-accent)",
+                                            cursor: hasExistingRide || isParticipating ? "not-allowed" : "pointer",
+                                            opacity: hasExistingRide || isParticipating ? 0.7 : 1,
+                                        }}
+                                    >
+                                        {checkingRide ? "Überprüfe..." : hasExistingRide ? "Bereits angeboten" : isParticipating ? "Als Mitfahrer angemeldet" : "+ Fahrt anbieten"}
+                                    </button>
+
+                                    {showExistingRideWarning && (
+                                        <div
+                                            className={styles.warningAlert}
+                                            style={{
+                                                position: "absolute",
+                                                top: "calc(100% + 8px)",
+                                                right: "0",
+                                                fontSize: "0.875rem",
+                                                boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                                                zIndex: 10,
+                                                maxWidth: "300px",
+                                                whiteSpace: "normal",
+                                            }}
+                                        >
+                                            {hasExistingRide
+                                                ? "Sie haben bereits eine Fahrt für diesen Spieltag angeboten"
+                                                : "Sie können keine eigene Fahrt anbieten, da Sie bereits als Mitfahrer angemeldet sind"}
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                        </div>
-                    </div>
+                            </div>
 
-                    <RidesList matchId={match.id} refreshTrigger={refreshTrigger} onRideUpdated={handleRideUpdated} />
-                </div>
+                            <RidesList matchId={match.id} refreshTrigger={refreshTrigger} onRideUpdated={handleRideUpdated} />
+                        </div>
+                    </TabPanel>
+
+                    <TabPanel value="bring-items">
+                        <BringItemsPlaceholder matchId={match.id} />
+                    </TabPanel>
+                </Tabs>
 
                 {/* Modal für CreateRideForm */}
                 <Modal isOpen={showCreateForm} onClose={handleCancelCreate} title="Fahrt anbieten" maxWidth="md">
@@ -182,3 +207,4 @@ export default function MatchDetailPage() {
         </div>
     );
 }
+

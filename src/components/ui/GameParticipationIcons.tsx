@@ -31,7 +31,9 @@ export const QuestionMarkIcon: React.FC<IconProps> = ({ className = "", size = 2
 
 export const ClockIcon: React.FC<IconProps> = ({ className = "", size = 24 }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 8.59L15 12l-1.59 1.41L12 12l-1.41 1.41L9 12l1.59-1.41L12 12V6h2v6.59z" />
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 6L12 10.5 8.5 8 7 9.5l3.5 2.5-2.5 3.5L9.5 17l2.5-3.5L15 17l1.5-1.5-2.5-3.5L17 9.5 15.5 8z" />
+        <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M12 6v6l4 2" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
 );
 

@@ -1,0 +1,340 @@
+/* Participation Summary Styles */
+
+.participationSummaryContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    width: 100%;
+}
+
+.summaryHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--border);
+}
+
+.summaryTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.summaryStats {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.statValue {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.statLabel {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+}
+
+.statDivider {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+}
+
+/* Participation Groups */
+.participationGroups {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+/* 2x2 Grid for 4 categories */
+.gridTwoByTwo {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+/* 3 in a row when less than 4 categories */
+.participationGroups:not(.gridTwoByTwo) {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.participationGroup {
+    background: var(--background-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.participationGroup:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.groupHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    background: var(--background-secondary);
+    border-left: 4px solid transparent;
+}
+
+.groupIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    background: var(--background-primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.groupInfo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.groupTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.groupCount {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.groupContent {
+    padding: var(--spacing-lg);
+    padding-top: 0;
+}
+
+/* User Grid */
+.userGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-sm);
+}
+
+.userCard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-md);
+    background: var(--background-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    transition: background-color 0.2s ease;
+}
+
+.userCard:hover {
+    background: var(--background-hover, rgba(0, 0, 0, 0.05));
+}
+
+.userInfo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.userName {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+.userRole {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    background: var(--background-primary);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: fit-content;
+}
+
+.userReason {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    padding: var(--spacing-xs);
+    background: var(--background-muted, #f8f9fa);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--error-color, #ef4444);
+    margin-top: var(--spacing-xs);
+}
+
+.userTime {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin-top: var(--spacing-xs);
+    text-align: right;
+}
+
+/* Loading States */
+.loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl);
+    gap: var(--spacing-md);
+    color: var(--text-secondary);
+}
+
+.loadingSpinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border);
+    border-top: 3px solid var(--primary-color, #3b82f6);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.errorContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl);
+    color: var(--error-color, #ef4444);
+    text-align: center;
+    background: var(--error-background, #fef2f2);
+    border: 1px solid var(--error-border, #fecaca);
+    border-radius: var(--radius-lg);
+}
+
+.emptyContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl);
+    text-align: center;
+    background: var(--background-secondary);
+    border-radius: var(--radius-lg);
+    border: 2px dashed var(--border);
+}
+
+.emptyIcon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+    opacity: 0.7;
+}
+
+.emptyTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.emptyText {
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .summaryHeader {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        align-items: flex-start;
+    }
+
+    .summaryStats {
+        align-self: stretch;
+        justify-content: center;
+    }
+
+    .participationGroups,
+    .gridTwoByTwo {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+
+    .userGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .groupHeader {
+        padding: var(--spacing-md);
+    }
+
+    .groupContent {
+        padding: var(--spacing-md);
+        padding-top: 0;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* Tablet: 2x2 grid becomes 2x2 with smaller gaps */
+    .gridTwoByTwo {
+        gap: var(--spacing-md);
+    }
+
+    /* For 3 categories, keep them in a row but make them smaller */
+    .participationGroups:not(.gridTwoByTwo) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .summaryTitle {
+        font-size: 1.25rem;
+    }
+
+    .statValue {
+        font-size: 1.25rem;
+    }
+
+    .statLabel {
+        font-size: 0.7rem;
+    }
+
+    .groupTitle {
+        font-size: 1rem;
+    }
+
+    .groupIcon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .userCard {
+        padding: var(--spacing-sm);
+    }
+}
+

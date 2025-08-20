@@ -392,3 +392,78 @@
     margin-bottom: var(--spacing-xl);
 }
 
+/* Tab-specific styles for match detail page */
+.matchTabs {
+    margin-top: var(--spacing-xl);
+}
+
+.ridesTabContent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.detailsTabContent {
+    padding: var(--spacing-md) 0;
+}
+
+.matchDetailsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.detailCard {
+    background: var(--background-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.detailCard:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.detailCardTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-md) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.detailCardContent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.detailCardContent p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.detailCardContent strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* Responsive adjustments for tabs */
+@media (max-width: 768px) {
+    .matchDetailsGrid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+
+    .detailCard {
+        padding: var(--spacing-md);
+    }
+}
+
