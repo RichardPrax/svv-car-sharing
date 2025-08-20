@@ -25,10 +25,12 @@ export interface ParticipationOverview {
         TENTATIVE: ParticipationData[];
         DECLINING: ParticipationData[];
     };
+    openUsers: ParticipationPlayer[];
     counts: {
         joining: number;
         tentative: number;
         declining: number;
+        open: number;
         total: number;
     };
     match: {

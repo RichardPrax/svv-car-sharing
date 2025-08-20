@@ -1,6 +1,6 @@
 import React from "react";
-import { useParticipationOverview, ParticipationData } from "@/hooks/matches/useParticipationOverview";
-import { ThumbsUpIcon, ThumbsDownIcon, QuestionMarkIcon } from "@/components/ui/GameParticipationIcons";
+import { useParticipationOverview, ParticipationData, ParticipationPlayer } from "@/hooks/matches/useParticipationOverview";
+import { ThumbsUpIcon, ThumbsDownIcon, QuestionMarkIcon, ClockIcon } from "@/components/ui/GameParticipationIcons";
 import styles from "./Matches.module.css";
 
 interface ParticipationOverviewProps {
@@ -11,15 +11,19 @@ interface ParticipationOverviewProps {
 interface ParticipationSectionProps {
     title: string;
     icon: React.ReactNode;
-    participations: ParticipationData[];
+    participations?: ParticipationData[];
+    openUsers?: ParticipationPlayer[];
     count: number;
+    sectionType?: "participation" | "open";
 }
 
-const ParticipationSection: React.FC<ParticipationSectionProps> = ({ title, icon, participations, count }) => {
+const ParticipationSection: React.FC<ParticipationSectionProps> = ({ title, icon, participations, openUsers, count, sectionType = "participation" }) => {
     if (count === 0) return null;
 
+    const sectionClass = sectionType === "open" ? `${styles.participationSection} ${styles.participationSectionOpen}` : styles.participationSection;
+
     return (
-        <div className={styles.participationSection}>
+        <div className={sectionClass}>
             <div className={styles.participationSectionHeader}>
                 <div className={styles.participationSectionIcon}>{icon}</div>
                 <h3 className={styles.participationSectionTitle}>
@@ -27,27 +31,39 @@ const ParticipationSection: React.FC<ParticipationSectionProps> = ({ title, icon
                 </h3>
             </div>
             <div className={styles.participationSectionList}>
-                {participations.map((participation) => (
-                    <div key={participation.id} className={styles.participationItem}>
-                        <div className={styles.participationItemInfo}>
-                            <span className={styles.participationItemName}>
-                                {participation.player.firstName} {participation.player.lastName}
-                            </span>
-                            <span className={styles.participationItemRole}>{participation.player.role}</span>
-                            {(participation.status === "DECLINING" || participation.status === "TENTATIVE") && participation.reason && (
-                                <span className={styles.participationItemReason}>Grund: {participation.reason}</span>
-                            )}
-                        </div>
-                        <div className={styles.participationItemTime}>
-                            {new Date(participation.updatedAt).toLocaleDateString("de-DE", {
-                                day: "2-digit",
-                                month: "2-digit",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                            })}
-                        </div>
-                    </div>
-                ))}
+                {sectionType === "open"
+                    ? openUsers?.map((user) => (
+                          <div key={user.id} className={styles.participationItem}>
+                              <div className={styles.participationItemInfo}>
+                                  <span className={styles.participationItemName}>
+                                      {user.firstName} {user.lastName}
+                                  </span>
+                                  <span className={styles.participationItemRole}>{user.role}</span>
+                              </div>
+                              <div className={styles.participationItemTime}>Noch offen</div>
+                          </div>
+                      ))
+                    : participations?.map((participation) => (
+                          <div key={participation.id} className={styles.participationItem}>
+                              <div className={styles.participationItemInfo}>
+                                  <span className={styles.participationItemName}>
+                                      {participation.player.firstName} {participation.player.lastName}
+                                  </span>
+                                  <span className={styles.participationItemRole}>{participation.player.role}</span>
+                                  {(participation.status === "DECLINING" || participation.status === "TENTATIVE") && participation.reason && (
+                                      <span className={styles.participationItemReason}>Grund: {participation.reason}</span>
+                                  )}
+                              </div>
+                              <div className={styles.participationItemTime}>
+                                  {new Date(participation.updatedAt).toLocaleDateString("de-DE", {
+                                      day: "2-digit",
+                                      month: "2-digit",
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                  })}
+                              </div>
+                          </div>
+                      ))}
             </div>
         </div>
     );
@@ -79,7 +95,7 @@ export default function ParticipationOverview({ matchId, refreshTrigger }: Parti
             <div className={styles.participationOverviewContainer}>
                 <div className={styles.participationOverviewEmpty}>
                     <h3 className={styles.participationOverviewEmptyTitle}>Teilnahme-Übersicht</h3>
-                    <p className={styles.participationOverviewEmptyText}>Noch keine Teilnahme-Anmeldungen vorhanden.</p>
+                    <p className={styles.participationOverviewEmptyText}>Noch keine Spieler im System registriert.</p>
                 </div>
             </div>
         );
@@ -90,7 +106,10 @@ export default function ParticipationOverview({ matchId, refreshTrigger }: Parti
             <div className={styles.participationOverviewHeader}>
                 <h3 className={styles.participationOverviewTitle}>Teilnahme-Übersicht</h3>
                 <div className={styles.participationOverviewStats}>
-                    <span className={styles.participationOverviewTotal}>Gesamt: {overview.counts.total}</span>
+                    <span className={styles.participationOverviewTotal}>
+                        Antworten: {overview.counts.total - overview.counts.open}/{overview.counts.total}
+                    </span>
+                    {overview.counts.open > 0 && <span className={styles.participationOverviewTotal}>Offen: {overview.counts.open}</span>}
                 </div>
             </div>
 
@@ -110,6 +129,8 @@ export default function ParticipationOverview({ matchId, refreshTrigger }: Parti
                     participations={overview.participations.DECLINING}
                     count={overview.counts.declining}
                 />
+
+                <ParticipationSection title="Noch offen" icon={<ClockIcon size={20} />} openUsers={overview.openUsers} count={overview.counts.open} sectionType="open" />
             </div>
         </div>
     );

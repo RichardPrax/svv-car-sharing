@@ -42,6 +42,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             ],
         });
 
+        // Get all users to determine who hasn't responded yet
+        const allUsers = await prisma.userProfile.findMany({
+            select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                role: true,
+            },
+            orderBy: { firstName: "asc" },
+        });
+
+        // Get IDs of users who have already participated
+        const participatedUserIds = new Set(participations.map((p) => p.playerId));
+
+        // Find users who haven't responded yet
+        const openUsers = allUsers.filter((user) => !participatedUserIds.has(user.id));
+
         // Group participations by status
         const groupedParticipations = {
             JOINING: participations.filter((p) => p.status === "JOINING"),
@@ -54,11 +71,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             joining: groupedParticipations.JOINING.length,
             tentative: groupedParticipations.TENTATIVE.length,
             declining: groupedParticipations.DECLINING.length,
-            total: participations.length,
+            open: openUsers.length,
+            total: allUsers.length,
         };
 
         res.status(200).json({
             participations: groupedParticipations,
+            openUsers,
             counts,
             match: {
                 id: match.id,

@@ -7,7 +7,7 @@ import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import { useRoleGuard } from "@/hooks/auth/useRoleGuard";
 import GameParticipationButtons from "./GameParticipationButtons";
 import { useParticipationOverview } from "@/hooks/matches/useParticipationOverview";
-import { ThumbsUpIcon, ThumbsDownIcon, QuestionMarkIcon } from "@/components/ui/GameParticipationIcons";
+import { ThumbsUpIcon, ThumbsDownIcon, QuestionMarkIcon, ClockIcon } from "@/components/ui/GameParticipationIcons";
 import styles from "./Matches.module.css";
 
 type Props = {
@@ -77,6 +77,12 @@ export default function MatchDayCard({ match }: Props) {
                                 <span className={styles.matchCardParticipationCount} style={{ color: "#ef4444" }}>
                                     <ThumbsDownIcon size={16} />
                                     <span style={{ marginLeft: "4px" }}>{overview.counts.declining}</span>
+                                </span>
+                            )}
+                            {overview.counts.open > 0 && (
+                                <span className={styles.matchCardParticipationCount} style={{ color: "#6b7280" }}>
+                                    <ClockIcon size={16} />
+                                    <span style={{ marginLeft: "4px" }}>{overview.counts.open}</span>
                                 </span>
                             )}
                         </div>

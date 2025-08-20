@@ -420,6 +420,10 @@
     color: #ef4444;
 }
 
+.participationSectionOpen .participationSectionIcon {
+    color: #6b7280;
+}
+
 .participationSectionTitle {
     font-size: 1rem;
     font-weight: 600;
