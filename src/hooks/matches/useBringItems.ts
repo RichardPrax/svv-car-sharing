@@ -1,5 +1,5 @@
 // src/hooks/matches/useBringItems.ts
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { BringItem, CreateBringItemData } from "@/entities/BringItem";
 
 interface UseBringItemsProps {
@@ -21,7 +21,7 @@ export function useBringItems({ matchId, refreshTrigger = 0 }: UseBringItemsProp
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchBringItems = async () => {
+    const fetchBringItems = useCallback(async () => {
         if (!matchId) return;
 
         setLoading(true);
@@ -42,7 +42,7 @@ export function useBringItems({ matchId, refreshTrigger = 0 }: UseBringItemsProp
         } finally {
             setLoading(false);
         }
-    };
+    }, [matchId]);
 
     const addBringItem = async (data: CreateBringItemData) => {
         setError(null);
@@ -99,7 +99,7 @@ export function useBringItems({ matchId, refreshTrigger = 0 }: UseBringItemsProp
 
     useEffect(() => {
         fetchBringItems();
-    }, [matchId, refreshTrigger]);
+    }, [matchId, refreshTrigger, fetchBringItems]);
 
     return {
         bringItems,

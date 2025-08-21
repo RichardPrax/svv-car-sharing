@@ -35,19 +35,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(400).json({ error: "Invalid match ID" });
         }
 
-        if (!status || !["JOINING", "DECLINING", "TENTATIVE"].includes(status)) {
+        if (!status || !["JOINING", "DECLINING"].includes(status)) {
             return res.status(400).json({ error: "Invalid status" });
         }
 
-        // Bei DECLINING und TENTATIVE ist ein Grund erforderlich
-        if ((status === "DECLINING" || status === "TENTATIVE") && (!reason || reason.trim().length === 0)) {
-            const statusText = status === "DECLINING" ? "Absage" : "unsicheren Teilnahme";
-            return res.status(400).json({ error: `Bei einer ${statusText} muss ein Grund angegeben werden` });
-        }
-
-        // Bei JOINING sollte kein Grund angegeben werden
-        if (status === "JOINING" && reason && reason.trim().length > 0) {
-            return res.status(400).json({ error: "Bei einer Zusage kann kein Grund angegeben werden" });
+        // Bei DECLINING ist ein Grund erforderlich
+        if (status === "DECLINING" && (!reason || reason.trim().length === 0)) {
+            return res.status(400).json({ error: "Bei einer Absage muss ein Grund angegeben werden" });
         }
 
         // Check if match day exists
@@ -76,14 +70,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             },
             update: {
                 status: status as GameParticipationStatus,
-                reason: status !== "JOINING" ? reason : null, // Grund bei DECLINING und TENTATIVE speichern
+                reason: reason && reason.trim() ? reason.trim() : null, // Grund optional bei JOINING, erforderlich bei DECLINING
                 updatedAt: new Date(),
             },
             create: {
                 matchDayId: matchId,
                 playerId: user.id,
                 status: status as GameParticipationStatus,
-                reason: status !== "JOINING" ? reason : null, // Grund bei DECLINING und TENTATIVE speichern
+                reason: reason && reason.trim() ? reason.trim() : null, // Grund optional bei JOINING, erforderlich bei DECLINING
             },
         });
 

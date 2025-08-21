@@ -1,6 +1,6 @@
 import React from "react";
 import { useParticipationOverview, ParticipationData, ParticipationPlayer } from "@/hooks/matches/useParticipationOverview";
-import { ThumbsUpIcon, ThumbsDownIcon, QuestionMarkIcon, ClockIcon } from "@/components/ui/GameParticipationIcons";
+import { ThumbsUpIcon, ThumbsDownIcon, ClockIcon } from "@/components/ui/GameParticipationIcons";
 import styles from "./ParticipationSummary.module.css";
 
 interface ParticipationSummaryProps {
@@ -19,8 +19,6 @@ interface ParticipationGroupProps {
 }
 
 const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, participations, openUsers, count, sectionType = "participation", color }) => {
-    if (count === 0) return null;
-
     return (
         <div className={styles.participationGroup}>
             <div className={styles.groupHeader} style={{ borderLeftColor: color }}>
@@ -36,7 +34,7 @@ const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, pa
             </div>
 
             <div className={styles.groupContent}>
-                {sectionType === "open" ? (
+                {count === 0 ? null : sectionType === "open" ? (
                     <div className={styles.userGrid}>
                         {openUsers?.map((user) => (
                             <div key={user.id} className={styles.userCard}>
@@ -105,10 +103,8 @@ export default function ParticipationSummary({ matchId, refreshTrigger }: Partic
         );
     }
 
-    // Count visible groups to determine layout
-    const visibleGroups = [overview.counts.joining > 0, overview.counts.tentative > 0, overview.counts.declining > 0, overview.counts.open > 0].filter(Boolean).length;
-
-    const gridClassName = visibleGroups === 4 ? `${styles.participationGroups} ${styles.gridTwoByTwo}` : styles.participationGroups;
+    // Always show all three groups for consistent layout
+    const gridClassName = `${styles.participationGroups} ${styles.gridThreeColumns}`;
 
     return (
         <div className={styles.participationSummaryContainer}>
@@ -134,14 +130,6 @@ export default function ParticipationSummary({ matchId, refreshTrigger }: Partic
                     participations={overview.participations.JOINING}
                     count={overview.counts.joining}
                     color="#10b981"
-                />
-
-                <ParticipationGroup
-                    title="Vielleicht"
-                    icon={<QuestionMarkIcon size={20} />}
-                    participations={overview.participations.TENTATIVE}
-                    count={overview.counts.tentative}
-                    color="#f59e0b"
                 />
 
                 <ParticipationGroup

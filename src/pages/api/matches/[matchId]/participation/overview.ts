@@ -62,14 +62,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Group participations by status
         const groupedParticipations = {
             JOINING: participations.filter((p) => p.status === "JOINING"),
-            TENTATIVE: participations.filter((p) => p.status === "TENTATIVE"),
             DECLINING: participations.filter((p) => p.status === "DECLINING"),
         };
 
         // Get counts
         const counts = {
             joining: groupedParticipations.JOINING.length,
-            tentative: groupedParticipations.TENTATIVE.length,
             declining: groupedParticipations.DECLINING.length,
             open: openUsers.length,
             total: allUsers.length,

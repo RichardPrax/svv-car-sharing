@@ -1,5 +1,12 @@
 /* BringItems Styles */
 
+.bringItemsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    width: 100%;
+}
+
 .container {
     display: flex;
     flex-direction: column;
@@ -7,6 +14,50 @@
     width: 100%;
     max-width: 800px;
     margin: 0 auto;
+}
+
+/* Consistent Header Design (matching ParticipationSummary) */
+.summaryHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--border);
+}
+
+.summaryTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.summaryActions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.headerActionButton {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+}
+
+.headerActionButton:hover {
+    background: var(--primary-dark);
+}
+
+.headerActionButton:disabled {
+    background: #d1d5db;
+    cursor: not-allowed;
 }
 
 .header {
@@ -214,6 +265,22 @@
 @media (max-width: 768px) {
     .container {
         gap: var(--spacing-md);
+    }
+
+    .summaryHeader {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        align-items: flex-start;
+    }
+
+    .summaryActions {
+        align-self: stretch;
+        justify-content: stretch;
+    }
+
+    .headerActionButton {
+        flex: 1;
+        text-align: center;
     }
 
     .header {

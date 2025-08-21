@@ -12,7 +12,7 @@ export interface ParticipationData {
     id: string;
     matchDayId: string;
     playerId: string;
-    status: "JOINING" | "TENTATIVE" | "DECLINING";
+    status: "JOINING" | "DECLINING";
     reason?: string | null; // Grund für Absage
     createdAt: string;
     updatedAt: string;
@@ -22,13 +22,11 @@ export interface ParticipationData {
 export interface ParticipationOverview {
     participations: {
         JOINING: ParticipationData[];
-        TENTATIVE: ParticipationData[];
         DECLINING: ParticipationData[];
     };
     openUsers: ParticipationPlayer[];
     counts: {
         joining: number;
-        tentative: number;
         declining: number;
         open: number;
         total: number;

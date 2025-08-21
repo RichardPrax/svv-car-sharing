@@ -69,8 +69,13 @@
     grid-template-rows: repeat(2, 1fr);
 }
 
+/* 3 columns for 3 categories */
+.gridThreeColumns {
+    grid-template-columns: repeat(3, 1fr);
+}
+
 /* 3 in a row when less than 4 categories */
-.participationGroups:not(.gridTwoByTwo) {
+.participationGroups:not(.gridTwoByTwo):not(.gridThreeColumns) {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
@@ -129,6 +134,24 @@
 .groupContent {
     padding: var(--spacing-lg);
     padding-top: 0;
+}
+
+/* Empty Group Placeholder */
+.emptyGroup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-lg);
+    background: var(--background-muted, #f8f9fa);
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-md);
+}
+
+.emptyGroupText {
+    color: red;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-style: italic;
 }
 
 /* User Grid */
@@ -280,7 +303,8 @@
     }
 
     .participationGroups,
-    .gridTwoByTwo {
+    .gridTwoByTwo,
+    .gridThreeColumns {
         grid-template-columns: 1fr;
         gap: var(--spacing-md);
     }
@@ -307,6 +331,10 @@
 
     /* For 3 categories, keep them in a row but make them smaller */
     .participationGroups:not(.gridTwoByTwo) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .gridThreeColumns {
         grid-template-columns: repeat(3, 1fr);
     }
 }

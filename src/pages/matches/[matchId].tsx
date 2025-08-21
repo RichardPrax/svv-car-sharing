@@ -145,9 +145,9 @@ export default function MatchDetailPage() {
 
                     <TabPanel value="rides">
                         <div className={styles.ridesTabContent}>
-                            <div className={styles.ridesSectionHeader}>
-                                <h2 className={styles.ridesSectionTitle}>Verfügbare Fahrten</h2>
-                                <div style={{ position: "relative" }}>
+                            <div className={styles.summaryHeader}>
+                                <h2 className={styles.summaryTitle}>Fahrten-Übersicht</h2>
+                                <div className={styles.summaryActions}>
                                     <button
                                         onClick={handleShowCreateForm}
                                         disabled={hasExistingRide || isParticipating || checkingRide}
@@ -158,9 +158,9 @@ export default function MatchDetailPage() {
                                                 ? "Sie können keine eigene Fahrt anbieten, da Sie bereits als Mitfahrer angemeldet sind"
                                                 : "Neue Fahrt anbieten"
                                         }
-                                        className={styles.createRideButton}
+                                        className={styles.headerActionButton}
                                         style={{
-                                            backgroundColor: hasExistingRide || isParticipating ? "#9ca3af" : "var(--text-accent)",
+                                            backgroundColor: hasExistingRide || isParticipating ? "#9ca3af" : undefined,
                                             cursor: hasExistingRide || isParticipating ? "not-allowed" : "pointer",
                                             opacity: hasExistingRide || isParticipating ? 0.7 : 1,
                                         }}

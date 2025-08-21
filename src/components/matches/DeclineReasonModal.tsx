@@ -12,22 +12,15 @@ interface DeclineReasonModalProps {
     statusType?: GameParticipationStatus | null;
 }
 
-export default function DeclineReasonModal({ isOpen, onClose, onConfirm, isLoading = false, statusType = "DECLINING" }: DeclineReasonModalProps) {
+export default function DeclineReasonModal({ isOpen, onClose, onConfirm, isLoading = false }: DeclineReasonModalProps) {
     const [reason, setReason] = useState("");
     const [error, setError] = useState("");
-
-    // Dynamische Texte basierend auf Status
-    const isDecline = statusType === "DECLINING";
-    const titleText = isDecline ? "Absage begründen" : "Unsicherheit begründen";
-    const actionText = isDecline ? "Absage" : "unsichere Teilnahme";
-    const placeholderText = isDecline ? "z.B. Verletzung, Arbeit, Familie, Krankheit..." : "z.B. noch unsicher wegen Arbeit, Familie, andere Termine...";
-    const buttonText = isDecline ? "Absage bestätigen" : "Als unsicher markieren";
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!reason.trim()) {
-            setError(`Bitte geben Sie einen Grund für Ihre ${actionText} an.`);
+            setError("Bitte geben Sie einen Grund für Ihre Absage an.");
             return;
         }
 
@@ -49,19 +42,19 @@ export default function DeclineReasonModal({ isOpen, onClose, onConfirm, isLoadi
     if (!isOpen) return null;
 
     return (
-        <Modal isOpen={isOpen} onClose={handleClose} title={titleText} maxWidth="sm">
+        <Modal isOpen={isOpen} onClose={handleClose} title="Absage begründen" maxWidth="sm">
             <form onSubmit={handleSubmit}>
-                <p className={styles.modalDescription}>Bitte geben Sie einen Grund für Ihre {actionText} an. Dies hilft bei der Planung und Kommunikation.</p>
+                <p className={styles.modalDescription}>Bitte geben Sie einen Grund für Ihre Absage an. Dies hilft bei der Planung und Kommunikation.</p>
 
                 <div className={styles.formField}>
                     <label htmlFor="reason" className={styles.formLabel}>
-                        Grund für die {actionText} *
+                        Grund für die Absage *
                     </label>
                     <textarea
                         id="reason"
                         value={reason}
                         onChange={(e) => setReason(e.target.value)}
-                        placeholder={placeholderText}
+                        placeholder="z.B. Verletzung, Arbeit, Familie, Krankheit..."
                         className={styles.formTextarea}
                         rows={3}
                         disabled={isLoading}
@@ -75,7 +68,7 @@ export default function DeclineReasonModal({ isOpen, onClose, onConfirm, isLoadi
                         Abbrechen
                     </Button>
                     <Button type="submit" variant="primary" loading={isLoading} disabled={!reason.trim() || reason.trim().length < 3}>
-                        {buttonText}
+                        Absage bestätigen
                     </Button>
                 </div>
             </form>

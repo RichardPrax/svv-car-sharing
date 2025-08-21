@@ -44,7 +44,6 @@ enum UserRole {
 enum GameParticipationStatus {
   JOINING
   DECLINING
-  TENTATIVE
 }
 
 model MatchDay {
@@ -101,7 +100,7 @@ model GameParticipation {
   matchDayId  String                 @map("match_day_id")
   playerId    String                 @map("player_id")
   status      GameParticipationStatus
-  reason      String?                @map("reason") // Grund für Absage (nur bei DECLINING erforderlich)
+  reason      String?                @map("reason") // Optional für JOINING (z.B. "Ich komme später"), verpflichtend für DECLINING
   createdAt   DateTime               @default(now()) @map("created_at")
   updatedAt   DateTime               @updatedAt @map("updated_at")
 

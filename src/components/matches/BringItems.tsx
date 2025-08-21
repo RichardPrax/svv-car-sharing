@@ -63,38 +63,45 @@ export default function BringItems({ matchId }: BringItemsProps) {
 
     if (loading && bringItems.length === 0) {
         return (
-            <div className={styles.container}>
-                <div className={styles.header}>
-                    <h2 className={styles.title}>🎒 Was müssen wir mitbringen?</h2>
+            <div className={styles.bringItemsContainer}>
+                <div className={styles.summaryHeader}>
+                    <h2 className={styles.summaryTitle}>Mitbringen-Übersicht</h2>
+                    <div className={styles.summaryActions}>
+                        {user && (
+                            <button onClick={() => setShowCreateForm(true)} className={styles.headerActionButton}>
+                                ➕ Etwas mitbringen
+                            </button>
+                        )}
+                    </div>
                 </div>
-                <div className={styles.loading}>Lade Mitbringen-Liste...</div>
+                <div className={styles.container}>
+                    <div className={styles.loading}>Lade Mitbringen-Liste...</div>
+                </div>
             </div>
         );
     }
 
     return (
-        <>
-            <div className={styles.container}>
-                {error && <div className={styles.error}>{error}</div>}
-
-                {/* Add Item Button */}
-                {user && (
-                    <div className={styles.addSection}>
-                        <button onClick={() => setShowCreateForm(true)} className={styles.addButton}>
+        <div className={styles.bringItemsContainer}>
+            <div className={styles.summaryHeader}>
+                <h2 className={styles.summaryTitle}>Mitbringen-Übersicht</h2>
+                <div className={styles.summaryActions}>
+                    {user && (
+                        <button onClick={() => setShowCreateForm(true)} className={styles.headerActionButton}>
                             ➕ Etwas mitbringen
                         </button>
-                    </div>
-                )}
+                    )}
+                </div>
+            </div>
+
+            <div className={styles.container}>
+                {error && <div className={styles.error}>{error}</div>}
 
                 {/* Items List */}
                 <div className={styles.itemsList}>
                     {bringItems.length === 0 ? (
                         <div className={styles.emptyState}>
-                            <div className={styles.emptyIcon}>📝</div>
-                            <h3 className={styles.emptyTitle}>Noch keine Einträge</h3>
-                            <p className={styles.emptyText}>
-                                {user ? "Sei der Erste und trage ein, was du mitbringen möchtest!" : "Melde dich an, um etwas zur Liste hinzuzufügen."}
-                            </p>
+                            <p className={styles.emptyText}>Noch keine Einträge</p>
                         </div>
                     ) : (
                         <>
@@ -128,7 +135,7 @@ export default function BringItems({ matchId }: BringItemsProps) {
             <Modal isOpen={!!deleteItem} onClose={handleDeleteCancel} title="Item löschen" maxWidth="sm">
                 {deleteItem && <DeleteBringItemConfirm itemName={deleteItem.itemName} loading={isDeleting} onConfirm={handleDeleteConfirm} onCancel={handleDeleteCancel} />}
             </Modal>
-        </>
+        </div>
     );
 }
 

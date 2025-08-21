@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { useGameParticipation, GameParticipationStatus } from "@/hooks/matches/useGameParticipation";
-import { ThumbsUpIcon, ThumbsDownIcon, QuestionMarkIcon } from "@/components/ui/GameParticipationIcons";
+import { ThumbsUpIcon, ThumbsDownIcon } from "@/components/ui/GameParticipationIcons";
 import DeclineReasonModal from "./DeclineReasonModal";
+import JoinInfoModal from "./JoinInfoModal";
 import styles from "./Matches.module.css";
 
 interface GameParticipationButtonsProps {
@@ -12,6 +13,7 @@ interface GameParticipationButtonsProps {
 
 export default function GameParticipationButtons({ matchDayId, refreshTrigger, onParticipationChange }: GameParticipationButtonsProps) {
     const [showDeclineModal, setShowDeclineModal] = useState(false);
+    const [showJoinModal, setShowJoinModal] = useState(false);
     const [pendingStatus, setPendingStatus] = useState<GameParticipationStatus | null>(null);
 
     const { participation, loading, error, updating, updateParticipation, removeParticipation } = useGameParticipation({ matchDayId, refreshTrigger });
@@ -26,15 +28,18 @@ export default function GameParticipationButtons({ matchDayId, refreshTrigger, o
             return;
         }
 
-        // For DECLINING and TENTATIVE status, show modal to get reason
-        if (status === "DECLINING" || status === "TENTATIVE") {
+        // For DECLINING status, show modal to get reason (required)
+        if (status === "DECLINING") {
             setPendingStatus(status);
             setShowDeclineModal(true);
             return;
-        } // Otherwise, update to new status
-        const result = await updateParticipation(status);
-        if (result.success) {
-            onParticipationChange?.();
+        }
+
+        // For JOINING status, show modal to optionally add info
+        if (status === "JOINING") {
+            setPendingStatus(status);
+            setShowJoinModal(true);
+            return;
         }
     };
 
@@ -49,16 +54,25 @@ export default function GameParticipationButtons({ matchDayId, refreshTrigger, o
         }
     };
 
+    const handleJoinConfirm = async (info?: string) => {
+        if (!pendingStatus) return;
+
+        const result = await updateParticipation(pendingStatus, info);
+        if (result.success) {
+            setShowJoinModal(false);
+            setPendingStatus(null);
+            onParticipationChange?.();
+        }
+    };
+
     const handleModalClose = () => {
         setShowDeclineModal(false);
+        setShowJoinModal(false);
         setPendingStatus(null);
     };
     const buttonClasses = useMemo(
         () => ({
             joining: `${styles.participationButton} ${participation?.status === "JOINING" ? styles.participationButtonActive : ""} ${styles.participationButtonJOINING}`.trim(),
-            tentative: `${styles.participationButton} ${participation?.status === "TENTATIVE" ? styles.participationButtonActive : ""} ${
-                styles.participationButtonTENTATIVE
-            }`.trim(),
             declining: `${styles.participationButton} ${participation?.status === "DECLINING" ? styles.participationButtonActive : ""} ${
                 styles.participationButtonDECLINING
             }`.trim(),
@@ -97,17 +111,6 @@ export default function GameParticipationButtons({ matchDayId, refreshTrigger, o
                 </button>
 
                 <button
-                    className={buttonClasses.tentative}
-                    onClick={() => handleParticipationClick("TENTATIVE")}
-                    disabled={updating}
-                    title="Ich bin mir nicht sicher"
-                    aria-label="Ich bin mir nicht sicher"
-                >
-                    <QuestionMarkIcon size={20} />
-                    <span className={styles.participationButtonText}>Vielleicht</span>
-                </button>
-
-                <button
                     className={buttonClasses.declining}
                     onClick={() => handleParticipationClick("DECLINING")}
                     disabled={updating}
@@ -120,6 +123,7 @@ export default function GameParticipationButtons({ matchDayId, refreshTrigger, o
             </div>
 
             <DeclineReasonModal isOpen={showDeclineModal} onClose={handleModalClose} onConfirm={handleDeclineConfirm} isLoading={updating} statusType={pendingStatus} />
+            <JoinInfoModal isOpen={showJoinModal} onClose={handleModalClose} onConfirm={handleJoinConfirm} isLoading={updating} />
         </div>
     );
 }

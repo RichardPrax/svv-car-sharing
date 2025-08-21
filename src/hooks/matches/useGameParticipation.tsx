@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 
-export type GameParticipationStatus = "JOINING" | "DECLINING" | "TENTATIVE";
+export type GameParticipationStatus = "JOINING" | "DECLINING";
 
 interface GameParticipation {
     id: string;
@@ -76,10 +76,9 @@ export function useGameParticipation({ matchDayId, refreshTrigger }: UseGamePart
                 return { error: "User not authenticated" };
             }
 
-            // Validierung: Bei DECLINING und TENTATIVE ist ein Grund erforderlich
-            if ((status === "DECLINING" || status === "TENTATIVE") && (!reason || reason.trim().length === 0)) {
-                const statusText = status === "DECLINING" ? "Absage" : "unsicheren Teilnahme";
-                return { error: `Bei einer ${statusText} muss ein Grund angegeben werden` };
+            // Validierung: Bei DECLINING ist ein Grund erforderlich
+            if (status === "DECLINING" && (!reason || reason.trim().length === 0)) {
+                return { error: "Bei einer Absage muss ein Grund angegeben werden" };
             }
             setUpdating(true);
             setError(null);
@@ -91,7 +90,7 @@ export function useGameParticipation({ matchDayId, refreshTrigger }: UseGamePart
                 }
 
                 const body: { status: GameParticipationStatus; reason?: string } = { status };
-                if ((status === "DECLINING" || status === "TENTATIVE") && reason) {
+                if (reason && reason.trim()) {
                     body.reason = reason.trim();
                 }
 
