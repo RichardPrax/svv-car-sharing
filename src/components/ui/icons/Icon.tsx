@@ -1,7 +1,7 @@
 // src/components/ui/icons/Icon.tsx
 import React from "react";
 
-export type IconName = "home" | "volleyball" | "runner" | "scales" | "chart" | "users" | "logout" | "menu" | "dashboard" | "car" | "refresh" | "user" | "edit";
+export type IconName = "home" | "volleyball" | "runner" | "scales" | "chart" | "users" | "logout" | "menu" | "dashboard" | "car" | "refresh" | "user" | "edit" | "delete";
 
 interface IconProps {
     name: IconName;
@@ -191,6 +191,25 @@ const Icon: React.FC<IconProps> = ({ name, size = 24, className = "", color = "c
                             strokeLinejoin="round"
                         />
                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                    </g>
+                );
+
+            case "delete":
+                return (
+                    <g>
+                        {/* Mülltonne Deckel */}
+                        <rect x="2" y="4" width="20" height="2" rx="1" fill={color} />
+                        {/* Griff oben */}
+                        <rect x="8" y="2" width="8" height="2" rx="1" fill={color} />
+                        {/* Mülltonne Körper */}
+                        <path 
+                            d="M5 6 L19 6 L18 20 Q18 21 17 21 L7 21 Q6 21 6 20 L5 6 Z" 
+                            fill={color}
+                        />
+                        {/* Vertikale Linien im Inneren */}
+                        <line x1="9" y1="9" x2="9" y2="18" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+                        <line x1="12" y1="9" x2="12" y2="18" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+                        <line x1="15" y1="9" x2="15" y2="18" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
                     </g>
                 );
 
