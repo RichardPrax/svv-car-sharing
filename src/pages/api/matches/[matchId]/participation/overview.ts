@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(404).json({ error: "Match not found" });
         }
 
-        // Get all participations for this match with user profiles
+        // Get all participations for this match with user profiles and positions
         const participations = await prisma.gameParticipation.findMany({
             where: { matchDayId: matchId },
             include: {
@@ -32,23 +32,43 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         id: true,
                         firstName: true,
                         lastName: true,
-                        role: true,
+                        playerPositions: {
+                            select: {
+                                id: true,
+                                position: true,
+                                isPrimary: true,
+                            },
+                            orderBy: [
+                                { isPrimary: 'desc' },
+                                { position: 'asc' }
+                            ]
+                        },
                     },
                 },
             },
             orderBy: [
-                { status: "asc" }, // JOINING first, then TENTATIVE, then DECLINING
+                { status: "asc" }, // JOINING first, then DECLINING
                 { player: { firstName: "asc" } }, // Then alphabetically by name
             ],
         });
 
-        // Get all users to determine who hasn't responded yet
+        // Get all users to determine who hasn't responded yet (including positions)
         const allUsers = await prisma.userProfile.findMany({
             select: {
                 id: true,
                 firstName: true,
                 lastName: true,
-                role: true,
+                playerPositions: {
+                    select: {
+                        id: true,
+                        position: true,
+                        isPrimary: true,
+                    },
+                    orderBy: [
+                        { isPrimary: 'desc' },
+                        { position: 'asc' }
+                    ]
+                },
             },
             orderBy: { firstName: "asc" },
         });

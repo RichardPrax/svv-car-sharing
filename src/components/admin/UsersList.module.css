@@ -305,3 +305,68 @@
     }
 }
 
+/* Volleyball Positions Styles */
+.userPositions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-xs);
+}
+
+.positionBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease;
+}
+
+.positionBadge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.primaryPosition {
+    opacity: 1;
+    font-weight: 700;
+}
+
+.secondaryPosition {
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+.primaryIndicator {
+    font-size: 0.6rem;
+    margin-left: 2px;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Position specific colors are set inline via JavaScript */
+.positionBadge.mb {
+    background-color: #e74c3c;
+}
+
+.positionBadge.aa {
+    background-color: #3498db;
+}
+
+.positionBadge.l {
+    background-color: #f39c12;
+}
+
+.positionBadge.z {
+    background-color: #2ecc71;
+}
+
+.positionBadge.d {
+    background-color: #9b59b6;
+}
+

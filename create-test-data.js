@@ -2,6 +2,29 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
+// Volleyball-Positionen mit Beschreibungen
+const volleyballPositions = {
+    MB: "Mittelblock",
+    AA: "Außenannahme", 
+    L: "Libero",
+    Z: "Zuspiel",
+    D: "Diagonal"
+};
+
+// Realistische Volleyball-Positionen-Kombinationen
+const volleyballPositionCombinations = [
+    [{ position: "Z", isPrimary: true }], // Reine Zuspieler
+    [{ position: "AA", isPrimary: true }], // Reine Außenangreifer
+    [{ position: "MB", isPrimary: true }], // Reine Mittelblocker
+    [{ position: "D", isPrimary: true }], // Reine Diagonalangreifer
+    [{ position: "L", isPrimary: true }], // Reine Liberos
+    [{ position: "AA", isPrimary: true }, { position: "Z", isPrimary: false }], // Außenannahme kann auch Zuspiel
+    [{ position: "MB", isPrimary: true }, { position: "D", isPrimary: false }], // Mittelblock kann auch Diagonal
+    [{ position: "Z", isPrimary: true }, { position: "AA", isPrimary: false }], // Zuspiel kann auch Außenannahme
+    [{ position: "D", isPrimary: true }, { position: "AA", isPrimary: false }], // Diagonal kann auch Außenannahme
+    [{ position: "AA", isPrimary: true }, { position: "L", isPrimary: false }], // Außenannahme kann auch Libero
+];
+
 // Realistische Abfahrtsorte in Deutschland
 const departureLocations = [
     "Hauptbahnhof",
@@ -435,6 +458,82 @@ async function createBringItemsTestData() {
     console.log("\n✅ Bring items test data creation completed!");
 }
 
+async function createVolleyballPositionsTestData() {
+    console.log("\n🏐 Creating volleyball positions test data...");
+
+    const users = await prisma.userProfile.findMany();
+
+    if (users.length === 0) {
+        console.error("❌ No users found!");
+        return;
+    }
+
+    console.log(`Found ${users.length} users to assign volleyball positions`);
+
+    for (const user of users) {
+        // Prüfe ob der User bereits Positionen hat
+        const existingPositions = await prisma.userPosition.findMany({
+            where: { userId: user.id }
+        });
+
+        if (existingPositions.length > 0) {
+            console.log(`✅ ${user.firstName} ${user.lastName}: Already has positions`);
+            existingPositions.forEach(pos => {
+                const primaryText = pos.isPrimary ? " (Hauptposition)" : " (Nebenposition)";
+                console.log(`   └─ ${volleyballPositions[pos.position]} (${pos.position})${primaryText}`);
+            });
+            continue;
+        }
+
+        // Zufällige Positionskombination auswählen
+        const selectedCombination = getRandomElement(volleyballPositionCombinations);
+        
+        console.log(`🏐 ${user.firstName} ${user.lastName}: Assigning volleyball positions...`);
+
+        for (const positionData of selectedCombination) {
+            try {
+                await prisma.userPosition.create({
+                    data: {
+                        userId: user.id,
+                        position: positionData.position,
+                        isPrimary: positionData.isPrimary,
+                    },
+                });
+
+                const primaryText = positionData.isPrimary ? " (Hauptposition)" : " (Nebenposition)";
+                console.log(`   ✅ ${volleyballPositions[positionData.position]} (${positionData.position})${primaryText}`);
+            } catch (error) {
+                console.error(`   ❌ Error creating position ${positionData.position}:`, error.message);
+            }
+        }
+    }
+
+    // Statistik erstellen
+    const positionStats = {};
+    const allPositions = await prisma.userPosition.findMany({
+        include: { user: true }
+    });
+
+    allPositions.forEach(pos => {
+        if (!positionStats[pos.position]) {
+            positionStats[pos.position] = { total: 0, primary: 0, secondary: 0 };
+        }
+        positionStats[pos.position].total++;
+        if (pos.isPrimary) {
+            positionStats[pos.position].primary++;
+        } else {
+            positionStats[pos.position].secondary++;
+        }
+    });
+
+    console.log("\n📊 Volleyball Positions Statistics:");
+    Object.entries(positionStats).forEach(([position, stats]) => {
+        console.log(`   ${volleyballPositions[position]} (${position}): ${stats.total} total (${stats.primary} Haupt-, ${stats.secondary} Nebenpositionen)`);
+    });
+
+    console.log("\n✅ Volleyball positions test data creation completed!");
+}
+
 async function main() {
     try {
         console.log("🎯 Creating comprehensive test data for existing users...");
@@ -450,6 +549,7 @@ async function main() {
         }
 
         // Erstelle alle Arten von Testdaten
+        await createVolleyballPositionsTestData();
         await createRideTestData();
         await createGameParticipationTestData();
         await createBringItemsTestData();

@@ -1,10 +1,10 @@
 // src/hooks/admin/useAdminUsers.tsx
 import { useState, useEffect, useCallback } from "react";
-import { UserProfile } from "@/entities/UserProfile";
+import { UserProfileWithPositions } from "@/entities/UserProfile";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 
 interface AdminUsersResponse {
-    users: UserProfile[];
+    users: UserProfileWithPositions[];
     total: number;
     requestedBy: {
         id: string;
@@ -14,7 +14,7 @@ interface AdminUsersResponse {
 }
 
 export function useAdminUsers() {
-    const [users, setUsers] = useState<UserProfile[]>([]);
+    const [users, setUsers] = useState<UserProfileWithPositions[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const { session } = useOptimizedAuth();

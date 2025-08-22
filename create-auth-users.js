@@ -67,6 +67,7 @@ async function main() {
             firstName: "Max",
             lastName: "Mustermann",
             role: "ADMIN", // Make Max an Admin
+            positions: [{ position: "Z", isPrimary: true }, { position: "D", isPrimary: false }], // Zuspiel als Hauptposition, Diagonal als Nebenposition
         },
         {
             email: "anna.schmidt@test.com",
@@ -74,6 +75,7 @@ async function main() {
             firstName: "Anna",
             lastName: "Schmidt",
             role: "TRAINER", // Make Anna a Trainer
+            positions: [{ position: "AA", isPrimary: true }, { position: "Z", isPrimary: false }], // Außenannahme als Hauptposition
         },
         {
             email: "tom.mueller@test.com",
@@ -81,6 +83,7 @@ async function main() {
             firstName: "Tom",
             lastName: "Mueller",
             role: "USER",
+            positions: [{ position: "MB", isPrimary: true }], // Mittelblock
         },
         {
             email: "lisa.weber@test.com",
@@ -88,6 +91,7 @@ async function main() {
             firstName: "Lisa",
             lastName: "Weber",
             role: "USER",
+            positions: [{ position: "L", isPrimary: true }], // Libero
         },
         {
             email: "ben.schneider@test.com",
@@ -95,6 +99,7 @@ async function main() {
             firstName: "Ben",
             lastName: "Schneider",
             role: "USER",
+            positions: [{ position: "D", isPrimary: true }, { position: "AA", isPrimary: false }], // Diagonal als Hauptposition
         },
         {
             email: "sara.fischer@test.com",
@@ -102,6 +107,7 @@ async function main() {
             firstName: "Sara",
             lastName: "Fischer",
             role: "USER",
+            positions: [{ position: "AA", isPrimary: true }, { position: "L", isPrimary: false }], // Außenannahme als Hauptposition
         },
         {
             email: "noah.hoffmann@test.com",
@@ -109,6 +115,7 @@ async function main() {
             firstName: "Noah",
             lastName: "Hoffmann",
             role: "USER",
+            positions: [{ position: "MB", isPrimary: true }, { position: "Z", isPrimary: false }], // Mittelblock als Hauptposition
         },
     ];
 
@@ -136,6 +143,42 @@ async function main() {
                     },
                 });
                 console.log(`✅ Database record created/updated for ${userData.email} with ID: ${authUser.id}`);
+
+                // Create user positions if provided
+                if (userData.positions && userData.positions.length > 0) {
+                    console.log(`🏐 Adding volleyball positions for ${userData.firstName} ${userData.lastName}...`);
+                    
+                    // Delete existing positions first
+                    await prisma.userPosition.deleteMany({
+                        where: { userId: authUser.id }
+                    });
+
+                    // Create new positions
+                    for (const positionData of userData.positions) {
+                        try {
+                            await prisma.userPosition.create({
+                                data: {
+                                    userId: authUser.id,
+                                    position: positionData.position,
+                                    isPrimary: positionData.isPrimary,
+                                },
+                            });
+                            
+                            const positionNames = {
+                                MB: "Mittelblock",
+                                AA: "Außenannahme", 
+                                L: "Libero",
+                                Z: "Zuspiel",
+                                D: "Diagonal"
+                            };
+                            
+                            const primaryText = positionData.isPrimary ? " (Hauptposition)" : " (Nebenposition)";
+                            console.log(`   ✅ ${positionNames[positionData.position]} (${positionData.position})${primaryText}`);
+                        } catch (positionError) {
+                            console.error(`   ❌ Error creating position ${positionData.position}:`, positionError.message);
+                        }
+                    }
+                }
             } catch (dbError) {
                 console.error(`❌ Error creating/updating database record for ${userData.email}:`, dbError);
             }

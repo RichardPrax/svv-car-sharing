@@ -1,11 +1,18 @@
 import { useState, useEffect, useCallback } from "react";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
+import { VolleyballPosition } from "@/entities/UserProfile";
+
+export interface PlayerPosition {
+    id: string;
+    position: VolleyballPosition;
+    isPrimary: boolean;
+}
 
 export interface ParticipationPlayer {
     id: string;
     firstName: string;
     lastName: string;
-    role: string;
+    playerPositions?: PlayerPosition[];
 }
 
 export interface ParticipationData {

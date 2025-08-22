@@ -29,6 +29,7 @@ model UserProfile {
   ridePassengers  RidePassenger[]
   gameParticipations GameParticipation[]
   bringItems      BringItem[]
+  playerPositions UserPosition[]
 
   @@map("user_profiles")
 }
@@ -39,6 +40,14 @@ enum UserRole {
   TRAINER
   PENALTY_MASTER
   PLAYER
+}
+
+enum VolleyballPosition {
+  MB  // Mittelblock
+  AA  // Außenannahme
+  L   // Libero
+  Z   // Zuspiel
+  D   // Diagonal
 }
 
 enum GameParticipationStatus {
@@ -127,4 +136,20 @@ model BringItem {
   user     UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("bring_items")
+}
+
+model UserPosition {
+  id         String            @id @default(cuid())
+  userId     String            @map("user_id")
+  position   VolleyballPosition
+  isPrimary  Boolean           @default(false) @map("is_primary") // Hauptposition des Spielers
+  createdAt  DateTime          @default(now()) @map("created_at")
+  updatedAt  DateTime          @updatedAt @map("updated_at")
+
+  // Relations
+  user       UserProfile       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Ein User kann jede Position nur einmal haben
+  @@unique([userId, position])
+  @@map("user_positions")
 }

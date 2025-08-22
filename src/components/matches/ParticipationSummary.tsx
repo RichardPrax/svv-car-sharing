@@ -1,6 +1,7 @@
 import React from "react";
 import { useParticipationOverview, ParticipationData, ParticipationPlayer } from "@/hooks/matches/useParticipationOverview";
 import { ThumbsUpIcon, ThumbsDownIcon, ClockIcon } from "@/components/ui/GameParticipationIcons";
+import { VolleyballPosition, getPositionDisplayName, getPositionColor } from "@/entities/UserProfile";
 import styles from "./ParticipationSummary.module.css";
 
 interface ParticipationSummaryProps {
@@ -38,10 +39,29 @@ const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, pa
                     <div className={styles.userGrid}>
                         {openUsers?.map((user) => (
                             <div key={user.id} className={styles.userCard}>
-                                <span className={styles.userName}>
-                                    {user.firstName} {user.lastName}
-                                </span>
-                                <span className={styles.userRole}>{user.role}</span>
+                                <div className={styles.userInfo}>
+                                    <span className={styles.userName}>
+                                        {user.firstName} {user.lastName}
+                                    </span>
+                                    {user.playerPositions && user.playerPositions.length > 0 && (
+                                        <div className={styles.userPositions}>
+                                            {user.playerPositions.map((position) => (
+                                                <span
+                                                    key={position.id}
+                                                    className={`${styles.positionBadge} ${position.isPrimary ? styles.primaryPosition : styles.secondaryPosition}`}
+                                                    style={{ 
+                                                        backgroundColor: getPositionColor(position.position),
+                                                        color: 'white'
+                                                    }}
+                                                    title={`${getPositionDisplayName(position.position)} ${position.isPrimary ? '(Hauptposition)' : '(Nebenposition)'}`}
+                                                >
+                                                    {position.position}
+                                                    {position.isPrimary && <span className={styles.primaryIndicator}>★</span>}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -53,7 +73,24 @@ const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, pa
                                     <span className={styles.userName}>
                                         {participation.player.firstName} {participation.player.lastName}
                                     </span>
-                                    <span className={styles.userRole}>{participation.player.role}</span>
+                                    {participation.player.playerPositions && participation.player.playerPositions.length > 0 && (
+                                        <div className={styles.userPositions}>
+                                            {participation.player.playerPositions.map((position) => (
+                                                <span
+                                                    key={position.id}
+                                                    className={`${styles.positionBadge} ${position.isPrimary ? styles.primaryPosition : styles.secondaryPosition}`}
+                                                    style={{ 
+                                                        backgroundColor: getPositionColor(position.position),
+                                                        color: 'white'
+                                                    }}
+                                                    title={`${getPositionDisplayName(position.position)} ${position.isPrimary ? '(Hauptposition)' : '(Nebenposition)'}`}
+                                                >
+                                                    {position.position}
+                                                    {position.isPrimary && <span className={styles.primaryIndicator}>★</span>}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                                 {participation.reason && <div className={styles.userReason}>{participation.reason}</div>}
                                 <div className={styles.userTime}>

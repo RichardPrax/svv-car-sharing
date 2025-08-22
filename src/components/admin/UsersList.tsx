@@ -1,7 +1,7 @@
 // src/components/admin/UsersList.tsx
 import React from "react";
 import { useAdminUsers } from "@/hooks/admin/useAdminUsers";
-import { UserRole, UserProfile } from "@/entities/UserProfile";
+import { UserRole, UserProfileWithPositions, VolleyballPosition, getPositionDisplayName, getPositionColor } from "@/entities/UserProfile";
 import { UserEditHandler, UserDeleteHandler } from "./types";
 import { UsersListSkeleton } from "@/components/ui/SkeletonLoader";
 import { Icon } from "@/components/ui";
@@ -81,7 +81,7 @@ export default function UsersList() {
                 </div>
             ) : (
                 <div className={styles.usersList}>
-                    {users.map((user: UserProfile) => (
+                    {users.map((user: UserProfileWithPositions) => (
                         <div key={user.id} className={styles.userItem}>
                             <div className={styles.userItemContent}>
                                 <div className={styles.userHeader}>
@@ -89,6 +89,24 @@ export default function UsersList() {
                                         <div className={styles.userName}>
                                             {user.firstName} {user.lastName}
                                         </div>
+                                        {user.playerPositions && user.playerPositions.length > 0 && (
+                                            <div className={styles.userPositions}>
+                                                {user.playerPositions.map((position) => (
+                                                    <span
+                                                        key={position.id}
+                                                        className={`${styles.positionBadge} ${position.isPrimary ? styles.primaryPosition : styles.secondaryPosition}`}
+                                                        style={{ 
+                                                            backgroundColor: getPositionColor(position.position as VolleyballPosition),
+                                                            color: 'white'
+                                                        }}
+                                                        title={`${getPositionDisplayName(position.position as VolleyballPosition)} ${position.isPrimary ? '(Hauptposition)' : '(Nebenposition)'}`}
+                                                    >
+                                                        {position.position}
+                                                        {position.isPrimary && <span className={styles.primaryIndicator}>★</span>}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                     <div className={styles.userActions}>
                                         <div className={`${styles.userRole} ${getRoleClassName(user.role)}`}>
