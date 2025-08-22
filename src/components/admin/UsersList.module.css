@@ -34,6 +34,17 @@
     font-weight: 400;
 }
 
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    background: var(--card-background);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    margin-top: var(--spacing-lg);
+}
+
 .usersList {
     display: flex;
     flex-direction: column;

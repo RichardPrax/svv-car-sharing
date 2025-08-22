@@ -13,9 +13,6 @@ export default function MatchesPage() {
     // Find the next upcoming match
     const nextMatch = sortedMatchDays.find((match) => isMatchInFuture(match.date, match.time));
 
-    if (loading) return <LoadingSpinner message="Lade Spieltage..." fullScreen />;
-    if (error) return <p className={styles.errorText}>Fehler beim Laden der Spieltage: {error}</p>;
-
     return (
         <>
             <div className={styles.pageContainerFullHeight}>
@@ -28,19 +25,31 @@ export default function MatchesPage() {
                         </h1>
                     </section>
 
-                    {/* Nächster Spieltag Section */}
-                    {nextMatch && (
-                        <section className={styles.sectionContainer}>
-                            <h2 className={styles.sectionTitle}>Nächster Spieltag</h2>
-                            <NextMatchCard match={nextMatch} />
-                        </section>
-                    )}
+                    {loading ? (
+                        <div className={styles.loadingSection}>
+                            <LoadingSpinner message="Lade Spieltage..." />
+                        </div>
+                    ) : error ? (
+                        <div className={styles.errorSection}>
+                            <p className={styles.errorText}>Fehler beim Laden der Spieltage: {error}</p>
+                        </div>
+                    ) : (
+                        <>
+                            {/* Nächster Spieltag Section */}
+                            {nextMatch && (
+                                <section className={styles.sectionContainer}>
+                                    <h2 className={styles.sectionTitle}>Nächster Spieltag</h2>
+                                    <NextMatchCard match={nextMatch} />
+                                </section>
+                            )}
 
-                    {/* Alle Spieltage Section */}
-                    <section>
-                        <h2 className={styles.sectionTitle}>Alle Spieltage</h2>
-                        <MatchDayList matchDays={sortedMatchDays} />
-                    </section>
+                            {/* Alle Spieltage Section */}
+                            <section>
+                                <h2 className={styles.sectionTitle}>Alle Spieltage</h2>
+                                <MatchDayList matchDays={sortedMatchDays} />
+                            </section>
+                        </>
+                    )}
                 </div>
             </div>
         </>

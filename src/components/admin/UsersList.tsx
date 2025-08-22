@@ -3,7 +3,7 @@ import React from "react";
 import { useAdminUsers } from "@/hooks/admin/useAdminUsers";
 import { UserRole, UserProfile } from "@/entities/UserProfile";
 import { UserEditHandler, UserDeleteHandler } from "./types";
-import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { UsersListSkeleton } from "@/components/ui/SkeletonLoader";
 import { Icon } from "@/components/ui";
 import styles from "./UsersList.module.css";
 
@@ -54,23 +54,6 @@ export default function UsersList() {
         alert(`Löschen: ${user.firstName} ${user.lastName}`);
     };
 
-    if (loading) {
-        return <LoadingSpinner message="Benutzer werden geladen..." fullScreen />;
-    }
-
-    if (error) {
-        return (
-            <div className={styles.usersContainer}>
-                <div className={styles.error}>
-                    <p>Fehler beim Laden der Benutzer: {error}</p>
-                    <button onClick={refresh} className={styles.errorButton}>
-                        Erneut versuchen
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className={styles.usersContainer}>
             <div className={styles.pageHeader}>
@@ -80,7 +63,16 @@ export default function UsersList() {
                 </h1>
             </div>
 
-            {users.length === 0 ? (
+            {loading ? (
+                <UsersListSkeleton count={6} />
+            ) : error ? (
+                <div className={styles.error}>
+                    <p>Fehler beim Laden der Benutzer: {error}</p>
+                    <button onClick={refresh} className={styles.errorButton}>
+                        Erneut versuchen
+                    </button>
+                </div>
+            ) : users.length === 0 ? (
                 <div className={styles.emptyState}>
                     <div className={styles.emptyStateIcon}>
                         <Icon name="users" size={48} color="var(--text-muted)" />

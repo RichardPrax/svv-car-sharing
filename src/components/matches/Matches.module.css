@@ -206,8 +206,9 @@
 .participationButtonsContainer {
     margin-top: var(--spacing-md);
     padding-top: var(--spacing-md);
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--card-border);
     position: relative;
+    background: transparent;
 }
 
 .participationButtonsLabel {
@@ -228,9 +229,9 @@
     align-items: center;
     gap: var(--spacing-xs);
     padding: var(--spacing-sm) var(--spacing-md);
-    border: 1px solid var(--border);
+    border: 1px solid var(--card-border);
     border-radius: var(--radius-md);
-    background: var(--surface);
+    background: var(--card-background);
     color: var(--text-secondary);
     font-size: 0.875rem;
     font-weight: 500;
@@ -302,7 +303,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--card-background);
+    border: 1px solid var(--card-border);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -556,11 +558,11 @@
 
 .formTextarea {
     padding: var(--spacing-md);
-    border: 1px solid var(--border-light);
+    border: 1px solid var(--card-border);
     border-radius: var(--radius-md);
     font-family: inherit;
     font-size: 1rem;
-    background-color: var(--input-background, white);
+    background-color: var(--input-background);
     color: var(--text-primary);
     resize: vertical;
     min-height: 80px;
@@ -569,12 +571,12 @@
 
 .formTextarea:focus {
     outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 2px rgba(62, 207, 142, 0.1);
 }
 
 .formError {
-    color: var(--error-color, #ef4444);
+    color: var(--error);
     font-size: 0.875rem;
     margin-top: var(--spacing-xs);
 }
@@ -585,6 +587,6 @@
     gap: var(--spacing-md);
     margin-top: var(--spacing-lg);
     padding-top: var(--spacing-lg);
-    border-top: 1px solid var(--border-light);
+    border-top: 1px solid var(--card-border);
 }
 

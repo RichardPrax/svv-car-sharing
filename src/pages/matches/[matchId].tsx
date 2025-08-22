@@ -75,11 +75,27 @@ export default function MatchDetailPage() {
 
     // Warte bis Router geladen ist
     if (!router.isReady) {
-        return <LoadingSpinner message="Lade Seite..." fullScreen />;
+        return (
+            <div className={styles.pageContainerFullHeight}>
+                <div className={styles.pageWrapper}>
+                    <div className={styles.loadingSection}>
+                        <LoadingSpinner message="Lade Seite..." />
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     if (loading) {
-        return <LoadingSpinner message="Lade Spieltag..." fullScreen />;
+        return (
+            <div className={styles.pageContainerFullHeight}>
+                <div className={styles.pageWrapper}>
+                    <div className={styles.loadingSection}>
+                        <LoadingSpinner message="Lade Spieltag..." />
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     if (error || !match) {
