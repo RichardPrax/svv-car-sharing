@@ -1,29 +1,45 @@
 // src/components/matches/MatchDayCard.tsx
 import { MatchDay } from "@/entities/MatchDay";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { formatDate, formatTime, isMatchInPast } from "@/utils/dateTime";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import { useRoleGuard } from "@/hooks/auth/useRoleGuard";
 import GameParticipationButtons from "./GameParticipationButtons";
-import { useParticipationOverview } from "@/hooks/matches/useParticipationOverview";
+import { ParticipationOverview } from "@/hooks/matches/useBatchedParticipationOverview";
 import { ThumbsUpIcon, ThumbsDownIcon, ClockIcon } from "@/components/ui/GameParticipationIcons";
 import styles from "./Matches.module.css";
 
 type Props = {
     match: MatchDay;
+    participationOverview?: ParticipationOverview;
+    overviewLoading?: boolean;
+    onParticipationChange?: () => void;
 };
 
-export default function MatchDayCard({ match }: Props) {
+export default function MatchDayCard({ 
+    match, 
+    participationOverview, 
+    overviewLoading, 
+    onParticipationChange 
+}: Props) {
     const isPast = isMatchInPast(match.date, match.time);
     const router = useRouter();
     const { user } = useOptimizedAuth();
     const { hasPlayerAccess } = useRoleGuard();
     const [participationRefreshTrigger, setParticipationRefreshTrigger] = useState(0);
-    const { overview } = useParticipationOverview({
-        matchId: match.id,
-        refreshTrigger: participationRefreshTrigger,
-    });
+
+    // Extract user's participation from the overview data
+    const userParticipation = useMemo(() => {
+        if (!participationOverview || !user) return null;
+        
+        const allParticipations = [
+            ...participationOverview.participations.JOINING,
+            ...participationOverview.participations.DECLINING
+        ];
+        
+        return allParticipations.find(p => p.playerId === user.id) || null;
+    }, [participationOverview, user]);
 
     const handleCardClick = () => {
         router.push(`/matches/${match.id}`);
@@ -57,26 +73,26 @@ export default function MatchDayCard({ match }: Props) {
                 </div>
 
                 {/* Participation Summary - moved below Ort */}
-                {overview && overview.counts.total > 0 && (
+                {participationOverview && participationOverview.counts.total > 0 && (
                     <div className={styles.matchCardParticipationSummary}>
                         <span className={styles.matchCardParticipationLabel}>Teilnahme:</span>
                         <div className={styles.matchCardParticipationCounts}>
-                            {overview.counts.joining > 0 && (
+                            {participationOverview.counts.joining > 0 && (
                                 <span className={styles.matchCardParticipationCount} style={{ color: "#10b981" }}>
                                     <ThumbsUpIcon size={16} />
-                                    <span style={{ marginLeft: "4px" }}>{overview.counts.joining}</span>
+                                    <span style={{ marginLeft: "4px" }}>{participationOverview.counts.joining}</span>
                                 </span>
                             )}
-                            {overview.counts.declining > 0 && (
+                            {participationOverview.counts.declining > 0 && (
                                 <span className={styles.matchCardParticipationCount} style={{ color: "#ef4444" }}>
                                     <ThumbsDownIcon size={16} />
-                                    <span style={{ marginLeft: "4px" }}>{overview.counts.declining}</span>
+                                    <span style={{ marginLeft: "4px" }}>{participationOverview.counts.declining}</span>
                                 </span>
                             )}
-                            {overview.counts.open > 0 && (
+                            {participationOverview.counts.open > 0 && (
                                 <span className={styles.matchCardParticipationCount} style={{ color: "#6b7280" }}>
                                     <ClockIcon size={16} />
-                                    <span style={{ marginLeft: "4px" }}>{overview.counts.open}</span>
+                                    <span style={{ marginLeft: "4px" }}>{participationOverview.counts.open}</span>
                                 </span>
                             )}
                         </div>
@@ -89,12 +105,14 @@ export default function MatchDayCard({ match }: Props) {
                 <div onClick={handleParticipationClick}>
                     <GameParticipationButtons
                         matchDayId={match.id}
+                        userParticipation={userParticipation}
                         refreshTrigger={participationRefreshTrigger}
                         onParticipationChange={() => {
                             // Trigger a refresh of the participation overview
                             // Small delay to ensure the API call completes
                             setTimeout(() => {
                                 setParticipationRefreshTrigger((prev) => prev + 1);
+                                onParticipationChange?.();
                             }, 100);
                         }}
                     />

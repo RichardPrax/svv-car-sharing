@@ -1,24 +1,43 @@
 // src/components/rides/RidesList.tsx
 import { useOptimizedCurrentUser } from "@/hooks/rides/useOptimizedCurrentUser";
 import { useOptimizedUserProfiles } from "@/hooks/auth/useUserProfileCache";
-import { useRides } from "@/hooks/rides";
 import { useRideActions } from "@/hooks/rides";
-import { useUserRideCheck, useUserParticipationCheck } from "@/hooks/rides";
 import RideCard from "./RideCard";
 import { LoadingSpinner } from "@/components/ui";
+import { Ride } from "@/entities/Ride";
 import styles from "./Rides.module.css";
 
 interface RidesListProps {
     matchId: string;
     refreshTrigger: number;
     onRideUpdated?: () => void;
+    rides?: Ride[];
+    userRideCheck?: {
+        hasExistingRide: boolean;
+        rideId: string | null;
+    } | null;
+    userParticipationCheck?: {
+        isParticipating: boolean;
+        participatingRideId: string | null;
+    } | null;
 }
 
-export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: RidesListProps) {
+export default function RidesList({ 
+    matchId, 
+    refreshTrigger, 
+    onRideUpdated, 
+    rides: passedRides, 
+    userRideCheck, 
+    userParticipationCheck 
+}: RidesListProps) {
     const { currentUserId } = useOptimizedCurrentUser();
-    const { rides, loading, error, refetch } = useRides({ matchId, refreshTrigger });
-    const { hasExistingRide } = useUserRideCheck({ matchId, refreshTrigger });
-    const { isParticipating } = useUserParticipationCheck({ matchId, refreshTrigger });
+    
+    // Use passed data if available
+    const rides = passedRides || [];
+    const loading = !passedRides;
+    const error = null; // No error handling for passed data
+    const hasExistingRide = userRideCheck?.hasExistingRide || false;
+    const isParticipating = userParticipationCheck?.isParticipating || false;
 
     // Sammle alle User-IDs aus den Rides für optimiertes Preloading
     const allUserIds = rides
@@ -35,13 +54,11 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
         currentUserId,
         matchId,
         onSuccess: () => {
-            refetch();
             onRideUpdated?.();
         },
     });
 
     const handleRideUpdated = () => {
-        refetch();
         onRideUpdated?.();
     };
 

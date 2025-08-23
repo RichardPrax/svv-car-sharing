@@ -1,22 +1,93 @@
 import React, { useMemo, useState } from "react";
-import { useGameParticipation, GameParticipationStatus } from "@/hooks/matches/useGameParticipation";
+import { GameParticipationStatus } from "@/hooks/matches/useGameParticipation";
 import { ThumbsUpIcon, ThumbsDownIcon } from "@/components/ui/GameParticipationIcons";
 import DeclineReasonModal from "./DeclineReasonModal";
 import JoinInfoModal from "./JoinInfoModal";
 import styles from "./Matches.module.css";
 
+interface GameParticipation {
+    id: string;
+    matchDayId: string;
+    playerId: string;
+    status: GameParticipationStatus;
+    reason?: string | null;
+    createdAt: string;
+    updatedAt: string;
+}
+
 interface GameParticipationButtonsProps {
     matchDayId: string;
+    userParticipation?: GameParticipation | null;
     refreshTrigger?: number;
     onParticipationChange?: () => void;
 }
 
-export default function GameParticipationButtons({ matchDayId, refreshTrigger, onParticipationChange }: GameParticipationButtonsProps) {
+export default function GameParticipationButtons({ matchDayId, userParticipation, refreshTrigger, onParticipationChange }: GameParticipationButtonsProps) {
     const [showDeclineModal, setShowDeclineModal] = useState(false);
     const [showJoinModal, setShowJoinModal] = useState(false);
     const [pendingStatus, setPendingStatus] = useState<GameParticipationStatus | null>(null);
+    const [updating, setUpdating] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const { participation, loading, error, updating, updateParticipation, removeParticipation } = useGameParticipation({ matchDayId, refreshTrigger });
+    // Use the passed participation data instead of fetching
+    const participation = userParticipation;
+    const loading = false; // No loading since data is passed as props
+
+    // Add the update and remove functions
+    const updateParticipation = async (status: GameParticipationStatus, reason?: string) => {
+        setUpdating(true);
+        setError(null);
+
+        try {
+            const body: { status: GameParticipationStatus; reason?: string } = { status };
+            if (reason && reason.trim()) {
+                body.reason = reason.trim();
+            }
+
+            const response = await fetch(`/api/matches/${matchDayId}/participation`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+            });
+
+            if (response.ok) {
+                return { success: true };
+            } else {
+                const errorData = await response.json();
+                return { error: errorData.error || "Failed to update participation" };
+            }
+        } catch (err) {
+            console.error("Error updating participation:", err);
+            return { error: "Network error" };
+        } finally {
+            setUpdating(false);
+        }
+    };
+
+    const removeParticipation = async () => {
+        setUpdating(true);
+        setError(null);
+
+        try {
+            const response = await fetch(`/api/matches/${matchDayId}/participation`, {
+                method: "DELETE",
+            });
+
+            if (response.ok) {
+                return { success: true };
+            } else {
+                const errorData = await response.json();
+                return { error: errorData.error || "Failed to remove participation" };
+            }
+        } catch (err) {
+            console.error("Error removing participation:", err);
+            return { error: "Network error" };
+        } finally {
+            setUpdating(false);
+        }
+    };
 
     const handleParticipationClick = async (status: GameParticipationStatus) => {
         // If clicking the same status, remove participation

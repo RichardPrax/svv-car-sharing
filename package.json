@@ -49,6 +49,7 @@
     "dependencies": {
         "@prisma/client": "^6.10.1",
         "@supabase/supabase-js": "^2.50.5",
+        "dotenv": "^17.2.1",
         "next": "15.4.7",
         "prisma": "^6.11.1",
         "react": "^19.0.0",
@@ -69,4 +70,3 @@
         "typescript": "^5"
     }
 }
-

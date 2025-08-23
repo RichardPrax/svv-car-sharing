@@ -24,6 +24,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
 
+    // Keep emergency timeout as a safety net but with longer duration
+    useEffect(() => {
+        const emergencyTimeout = setTimeout(() => {
+            console.warn("⚠️ Authentication taking too long - forcing completion");
+            setLoading(false);
+        }, 15000); // 15 seconds maximum
+
+        return () => clearTimeout(emergencyTimeout);
+    }, []);
+
     const fetchUserProfile = async (userId: string): Promise<UserProfile | null> => {
         try {
             const response = await fetch(`/api/user/${userId}`);
@@ -56,7 +66,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     error,
                 } = await supabase.auth.getSession();
 
-                if (error) throw error;
+                if (error) {
+                    console.warn("Session error (non-critical):", error);
+                    // Don't throw on session errors, just continue with null session
+                }
 
                 setSession(session);
                 setUser(session?.user || null);
@@ -68,6 +81,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 }
             } catch (error) {
                 console.error("Error getting initial session:", error);
+                // Set user to null even on error to avoid infinite loading
+                setSession(null);
+                setUser(null);
+                setUserProfile(null);
             } finally {
                 setLoading(false);
             }

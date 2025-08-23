@@ -1,5 +1,5 @@
 import React from "react";
-import { useParticipationOverview, ParticipationData, ParticipationPlayer } from "@/hooks/matches/useParticipationOverview";
+import { ParticipationData, ParticipationPlayer } from "@/hooks/matches/useParticipationOverview";
 import { ThumbsUpIcon, ThumbsDownIcon, ClockIcon } from "@/components/ui/GameParticipationIcons";
 import { VolleyballPosition, getPositionDisplayName, getPositionColor } from "@/entities/UserProfile";
 import styles from "./ParticipationSummary.module.css";
@@ -7,6 +7,19 @@ import styles from "./ParticipationSummary.module.css";
 interface ParticipationSummaryProps {
     matchId: string;
     refreshTrigger?: number;
+    participationOverview?: {
+        participations: {
+            JOINING: ParticipationData[];
+            DECLINING: ParticipationData[];
+        };
+        openUsers: ParticipationPlayer[];
+        counts: {
+            joining: number;
+            declining: number;
+            open: number;
+            total: number;
+        };
+    };
 }
 
 interface ParticipationGroupProps {
@@ -110,10 +123,9 @@ const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, pa
     );
 };
 
-export default function ParticipationSummary({ matchId, refreshTrigger }: ParticipationSummaryProps) {
-    const { overview, loading, error } = useParticipationOverview({ matchId, refreshTrigger });
-
-    if (loading) {
+export default function ParticipationSummary({ matchId, refreshTrigger, participationOverview }: ParticipationSummaryProps) {
+    // Use passed data if available, otherwise show loading
+    if (!participationOverview) {
         return (
             <div className={styles.loadingContainer}>
                 <div className={styles.loadingSpinner}></div>
@@ -122,15 +134,9 @@ export default function ParticipationSummary({ matchId, refreshTrigger }: Partic
         );
     }
 
-    if (error) {
-        return (
-            <div className={styles.errorContainer}>
-                <span>{error.includes("Database migration") ? "Teilnahme-System wird eingerichtet..." : "Teilnahme-Übersicht nicht verfügbar"}</span>
-            </div>
-        );
-    }
+    const overview = participationOverview;
 
-    if (!overview || overview.counts.total === 0) {
+    if (overview.counts.total === 0) {
         return (
             <div className={styles.emptyContainer}>
                 <div className={styles.emptyIcon}>👥</div>
