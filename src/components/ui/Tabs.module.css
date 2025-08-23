@@ -1,4 +1,4 @@
-/* Tabs Component Styles */
+/* src/components/ui/Tabs.module.css */
 
 .tabsContainer {
     display: flex;
@@ -26,34 +26,47 @@
     justify-content: center;
     padding: var(--spacing-md) var(--spacing-lg);
     background: none;
-    border: none;
+    border: 2px solid transparent;
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--text-secondary);
-    border-bottom: 3px solid transparent;
-    transition: all 0.2s ease;
+    border-bottom-color: transparent;
+    transition: color 0.2s ease, background-color 0.2s ease;
     position: relative;
     white-space: nowrap;
     min-width: fit-content;
     flex-shrink: 0;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 .tab:hover {
     color: var(--text-primary);
-    background: var(--background-hover, rgba(0, 0, 0, 0.05));
+    background: var(--surface-hover);
 }
 
 .tab:focus {
     outline: none;
-    box-shadow: inset 0 0 0 2px var(--primary-color, #3b82f6);
+    box-shadow: inset 0 0 0 2px var(--primary);
 }
 
 .tabActive {
-    color: var(--primary-color, #3b82f6);
-    border-bottom-color: var(--primary-color, #3b82f6);
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    border-bottom-color: transparent;
     font-weight: 600;
-    background: var(--background-secondary, #f8f9fa);
+    background: var(--surface);
+    position: relative;
+}
+
+.tabActive::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--surface);
 }
 
 .tabContent {
@@ -88,7 +101,7 @@
 }
 
 .tabActive .tabBadge {
-    background: var(--primary-color, #3b82f6);
+    background: var(--primary);
 }
 
 .tabPanel {

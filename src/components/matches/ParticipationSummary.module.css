@@ -201,12 +201,12 @@
 
 .userReason {
     font-size: 0.8rem;
-    color: var(--text-secondary);
+    color: var(--text-primary);
     font-style: italic;
     padding: var(--spacing-xs);
-    background: var(--background-muted, #f8f9fa);
+    background: var(--surface);
     border-radius: var(--radius-sm);
-    border-left: 3px solid var(--error-color, #ef4444);
+    border-left: 3px solid var(--primary);
     margin-top: var(--spacing-xs);
 }
 
