@@ -1,7 +1,7 @@
 // pages/login.tsx
-import LoginForm from "@/components/auth/LoginForm";
+import AuthToggle from "@/components/auth/AuthToggle";
 
 export default function LoginPage() {
-    return <LoginForm />;
+    return <AuthToggle />;
 }
 

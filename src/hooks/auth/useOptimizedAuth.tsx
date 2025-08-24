@@ -34,11 +34,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return () => clearTimeout(emergencyTimeout);
     }, []);
 
-    const fetchUserProfile = async (userId: string): Promise<UserProfile | null> => {
+    const fetchUserProfile = async (userId: string, retryAttempt = 0): Promise<UserProfile | null> => {
+        const maxRetries = 1;
+        const retryDelay = 1000; // 3 second
+        
         try {
             const response = await fetch(`/api/user/${userId}`);
             if (!response.ok) {
                 if (response.status === 404) {
+                    // For newly registered users, the profile might not be available immediately
+                    // Retry a few times before giving up
+                    if (retryAttempt < maxRetries) {
+                        console.log(`User profile not found, retrying in ${retryDelay}ms (attempt ${retryAttempt + 1}/${maxRetries})`);
+                        await new Promise(resolve => setTimeout(resolve, retryDelay));
+                        return fetchUserProfile(userId, retryAttempt + 1);
+                    }
                     return null;
                 }
                 throw new Error("Failed to fetch user profile");

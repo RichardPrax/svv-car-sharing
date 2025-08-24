@@ -158,3 +158,17 @@
     color: var(--text-secondary);
 }
 
+/* Name Fields for Registration */
+.nameFields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+@media (max-width: 480px) {
+    .nameFields {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+}
+

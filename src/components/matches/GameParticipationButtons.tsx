@@ -3,6 +3,7 @@ import { GameParticipationStatus } from "@/hooks/matches/useGameParticipation";
 import { ThumbsUpIcon, ThumbsDownIcon } from "@/components/ui/GameParticipationIcons";
 import DeclineReasonModal from "./DeclineReasonModal";
 import JoinInfoModal from "./JoinInfoModal";
+import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import styles from "./Matches.module.css";
 
 interface GameParticipation {
@@ -28,6 +29,7 @@ export default function GameParticipationButtons({ matchDayId, userParticipation
     const [pendingStatus, setPendingStatus] = useState<GameParticipationStatus | null>(null);
     const [updating, setUpdating] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { session } = useOptimizedAuth();
 
     // Use the passed participation data instead of fetching
     const participation = userParticipation;
@@ -39,6 +41,11 @@ export default function GameParticipationButtons({ matchDayId, userParticipation
         setError(null);
 
         try {
+            const token = session?.access_token;
+            if (!token) {
+                return { error: "No access token available" };
+            }
+
             const body: { status: GameParticipationStatus; reason?: string } = { status };
             if (reason && reason.trim()) {
                 body.reason = reason.trim();
@@ -48,6 +55,7 @@ export default function GameParticipationButtons({ matchDayId, userParticipation
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify(body),
             });
@@ -71,8 +79,17 @@ export default function GameParticipationButtons({ matchDayId, userParticipation
         setError(null);
 
         try {
-            const response = await fetch(`/api/matches/${matchDayId}/participation`, {
+            const token = session?.access_token;
+            if (!token) {
+                return { error: "No access token available" };
+            }
+
+            // The delete endpoint requires the user ID, so we need to use the correct endpoint
+            const response = await fetch(`/api/matches/${matchDayId}/participation/${session.user?.id}`, {
                 method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
             });
 
             if (response.ok) {
