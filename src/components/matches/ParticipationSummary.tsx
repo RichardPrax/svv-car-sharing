@@ -1,25 +1,21 @@
 import React from "react";
-import { ParticipationData, ParticipationPlayer } from "@/hooks/matches/useParticipationOverview";
+import { ParticipationData, ParticipationPlayer, ParticipationOverview } from "@/hooks/matches/useBatchedParticipationOverview";
 import { ThumbsUpIcon, ThumbsDownIcon, ClockIcon } from "@/components/ui/GameParticipationIcons";
-import { VolleyballPosition, getPositionDisplayName, getPositionColor } from "@/entities/UserProfile";
+import { getPositionDisplayName, getPositionColor, VolleyballPosition } from "@/entities/UserProfile";
 import styles from "./ParticipationSummary.module.css";
+
+// Helper function to safely convert string position to enum
+const getPositionEnum = (position: string): VolleyballPosition => {
+    if (Object.values(VolleyballPosition).includes(position as VolleyballPosition)) {
+        return position as VolleyballPosition;
+    }
+    return VolleyballPosition.MB; // Default fallback
+};
 
 interface ParticipationSummaryProps {
     matchId: string;
     refreshTrigger?: number;
-    participationOverview?: {
-        participations: {
-            JOINING: ParticipationData[];
-            DECLINING: ParticipationData[];
-        };
-        openUsers: ParticipationPlayer[];
-        counts: {
-            joining: number;
-            declining: number;
-            open: number;
-            total: number;
-        };
-    };
+    participationOverview?: ParticipationOverview | null;
 }
 
 interface ParticipationGroupProps {
@@ -63,10 +59,10 @@ const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, pa
                                                     key={position.id}
                                                     className={`${styles.positionBadge} ${position.isPrimary ? styles.primaryPosition : styles.secondaryPosition}`}
                                                     style={{ 
-                                                        backgroundColor: getPositionColor(position.position),
+                                                        backgroundColor: getPositionColor(getPositionEnum(position.position)),
                                                         color: 'white'
                                                     }}
-                                                    title={`${getPositionDisplayName(position.position)} ${position.isPrimary ? '(Hauptposition)' : '(Nebenposition)'}`}
+                                                    title={`${getPositionDisplayName(getPositionEnum(position.position))} ${position.isPrimary ? '(Hauptposition)' : '(Nebenposition)'}`}
                                                 >
                                                     {position.position}
                                                     {position.isPrimary && <span className={styles.primaryIndicator}>★</span>}
@@ -93,10 +89,10 @@ const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, pa
                                                     key={position.id}
                                                     className={`${styles.positionBadge} ${position.isPrimary ? styles.primaryPosition : styles.secondaryPosition}`}
                                                     style={{ 
-                                                        backgroundColor: getPositionColor(position.position),
+                                                        backgroundColor: getPositionColor(getPositionEnum(position.position)),
                                                         color: 'white'
                                                     }}
-                                                    title={`${getPositionDisplayName(position.position)} ${position.isPrimary ? '(Hauptposition)' : '(Nebenposition)'}`}
+                                                    title={`${getPositionDisplayName(getPositionEnum(position.position))} ${position.isPrimary ? '(Hauptposition)' : '(Nebenposition)'}`}
                                                 >
                                                     {position.position}
                                                     {position.isPrimary && <span className={styles.primaryIndicator}>★</span>}
@@ -123,7 +119,7 @@ const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, pa
     );
 };
 
-export default function ParticipationSummary({ matchId, refreshTrigger, participationOverview }: ParticipationSummaryProps) {
+export default function ParticipationSummary({ participationOverview }: ParticipationSummaryProps) {
     // Use passed data if available, otherwise show loading
     if (!participationOverview) {
         return (

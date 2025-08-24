@@ -4,14 +4,13 @@ import { useOptimizedUserProfiles } from "@/hooks/auth/useUserProfileCache";
 import { useRideActions } from "@/hooks/rides";
 import RideCard from "./RideCard";
 import { LoadingSpinner } from "@/components/ui";
-import { Ride } from "@/entities/Ride";
+import { RideWithDetails } from "@/entities/Ride";
 import styles from "./Rides.module.css";
 
 interface RidesListProps {
     matchId: string;
-    refreshTrigger: number;
     onRideUpdated?: () => void;
-    rides?: Ride[];
+    rides?: RideWithDetails[];
     userRideCheck?: {
         hasExistingRide: boolean;
         rideId: string | null;
@@ -24,7 +23,6 @@ interface RidesListProps {
 
 export default function RidesList({ 
     matchId, 
-    refreshTrigger, 
     onRideUpdated, 
     rides: passedRides, 
     userRideCheck, 

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import { MatchDay } from "@/entities/MatchDay";
-import { Ride } from "@/entities/Ride";
+import { RideWithDetails } from "@/entities/Ride";
 import { ParticipationOverview } from "./useBatchedParticipationOverview";
 
 interface UserRideCheck {
@@ -17,7 +17,7 @@ interface UserParticipationCheck {
 interface MatchDetailBatchData {
     match: MatchDay;
     participationOverview: ParticipationOverview;
-    rides: Ride[];
+    rides: RideWithDetails[];
     userRideCheck: UserRideCheck | null;
     userParticipationCheck: UserParticipationCheck | null;
 }

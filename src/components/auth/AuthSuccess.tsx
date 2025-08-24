@@ -6,9 +6,11 @@ interface AuthSuccessProps {
     title: string;
     message: string;
     submessage?: string;
+    buttonText?: string;
+    onButtonClick?: () => void;
 }
 
-export default function AuthSuccess({ title, message, submessage }: AuthSuccessProps) {
+export default function AuthSuccess({ title, message, submessage, buttonText, onButtonClick }: AuthSuccessProps) {
     return (
         <AuthContainer>
             <div className={styles.authSuccess}>
@@ -16,6 +18,11 @@ export default function AuthSuccess({ title, message, submessage }: AuthSuccessP
                 <h2 className={styles.successTitle}>{title}</h2>
                 <p className={styles.successMessage}>{message}</p>
                 {submessage && <p className={styles.successMessage}>{submessage}</p>}
+                {buttonText && onButtonClick && (
+                    <button onClick={onButtonClick} className={styles.authLink}>
+                        {buttonText}
+                    </button>
+                )}
             </div>
         </AuthContainer>
     );

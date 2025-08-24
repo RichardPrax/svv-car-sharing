@@ -1,5 +1,5 @@
 // src/components/auth/OptimizedAuthGuard.tsx
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import { LoadingSpinner } from "@/components/ui";

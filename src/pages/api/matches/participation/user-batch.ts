@@ -57,7 +57,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
 
         // Create a map of matchId to participation
-        const participationByMatch: Record<string, any> = {};
+        const participationByMatch: Record<string, typeof participations[0] | null> = {};
         
         for (const matchId of matchIdArray) {
             const participation = participations.find(p => p.matchDayId === matchId);

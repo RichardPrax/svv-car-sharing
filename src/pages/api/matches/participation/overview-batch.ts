@@ -81,13 +81,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
 
         // Get IDs of users who have already participated in any match
-        const participatedUserIds = new Set(participations.map((p) => p.playerId));
+        // const participatedUserIds = new Set(participations.map((p) => p.playerId));
 
         // Find users who haven't responded to any match yet
-        const openUsers = allUsers.filter((user) => !participatedUserIds.has(user.id));
+        // const openUsers = allUsers.filter((user) => !participatedUserIds.has(user.id));
 
         // Group participations by match day and status
-        const overviewByMatch: Record<string, any> = {};
+        const overviewByMatch: Record<string, {
+            participations: {
+                JOINING: typeof participations;
+                DECLINING: typeof participations;
+            };
+            openUsers: typeof allUsers;
+            counts: {
+                joining: number;
+                declining: number;
+                open: number;
+                total: number;
+            };
+            match: {
+                id: string;
+                date: Date;
+                time: string;
+                opponent: string;
+                location: string;
+            };
+        }> = {};
 
         for (const match of matches) {
             const matchParticipations = participations.filter(p => p.matchDayId === match.id);

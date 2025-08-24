@@ -147,7 +147,6 @@ export default function MatchDetailPage() {
                     <TabPanel value="participation">
                         <ParticipationSummary 
                             matchId={match.id} 
-                            refreshTrigger={refreshTrigger} 
                             participationOverview={participationOverview}
                         />
                     </TabPanel>
@@ -201,7 +200,6 @@ export default function MatchDetailPage() {
 
                             <RidesList 
                                 matchId={match.id} 
-                                refreshTrigger={refreshTrigger} 
                                 onRideUpdated={handleRideUpdated}
                                 rides={rides}
                                 userRideCheck={userRideCheck}
