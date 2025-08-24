@@ -1,5 +1,4 @@
 // src/components/ui/icons/Icon.tsx
-import React from "react";
 
 export type IconName = "home" | "volleyball" | "runner" | "scales" | "chart" | "users" | "logout" | "menu" | "dashboard" | "car" | "refresh" | "user" | "edit" | "delete";
 

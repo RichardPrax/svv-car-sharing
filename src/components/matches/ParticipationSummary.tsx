@@ -1,4 +1,3 @@
-import React from "react";
 import { ParticipationData, ParticipationPlayer, ParticipationOverview } from "@/hooks/matches/useBatchedParticipationOverview";
 import { ThumbsUpIcon, ThumbsDownIcon, ClockIcon } from "@/components/ui/GameParticipationIcons";
 import { getPositionDisplayName, getPositionColor, VolleyballPosition } from "@/entities/UserProfile";

@@ -1,5 +1,5 @@
 // src/components/matches/BringItems.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { useBringItems } from "@/hooks/matches/useBringItems";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import { CreateBringItemForm } from "@/components/forms";

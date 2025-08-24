@@ -1,5 +1,4 @@
 // src/components/admin/UsersList.tsx
-import React from "react";
 import { useAdminUsers } from "@/hooks/admin/useAdminUsers";
 import { UserRole, UserProfileWithPositions, VolleyballPosition, getPositionDisplayName, getPositionColor } from "@/entities/UserProfile";
 import { UserEditHandler, UserDeleteHandler } from "./types";

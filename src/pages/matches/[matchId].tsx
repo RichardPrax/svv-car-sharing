@@ -24,8 +24,7 @@ export default function MatchDetailPage() {
         userRideCheck, 
         userParticipationCheck, 
         loading, 
-        error, 
-        refetch 
+        error 
     } = useMatchDetailBatch({
         matchId,
         refreshTrigger,

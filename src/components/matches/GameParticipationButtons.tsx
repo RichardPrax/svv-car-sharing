@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { GameParticipationStatus } from "@/hooks/matches/useGameParticipation";
 import { ThumbsUpIcon, ThumbsDownIcon } from "@/components/ui/GameParticipationIcons";
 import DeclineReasonModal from "./DeclineReasonModal";
