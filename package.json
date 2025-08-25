@@ -31,6 +31,7 @@
         "auth:create-users": "dotenv -e .env.local -- node create-auth-users.js",
         "create:test-data": "dotenv -e .env.local -- node create-test-data.js",
         "import:spielplan": "dotenv -e .env.local -- node import-spielplan.js",
+        "import:spielplan:production": "node import-spielplan-production.js",
         "db:production:generate": "dotenv -e .env.production -- prisma generate",
         "db:production:push": "dotenv -e .env.production -- prisma db push",
         "db:production:migrate": "dotenv -e .env.production -- prisma migrate dev",
