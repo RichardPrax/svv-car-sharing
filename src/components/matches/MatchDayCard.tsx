@@ -13,14 +13,13 @@ import styles from "./Matches.module.css";
 type Props = {
     match: MatchDay;
     participationOverview?: ParticipationOverview;
-    overviewLoading?: boolean;
+    // overviewLoading entfernt, da ungenutzt
     onParticipationChange?: () => void;
 };
 
 export default function MatchDayCard({ 
     match, 
     participationOverview, 
-    overviewLoading, 
     onParticipationChange 
 }: Props) {
     const isPast = isMatchInPast(match.date, match.time);

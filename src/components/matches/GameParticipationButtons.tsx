@@ -9,7 +9,7 @@ import styles from "./Matches.module.css";
 interface GameParticipation {
     id: string;
     matchDayId: string;
-    playerId: string;
+        // refreshTrigger entfernt, da ungenutzt
     status: GameParticipationStatus;
     reason?: string | null;
     createdAt: string;
@@ -23,7 +23,7 @@ interface GameParticipationButtonsProps {
     onParticipationChange?: () => void;
 }
 
-export default function GameParticipationButtons({ matchDayId, userParticipation, refreshTrigger, onParticipationChange }: GameParticipationButtonsProps) {
+export default function GameParticipationButtons({ matchDayId, userParticipation, onParticipationChange }: GameParticipationButtonsProps) {
     const [showDeclineModal, setShowDeclineModal] = useState(false);
     const [showJoinModal, setShowJoinModal] = useState(false);
     const [pendingStatus, setPendingStatus] = useState<GameParticipationStatus | null>(null);

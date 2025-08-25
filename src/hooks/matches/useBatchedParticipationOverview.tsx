@@ -70,7 +70,8 @@ export function useBatchedParticipationOverview({ matchIds, refreshTrigger = 0 }
     const { session } = useOptimizedAuth();
 
     // Memoize matchIds to prevent unnecessary re-renders
-    const stableMatchIds = useMemo(() => matchIds, [JSON.stringify(matchIds)]);
+    // Verwende matchIds direkt als Dependency
+    const stableMatchIds = useMemo(() => matchIds, [matchIds]);
 
     const fetchOverview = useCallback(async () => {
         if (!stableMatchIds || stableMatchIds.length === 0) {
@@ -120,7 +121,7 @@ export function useBatchedParticipationOverview({ matchIds, refreshTrigger = 0 }
         if (stableMatchIds && stableMatchIds.length > 0) {
             fetchOverview();
         }
-    }, [fetchOverview, refreshTrigger]);
+    }, [stableMatchIds, fetchOverview, refreshTrigger]);
 
     return {
         overview,

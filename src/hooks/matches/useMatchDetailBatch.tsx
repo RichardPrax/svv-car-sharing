@@ -77,7 +77,7 @@ export function useMatchDetailBatch({ matchId, refreshTrigger = 0 }: UseMatchDet
         if (matchId && !Array.isArray(matchId)) {
             fetchMatchDetailBatch();
         }
-    }, [fetchMatchDetailBatch, refreshTrigger]);
+    }, [matchId, fetchMatchDetailBatch, refreshTrigger]);
 
     return {
         match: data?.match || null,

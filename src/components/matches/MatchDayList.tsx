@@ -18,7 +18,7 @@ export default function MatchDayList({ matchDays }: Props) {
     }, [matchDays]);
     
     // Fetch participation overview for all matches in a single request
-    const { overview: batchedOverview, loading: overviewLoading } = useBatchedParticipationOverview({
+    const { overview: batchedOverview } = useBatchedParticipationOverview({
         matchIds,
         refreshTrigger,
     });
@@ -37,7 +37,6 @@ export default function MatchDayList({ matchDays }: Props) {
                     key={match.id} 
                     match={match} 
                     participationOverview={batchedOverview?.[match.id]}
-                    overviewLoading={overviewLoading}
                     onParticipationChange={handleParticipationChange}
                 />
             ))}

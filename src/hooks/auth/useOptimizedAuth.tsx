@@ -1,5 +1,5 @@
 // src/hooks/auth/useOptimizedAuth.tsx
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabaseClient";
 import { UserProfile } from "@/entities/UserProfile";
@@ -34,10 +34,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return () => clearTimeout(emergencyTimeout);
     }, []);
 
-    const fetchUserProfile = async (userId: string, retryAttempt = 0): Promise<UserProfile | null> => {
+    const fetchUserProfile = useCallback(async (userId: string, retryAttempt = 0): Promise<UserProfile | null> => {
         const maxRetries = 1;
         const retryDelay = 1000; // 3 second
-        
         try {
             const response = await fetch(`/api/user/${userId}`);
             if (!response.ok) {
@@ -58,7 +57,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             console.error("Error fetching user profile:", error);
             return null;
         }
-    };
+    }, []);
 
     const refreshUserProfile = async () => {
         if (user?.id) {
@@ -126,7 +125,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return () => {
             subscription.unsubscribe();
         };
-    }, []);
+    }, [fetchUserProfile]);
 
     const value: AuthContextType = {
         user,
