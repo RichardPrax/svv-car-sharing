@@ -1,5 +1,6 @@
 // src/components/ui/Modal.tsx
 import { ReactNode, useEffect } from "react";
+import { createPortal } from "react-dom";
 import styles from "./Modal.module.css";
 
 type Props = {
@@ -63,7 +64,8 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = "md
         }
     };
 
-    return (
+    // Modal-Content als Portal ins body rendern
+    return createPortal(
         <div className={styles.modalOverlay} onClick={handleBackdropClick}>
             <div className={`${styles.modalContent} ${getModalSizeClass()}`}>
                 {title && (
@@ -76,7 +78,8 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = "md
                 )}
                 <div className={styles.modalBody}>{children}</div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
 
