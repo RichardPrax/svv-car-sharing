@@ -48,19 +48,29 @@ export function UserProfileProvider({ children }: UserProfileProviderProps) {
 
     const fetchProfiles = async (userIds: string[]): Promise<UserProfile[]> => {
         try {
+            // Filter out empty or invalid user IDs
+            const validUserIds = userIds.filter(id => id && typeof id === 'string' && id.trim() !== '');
+            
+            if (validUserIds.length === 0) {
+                console.log('No valid user IDs to fetch profiles for');
+                return [];
+            }
+
             const response = await fetch("/api/user/profiles", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ userIds }),
+                body: JSON.stringify({ userIds: validUserIds }),
             });
 
             if (!response.ok) {
-                throw new Error("Failed to fetch user profiles");
+                console.error(`Failed to fetch user profiles: ${response.status} ${response.statusText}`);
+                return [];
             }
 
-            return await response.json();
+            const profiles = await response.json();
+            return Array.isArray(profiles) ? profiles : [];
         } catch (error) {
             console.error("Error fetching user profiles:", error);
             return [];
@@ -165,9 +175,12 @@ export function UserProfileProvider({ children }: UserProfileProviderProps) {
 
         try {
             const profiles = await fetchProfiles(uncachedUserIds);
-            updateCache(profiles);
+            if (profiles && profiles.length > 0) {
+                updateCache(profiles);
+            }
         } catch (error) {
             console.error("Error preloading profiles:", error);
+            // Don't throw, just log the error
         } finally {
             setLoading(uncachedUserIds, false);
         }

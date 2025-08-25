@@ -1,5 +1,6 @@
 // src/components/auth/AuthLink.tsx
 import { useRouter } from "next/router";
+import styles from "./Auth.module.css";
 
 interface AuthLinkProps {
     text: string;
@@ -11,32 +12,10 @@ export default function AuthLink({ text, linkText, href }: AuthLinkProps) {
     const router = useRouter();
 
     return (
-        <div
-            style={{
-                marginTop: "var(--spacing-lg)",
-                textAlign: "center",
-                paddingTop: "var(--spacing-lg)",
-                borderTop: "1px solid var(--card-border)",
-            }}
-        >
-            <p
-                style={{
-                    color: "var(--text-secondary)",
-                    fontSize: "0.875rem",
-                }}
-            >
+        <div className={styles.authLinkContainer}>
+            <p className={styles.authLinkText}>
                 {text}{" "}
-                <button
-                    onClick={() => router.push(href)}
-                    style={{
-                        color: "var(--text-accent)",
-                        textDecoration: "underline",
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        fontSize: "0.875rem",
-                    }}
-                >
+                <button onClick={() => router.push(href)} className={styles.authLink}>
                     {linkText}
                 </button>
             </p>

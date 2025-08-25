@@ -1,0 +1,372 @@
+/* src/components/admin/UsersList.module.css */
+.usersContainer {
+    padding: var(--spacing-lg) 0;
+    background: var(--background);
+    min-height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+}
+
+.pageHeader {
+    margin-bottom: var(--spacing-xl);
+    text-align: center;
+}
+
+.pageTitle {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+.pageSubtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    background: var(--card-background);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    margin-top: var(--spacing-lg);
+}
+
+.usersList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    background: transparent;
+}
+
+.userItem {
+    background: var(--card-background);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    transition: all 0.2s ease-in-out;
+    box-shadow: var(--shadow-sm);
+}
+
+.userItem:hover {
+    border-color: var(--border-light);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.userItemContent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-md);
+    width: 100%;
+}
+
+.userHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-md);
+    width: 100%;
+}
+
+.userActions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.actionButtons {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.editButton {
+    background: var(--primary);
+    color: var(--background);
+    border: none;
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.editButton:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.deleteButton {
+    background: var(--error);
+    color: var(--background);
+    border: none;
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.deleteButton:hover {
+    background: var(--error-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.userInfo {
+    flex: 1;
+    min-width: 0; /* Allow text truncation */
+}
+
+.userName {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0;
+    font-size: 1.125rem;
+    word-break: break-word;
+}
+
+.userRole {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    white-space: nowrap;
+    align-self: flex-start;
+}
+
+.roleAdmin {
+    background: rgba(62, 207, 142, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(62, 207, 142, 0.2);
+}
+
+.roleUser {
+    background: rgba(161, 161, 170, 0.1);
+    color: var(--text-secondary);
+    border: 1px solid rgba(161, 161, 170, 0.2);
+}
+
+.roleTrainer {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--accent);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.rolePenaltyMaster {
+    background: rgba(248, 113, 113, 0.1);
+    color: var(--error);
+    border: 1px solid rgba(248, 113, 113, 0.2);
+}
+
+.rolePlayer {
+    background: rgba(251, 191, 36, 0.1);
+    color: var(--warning);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.error {
+    background: var(--card-background);
+    border: 1px solid var(--error);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    color: var(--error);
+    text-align: center;
+}
+
+.errorButton {
+    background: var(--error);
+    color: var(--background);
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: var(--spacing-md);
+    transition: all 0.2s ease-in-out;
+}
+
+.errorButton:hover {
+    background: var(--error-hover);
+}
+
+.loading {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-secondary);
+}
+
+.emptyState {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-secondary);
+    background: var(--card-background);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+}
+
+.emptyStateIcon {
+    margin-bottom: var(--spacing-md);
+    opacity: 0.6;
+}
+
+/* Responsive Design */
+/* Mobile (default) - Keep list layout */
+@media (min-width: 480px) {
+    .usersContainer {
+        padding: var(--spacing-xl) var(--spacing-lg);
+    }
+}
+
+/* Tablet and above - Horizontal layout for user details */
+@media (min-width: 768px) {
+    /* Styles already optimized for horizontal layout */
+}
+
+/* Large screens - Better spacing */
+@media (min-width: 1024px) {
+    .usersList {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+}
+
+/* Mobile specific optimizations */
+@media (max-width: 479px) {
+    .usersContainer {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+    
+    .pageTitle {
+        font-size: 2rem;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+    
+    .pageSubtitle {
+        font-size: 1rem;
+    }
+    
+    .userItem {
+        padding: var(--spacing-md);
+    }
+    
+    .userName {
+        font-size: 1rem;
+    }
+    
+    .userItemContent {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+    
+    .userHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+    
+    .userActions {
+        flex-direction: row;
+        align-self: stretch;
+        justify-content: space-between;
+    }
+    
+    .userRole {
+        align-self: flex-start;
+    }
+}
+
+/* Volleyball Positions Styles */
+.userPositions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-xs);
+}
+
+.positionBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease;
+}
+
+.positionBadge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.primaryPosition {
+    opacity: 1;
+    font-weight: 700;
+}
+
+.secondaryPosition {
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+.primaryIndicator {
+    font-size: 0.6rem;
+    margin-left: 2px;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Position specific colors are set inline via JavaScript */
+.positionBadge.mb {
+    background-color: #e74c3c;
+}
+
+.positionBadge.aa {
+    background-color: #3498db;
+}
+
+.positionBadge.l {
+    background-color: #f39c12;
+}
+
+.positionBadge.z {
+    background-color: #2ecc71;
+}
+
+.positionBadge.d {
+    background-color: #9b59b6;
+}
+

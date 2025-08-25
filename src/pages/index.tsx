@@ -1,72 +1,100 @@
-import { MatchDayList, NextMatchCard } from "@/components/matches";
-import { Header } from "@/components/layout";
-import { LoadingSpinner } from "@/components/ui";
-import { useMatches } from "@/hooks/matches/useMatches";
-import { isMatchInFuture, sortMatchesByDateTime } from "@/utils/dateTime";
+import { useRouter } from "next/router";
+import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
+import { useRoleGuard } from "@/hooks/auth/useRoleGuard";
+import { Icon, type IconName } from "@/components/ui";
+import styles from "../styles/Pages.module.css";
+
+interface CategoryCard {
+    title: string;
+    description: string;
+    route: string;
+    icon: IconName;
+    color: string;
+}
 
 export default function HomePage() {
-    const { matchDays, loading, error } = useMatches();
+    const router = useRouter();
+    const { userProfile } = useOptimizedAuth();
+    const { hasAdminAccess } = useRoleGuard();
 
-    // Sort all matches by date and time
-    const sortedMatchDays = sortMatchesByDateTime(matchDays);
+    const baseCategories: CategoryCard[] = [
+        {
+            title: "Training",
+            description: "Trainingspläne und Übungen verwalten",
+            route: "/training",
+            icon: "runner" as IconName,
+            color: "#3B82F6",
+        },
+        {
+            title: "Spieltage",
+            description: "Spielpläne und Fahrgemeinschaften",
+            route: "/matches",
+            icon: "volleyball" as IconName,
+            color: "#10B981",
+        },
+        {
+            title: "Strafen",
+            description: "Strafenkatalog und Verwaltung",
+            route: "/penalties",
+            icon: "scales" as IconName,
+            color: "#EF4444",
+        },
+        {
+            title: "Statistiken",
+            description: "Spieler- und Teamstatistiken",
+            route: "/statistics",
+            icon: "chart" as IconName,
+            color: "#8B5CF6",
+        },
+    ];
 
-    // Find the next upcoming match
-    const nextMatch = sortedMatchDays.find((match) => isMatchInFuture(match.date, match.time));
+    // Admin-Kategorien (nur hinzufügen wenn Berechtigung vorhanden)
+    const adminCategories: CategoryCard[] = [
+        {
+            title: "Benutzer verwalten",
+            description: "Übersicht aller Benutzer und Rollenverwaltung",
+            route: "/admin/users",
+            icon: "users" as IconName,
+            color: "#F59E0B",
+        },
+    ];
 
-    if (loading) return <LoadingSpinner message="Lade Spieltage..." fullScreen />;
-    if (error) return <p>Fehler beim Laden der Spieltage: {error}</p>;
+    // Alle Kategorien zusammenfügen basierend auf Berechtigung
+    const categories = hasAdminAccess() ? [...baseCategories, ...adminCategories] : baseCategories;
+
+    const handleCategoryClick = (route: string) => {
+        router.push(route);
+    };
 
     return (
         <>
-            <Header />
-            <div
-                style={{
-                    padding: "var(--spacing-lg) 0",
-                    minHeight: "100vh",
-                    backgroundColor: "var(--background)",
-                }}
-            >
-                <div
-                    style={{
-                        maxWidth: "1200px",
-                        margin: "0 auto",
-                        padding: "0 var(--spacing-md)",
-                    }}
-                >
-                    {/* Nächster Spieltag Section */}
-                    {nextMatch && (
-                        <section style={{ marginBottom: "var(--spacing-xl)" }}>
-                            <h2
-                                style={{
-                                    fontSize: "1.75rem",
-                                    fontWeight: "700",
-                                    marginBottom: "var(--spacing-lg)",
-                                    color: "var(--text-primary)",
-                                    textAlign: "center",
-                                    padding: "0 var(--spacing-md)",
-                                }}
-                            >
-                                Nächster Spieltag
-                            </h2>
-                            <NextMatchCard match={nextMatch} />
-                        </section>
-                    )}
+            <div className={styles.pageContainer}>
+                <div className={styles.pageWrapper}>
+                    {/* Willkommen Section */}
+                    <section className={styles.pageHeader}>
+                        <div>
+                            <h1 className={styles.pageTitleGradient}>{userProfile ? `Willkommen zurück, ${userProfile.firstName}!` : "Willkommen!"}</h1>
+                            <p className={styles.pageSubtitle}>Wähle einen Bereich aus, um loszulegen:</p>
+                        </div>
+                    </section>
 
-                    {/* Alle Spieltage Section */}
+                    {/* Kategorien Grid */}
                     <section>
-                        <h2
-                            style={{
-                                fontSize: "1.75rem",
-                                fontWeight: "700",
-                                marginBottom: "var(--spacing-lg)",
-                                color: "var(--text-primary)",
-                                textAlign: "center",
-                                padding: "0 var(--spacing-md)",
-                            }}
-                        >
-                            Alle Spieltage
-                        </h2>
-                        <MatchDayList matchDays={sortedMatchDays} />
+                        <div className={styles.categoriesGrid}>
+                            {categories.map((category) => (
+                                <div key={category.title} onClick={() => handleCategoryClick(category.route)} className={styles.categoryCard}>
+                                    <div className={styles.categoryCardIcon}>
+                                        <Icon name={category.icon} size={32} color={category.color} />
+                                    </div>
+                                    <h3 className={styles.categoryCardTitle} style={{ color: category.color }}>
+                                        {category.title}
+                                    </h3>
+                                    <p className={styles.categoryCardDescription}>{category.description}</p>
+
+                                    <div className={styles.categoryCardDecorative} style={{ background: `linear-gradient(135deg, ${category.color}20, transparent)` }} />
+                                </div>
+                            ))}
+                        </div>
                     </section>
                 </div>
             </div>

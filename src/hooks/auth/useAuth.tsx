@@ -105,3 +105,136 @@ export function useLogin() {
     };
 }
 
+// Email validation utility
+function isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+export function useRegistration() {
+    const [state, setState] = useState<AuthState>({
+        email: "",
+        password: "",
+        firstName: "",
+        lastName: "",
+        error: "",
+        loading: false,
+        success: false,
+    });
+    const router = useRouter();
+
+    const setEmail = (email: string) => setState((prev) => ({ ...prev, email }));
+    const setPassword = (password: string) => setState((prev) => ({ ...prev, password }));
+    const setFirstName = (firstName: string) => setState((prev) => ({ ...prev, firstName }));
+    const setLastName = (lastName: string) => setState((prev) => ({ ...prev, lastName }));
+
+    const register = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setState((prev) => ({ ...prev, loading: true, error: "" }));
+
+        // Form validation
+        if (!isValidEmail(state.email)) {
+            setState((prev) => ({ ...prev, error: "Bitte geben Sie eine gültige E-Mail-Adresse ein.", loading: false }));
+            return;
+        }
+
+        if (!state.password || state.password.length < 6) {
+            setState((prev) => ({ ...prev, error: "Das Passwort muss mindestens 6 Zeichen lang sein.", loading: false }));
+            return;
+        }
+
+        if (!state.firstName || !state.lastName) {
+            setState((prev) => ({ ...prev, error: "Vor- und Nachname sind erforderlich.", loading: false }));
+            return;
+        }
+
+        try {
+            // Create auth user in Supabase
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+                email: state.email,
+                password: state.password,
+                options: {
+                    data: {
+                        firstName: state.firstName,
+                        lastName: state.lastName,
+                    },
+                },
+            });
+
+            if (authError) {
+                if (authError.message.includes("User already registered")) {
+                    setState((prev) => ({ ...prev, error: "Ein Benutzer mit dieser E-Mail-Adresse existiert bereits.", loading: false }));
+                } else {
+                    setState((prev) => ({ ...prev, error: "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.", loading: false }));
+                }
+                return;
+            }
+
+            if (authData.user) {
+                // Create user profile in database BEFORE proceeding
+                try {
+                    const profileResponse = await fetch(`/api/user/${authData.user.id}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            id: authData.user.id,
+                            firstName: state.firstName,
+                            lastName: state.lastName,
+                            role: "USER",
+                        }),
+                    });
+
+                    if (!profileResponse.ok) {
+                        console.error("Failed to create user profile");
+                        setState((prev) => ({ 
+                            ...prev, 
+                            error: "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.", 
+                            loading: false 
+                        }));
+                        return;
+                    }
+                } catch (profileError) {
+                    console.error("Error creating user profile:", profileError);
+                    setState((prev) => ({ 
+                        ...prev, 
+                        error: "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.", 
+                        loading: false 
+                    }));
+                    return;
+                }
+
+                setState((prev) => ({ ...prev, loading: false, success: true }));
+                
+                // If email confirmation is disabled, redirect immediately
+                if (authData.session) {
+                    // Add small delay to ensure profile is available before components try to fetch it
+                    setTimeout(() => {
+                        router.push("/");
+                    }, 100);
+                } else {
+                    // Email confirmation required - show success message
+                    // User will be redirected after email confirmation
+                }
+            }
+        } catch (error) {
+            console.error("Registration error:", error);
+            setState((prev) => ({
+                ...prev,
+                error: "Netzwerkfehler. Bitte versuchen Sie es später erneut.",
+                loading: false,
+            }));
+        }
+    };
+
+    return {
+        ...state,
+        setEmail,
+        setPassword,
+        setFirstName,
+        setLastName,
+        register,
+    };
+}
+

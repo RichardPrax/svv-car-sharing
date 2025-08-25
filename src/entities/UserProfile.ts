@@ -1,18 +1,83 @@
 // src/entities/UserProfile.ts
+import { UserRole } from "@prisma/client";
+
+// Re-export Prisma's UserRole for convenience
+export { UserRole } from "@prisma/client";
+
+// Volleyball positions enum (matching Prisma schema)
+export enum VolleyballPosition {
+    MB = "MB", // Mittelblock
+    AA = "AA", // Außenannahme
+    L = "L",   // Libero
+    Z = "Z",   // Zuspiel
+    D = "D"    // Diagonal
+}
+
+// Volleyball position with metadata
+export interface UserPosition {
+    id: string;
+    userId: string;
+    position: VolleyballPosition;
+    isPrimary: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+// Helper functions for position display
+export const getPositionDisplayName = (position: VolleyballPosition): string => {
+    switch (position) {
+        case VolleyballPosition.MB:
+            return "Mittelblock";
+        case VolleyballPosition.AA:
+            return "Außenannahme";
+        case VolleyballPosition.L:
+            return "Libero";
+        case VolleyballPosition.Z:
+            return "Zuspiel";
+        case VolleyballPosition.D:
+            return "Diagonal";
+        default:
+            return position;
+    }
+};
+
+export const getPositionColor = (position: VolleyballPosition): string => {
+    switch (position) {
+        case VolleyballPosition.MB:
+            return "#e74c3c"; // Rot
+        case VolleyballPosition.AA:
+            return "#3498db"; // Blau
+        case VolleyballPosition.L:
+            return "#f39c12"; // Orange
+        case VolleyballPosition.Z:
+            return "#2ecc71"; // Grün
+        case VolleyballPosition.D:
+            return "#9b59b6"; // Lila
+        default:
+            return "#95a5a6"; // Grau
+    }
+};
 
 // Base UserProfile type based on Prisma schema
 export interface UserProfile {
     id: string;
     firstName: string;
     lastName: string;
+    role: UserRole;
     createdAt: Date;
     updatedAt: Date;
+}
+
+// UserProfile with volleyball positions
+export interface UserProfileWithPositions extends UserProfile {
+    playerPositions: UserPosition[];
 }
 
 export interface UserProfileWithName {
     id: string;
     firstName: string;
     lastName: string;
+    role: UserRole;
     fullName: string;
 }
 
@@ -53,6 +118,25 @@ export function transformUserProfile(user: UserProfile): UserProfileWithName {
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
+        role: user.role,
         fullName: getUserFullName(user),
     };
 }
+
+// Role utility functions
+export function isAdmin(user: UserProfile | null | undefined): boolean {
+    return user?.role === UserRole.ADMIN;
+}
+
+export function isTrainer(user: UserProfile | null | undefined): boolean {
+    return user?.role === UserRole.TRAINER;
+}
+
+export function isPenaltyMaster(user: UserProfile | null | undefined): boolean {
+    return user?.role === UserRole.PENALTY_MASTER;
+}
+
+export function hasAdminAccess(user: UserProfile | null | undefined): boolean {
+    return isAdmin(user) || isTrainer(user);
+}
+

@@ -1,26 +1,49 @@
 // src/components/rides/RidesList.tsx
 import { useOptimizedCurrentUser } from "@/hooks/rides/useOptimizedCurrentUser";
 import { useOptimizedUserProfiles } from "@/hooks/auth/useUserProfileCache";
-import { useRides } from "@/hooks/rides";
 import { useRideActions } from "@/hooks/rides";
-import { useUserRideCheck, useUserParticipationCheck } from "@/hooks/rides";
 import RideCard from "./RideCard";
 import { LoadingSpinner } from "@/components/ui";
+import { RideWithDetails } from "@/entities/Ride";
+import styles from "./Rides.module.css";
 
 interface RidesListProps {
     matchId: string;
-    refreshTrigger: number;
     onRideUpdated?: () => void;
+    rides?: RideWithDetails[];
+    userRideCheck?: {
+        hasExistingRide: boolean;
+        rideId: string | null;
+    } | null;
+    userParticipationCheck?: {
+        isParticipating: boolean;
+        participatingRideId: string | null;
+    } | null;
 }
 
-export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: RidesListProps) {
+export default function RidesList({ 
+    matchId, 
+    onRideUpdated, 
+    rides: passedRides, 
+    userRideCheck, 
+    userParticipationCheck 
+}: RidesListProps) {
     const { currentUserId } = useOptimizedCurrentUser();
-    const { rides, loading, error, refetch } = useRides({ matchId, refreshTrigger });
-    const { hasExistingRide } = useUserRideCheck({ matchId, refreshTrigger });
-    const { isParticipating } = useUserParticipationCheck({ matchId, refreshTrigger });
+    
+    // Use passed data if available
+    const rides = passedRides || [];
+    const loading = !passedRides;
+    const error = null; // No error handling for passed data
+    const hasExistingRide = userRideCheck?.hasExistingRide || false;
+    const isParticipating = userParticipationCheck?.isParticipating || false;
 
     // Sammle alle User-IDs aus den Rides für optimiertes Preloading
-    const allUserIds = rides.flatMap((ride) => [ride.driverId, ...ride.passengers.map((p) => p.passengerId)]).filter(Boolean);
+    const allUserIds = rides
+        .flatMap((ride) => [
+            ride.driverId, 
+            ...(ride.passengers || []).map((p) => p.passengerId)
+        ])
+        .filter((id) => id && typeof id === 'string' && id.trim() !== '');
 
     // Preload alle benötigten User-Profile in einem Batch
     const { getProfileName } = useOptimizedUserProfiles(allUserIds);
@@ -29,13 +52,11 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
         currentUserId,
         matchId,
         onSuccess: () => {
-            refetch();
             onRideUpdated?.();
         },
     });
 
     const handleRideUpdated = () => {
-        refetch();
         onRideUpdated?.();
     };
 
@@ -58,7 +79,7 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
     // Enriche Rides mit gecachten User-Namen (nur für Driver, da Passengers bereits korrekt von API kommen)
     const enrichedRides = rides.map((ride) => ({
         ...ride,
-        driverName: getProfileName(ride.driverId),
+        driverName: ride.driverId ? getProfileName(ride.driverId) : 'Unbekannter Fahrer',
         // passengerNames kommen bereits korrekt von der API über useRides
     }));
 
@@ -67,28 +88,12 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
     }
 
     if (error) {
-        return (
-            <div
-                style={{
-                    textAlign: "center",
-                    padding: "var(--spacing-xl)",
-                    color: "var(--danger)",
-                }}
-            >
-                {error}
-            </div>
-        );
+        return <div className={styles.ridesListError}>{error}</div>;
     }
 
     if (enrichedRides.length === 0) {
         return (
-            <div
-                style={{
-                    textAlign: "center",
-                    padding: "var(--spacing-xl)",
-                    color: "var(--text-secondary)",
-                }}
-            >
+            <div className={styles.ridesListEmpty}>
                 Noch keine Fahrten erstellt.
                 {!hasExistingRide && !isParticipating && (
                     <>
@@ -101,13 +106,7 @@ export default function RidesList({ matchId, refreshTrigger, onRideUpdated }: Ri
     }
 
     return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "var(--spacing-md)",
-            }}
-        >
+        <div className={styles.ridesList}>
             {enrichedRides.map((ride) => {
                 // Check ob User bereits Fahrer oder Mitfahrer ist
                 const isUserDriverOfThisRide = ride.driverId === currentUserId;

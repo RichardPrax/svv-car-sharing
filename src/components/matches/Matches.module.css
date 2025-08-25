@@ -1,0 +1,592 @@
+/* Matches Components Shared Styles */
+
+/* Match Day List */
+.matchDayList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+/* Match Day Card */
+.matchCard {
+    background-color: var(--card-background);
+    border-color: var(--card-border);
+    border-width: 1px;
+    border-style: solid;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--card-shadow);
+    padding: var(--spacing-lg);
+    width: 100%;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.matchCard:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--border-light);
+}
+
+.matchCardPast {
+    background-color: var(--card-past-background);
+    border-color: var(--card-past-border);
+    opacity: 0.8;
+}
+
+.matchCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-md);
+}
+
+.matchCardDateTime {
+    flex: 1;
+}
+
+.matchCardDate {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-xs) 0;
+    line-height: 1.4;
+}
+
+.matchCardTime {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.matchCardPastIndicator {
+    font-size: 0.75rem;
+    color: var(--text-accent);
+    font-weight: 600;
+    background-color: var(--card-past-border);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+}
+
+.matchCardDetails {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.matchCardDetailRow {
+    display: flex;
+    align-items: center;
+}
+
+.matchCardDetailLabel {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.matchCardDetailValue {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-left: var(--spacing-xs);
+}
+
+.matchCardParticipationSummary {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+}
+
+.matchCardParticipationLabel {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.matchCardParticipationCounts {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.matchCardParticipationCount {
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--background-secondary);
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Next Match Card */
+.nextMatchCard {
+    background: linear-gradient(135deg, var(--card-background) 0%, var(--surface) 100%);
+    border-color: var(--card-border);
+    border-width: 2px;
+    border-style: solid;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--spacing-xl);
+    width: 100%;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.nextMatchCard::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3ecf8e, #10b981);
+}
+
+.nextMatchCard:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
+    border-color: #3ecf8e;
+}
+
+.nextMatchCardHeader {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.nextMatchCardDate {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-xs) 0;
+    line-height: 1.4;
+}
+
+.nextMatchCardTime {
+    font-size: 1.125rem;
+    color: var(--text-accent);
+    font-weight: 600;
+    margin: 0;
+}
+
+.nextMatchCardDetails {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    text-align: center;
+}
+
+.nextMatchCardDetail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nextMatchCardDetailLabel {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.nextMatchCardDetailValue {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Game Participation Buttons */
+.participationButtonsContainer {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--card-border);
+    position: relative;
+    background: transparent;
+}
+
+.participationButtonsLabel {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.participationButtons {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.participationButton {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    background: var(--card-background);
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 80px;
+    justify-content: center;
+}
+
+.participationButton:hover {
+    background: var(--surface-hover);
+    border-color: var(--border-light);
+    transform: translateY(-1px);
+}
+
+.participationButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.participationButtonActive {
+    border-width: 2px;
+    font-weight: 600;
+}
+
+.participationButtonJOINING {
+    border-color: #10b981;
+    color: #10b981;
+}
+
+.participationButtonJOINING.participationButtonActive {
+    background: #10b981;
+    color: white;
+}
+
+.participationButtonTENTATIVE {
+    border-color: #f59e0b;
+    color: #f59e0b;
+}
+
+.participationButtonTENTATIVE.participationButtonActive {
+    background: #f59e0b;
+    color: white;
+}
+
+.participationButtonDECLINING {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.participationButtonDECLINING.participationButtonActive {
+    background: #ef4444;
+    color: white;
+}
+
+.participationButtonText {
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.participationButtonsLoading {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    padding: var(--spacing-sm);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--card-background);
+    border: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: var(--radius-md);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .matchCardHeader {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        align-items: flex-start;
+    }
+
+    .matchCardPastIndicator {
+        align-self: flex-start;
+    }
+
+    .nextMatchCardDetails {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+
+    .participationButtons {
+        flex-direction: column;
+    }
+
+    .participationButton {
+        justify-content: flex-start;
+        min-width: auto;
+    }
+}
+
+/* Participation Overview Styles */
+.participationOverviewContainer {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--background-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+}
+
+.participationOverviewHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border);
+}
+
+.participationOverviewTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.participationOverviewStats {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.participationOverviewTotal {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    background: var(--background-primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+}
+
+.participationOverviewContent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.participationSection {
+    background: var(--background-primary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.participationSectionHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: var(--background-secondary);
+    border-bottom: 1px solid var(--border);
+}
+
+.participationSectionIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--background-primary);
+}
+
+.participationSectionJoining .participationSectionIcon {
+    color: #10b981;
+}
+
+.participationSectionTentative .participationSectionIcon {
+    color: #f59e0b;
+}
+
+.participationSectionDeclining .participationSectionIcon {
+    color: #ef4444;
+}
+
+.participationSectionOpen .participationSectionIcon {
+    color: #6b7280;
+}
+
+.participationSectionTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.participationSectionList {
+    padding: var(--spacing-sm);
+}
+
+.participationItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    background: var(--background-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.participationItem:last-child {
+    margin-bottom: 0;
+}
+
+.participationItemInfo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.participationItemName {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.participationItemRole {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    background-color: var(--background-secondary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-md);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.participationItemReason {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-top: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background-color: var(--background-muted, #f8f9fa);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--error-color, #ef4444);
+}
+
+.participationItemTime {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    background: var(--background-primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+}
+
+.participationOverviewLoading,
+.participationOverviewError,
+.participationOverviewEmpty {
+    text-align: center;
+    padding: var(--spacing-lg);
+    color: var(--text-secondary);
+}
+
+.participationOverviewEmptyTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.participationOverviewEmptyText {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+/* Responsive adjustments for participation overview */
+@media (max-width: 768px) {
+    .participationOverviewContainer {
+        margin-top: var(--spacing-md);
+        padding: var(--spacing-md);
+    }
+
+    .participationOverviewHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+
+    .participationItem {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+
+    .participationItemTime {
+        align-self: flex-end;
+    }
+}
+
+/* Decline Reason Modal Specific Styles */
+.modalDescription {
+    color: var(--text-secondary);
+    margin: 0 0 var(--spacing-lg) 0;
+    line-height: 1.5;
+}
+
+.formField {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.formLabel {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+.formTextarea {
+    padding: var(--spacing-md);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 1rem;
+    background-color: var(--input-background);
+    color: var(--text-primary);
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.2s;
+}
+
+.formTextarea:focus {
+    outline: none;
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 2px rgba(62, 207, 142, 0.1);
+}
+
+.formError {
+    color: var(--error);
+    font-size: 0.875rem;
+    margin-top: var(--spacing-xs);
+}
+
+.modalFooter {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--card-border);
+}
+

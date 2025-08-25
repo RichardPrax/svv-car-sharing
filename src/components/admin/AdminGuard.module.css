@@ -1,0 +1,48 @@
+/* src/components/admin/AdminGuard.module.css */
+.adminGuard {
+    padding: 2rem;
+    text-align: center;
+}
+
+.unauthorized {
+    background: linear-gradient(135deg, #fef2f2, #fff);
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 500px;
+}
+
+.unauthorizedIcon {
+    font-size: 3rem;
+    color: #dc2626;
+    margin-bottom: 1rem;
+}
+
+.unauthorizedTitle {
+    color: #dc2626;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.unauthorizedText {
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+}
+
+.backButton {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.backButton:hover {
+    background: #2563eb;
+}
+

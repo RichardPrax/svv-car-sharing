@@ -2,6 +2,7 @@
 import { RideWithDetails } from "@/entities/Ride";
 import { FormField, Input, Select, Textarea, Button } from "@/components/forms";
 import { useEditRide } from "@/hooks/rides";
+import styles from "./Forms.module.css";
 
 type Props = {
     ride: RideWithDetails;
@@ -18,96 +19,25 @@ export default function EditRideForm({ ride, onRideUpdated, onCancel, onDelete }
     });
 
     return (
-        <div
-            style={{
-                backgroundColor: "var(--card-background)",
-                border: "1px solid var(--card-border)",
-                borderRadius: "var(--radius-lg)",
-                padding: "var(--spacing-lg)",
-                marginTop: "var(--spacing-lg)",
-                maxWidth: "100%",
-                overflow: "hidden",
-            }}
-        >
-            <h3
-                style={{
-                    fontSize: "1.125rem",
-                    fontWeight: "700",
-                    color: "var(--text-primary)",
-                    marginBottom: "var(--spacing-lg)",
-                    textAlign: "center",
-                }}
-            >
-                Fahrt bearbeiten
-            </h3>
-
-            {error && (
-                <div
-                    style={{
-                        backgroundColor: "#fef2f2",
-                        color: "#dc2626",
-                        padding: "var(--spacing-sm)",
-                        borderRadius: "var(--radius-sm)",
-                        marginBottom: "var(--spacing-md)",
-                        fontSize: "0.875rem",
-                    }}
-                >
-                    {error}
-                </div>
-            )}
+        <div className={styles.rideForm}>
+            {error && <div className={styles.rideFormError}>{error}</div>}
 
             {showDeleteConfirm ? (
-                <div
-                    style={{
-                        textAlign: "center",
-                        padding: "var(--spacing-lg)",
-                    }}
-                >
-                    <h4
-                        style={{
-                            fontSize: "1rem",
-                            fontWeight: "600",
-                            color: "#dc2626",
-                            marginBottom: "var(--spacing-md)",
-                        }}
-                    >
-                        Fahrt wirklich löschen?
-                    </h4>
-                    <p
-                        style={{
-                            fontSize: "0.875rem",
-                            color: "var(--text-secondary)",
-                            marginBottom: "var(--spacing-lg)",
-                            lineHeight: 1.5,
-                        }}
-                    >
-                        Diese Aktion kann nicht rückgängig gemacht werden. Die Fahrt und alle Anmeldungen werden permanent gelöscht.
-                    </p>
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: "var(--spacing-xs)",
-                            justifyContent: "center",
-                            flexWrap: "wrap",
-                        }}
-                    >
-                        <Button variant="secondary" onClick={() => setShowDeleteConfirm(false)} disabled={loading} style={{ flex: 1, minWidth: "80px" }}>
+                <div className={styles.deleteConfirm}>
+                    <h4 className={styles.deleteConfirmTitle}>Fahrt wirklich löschen?</h4>
+                    <p className={styles.deleteConfirmMessage}>Diese Aktion kann nicht rückgängig gemacht werden. Die Fahrt und alle Anmeldungen werden permanent gelöscht.</p>
+                    <div className={styles.deleteConfirmActions}>
+                        <Button variant="secondary" onClick={() => setShowDeleteConfirm(false)} disabled={loading} className={styles.deleteConfirmButton}>
                             Abbrechen
                         </Button>
-                        <Button variant="danger" onClick={handleDeleteConfirm} disabled={loading} style={{ flex: 1, minWidth: "100px" }}>
+                        <Button variant="danger" onClick={handleDeleteConfirm} disabled={loading} className={styles.deleteConfirmButtonDanger}>
                             {loading ? "Wird gelöscht..." : "Endgültig löschen"}
                         </Button>
                     </div>
                 </div>
             ) : (
                 <form onSubmit={handleSubmit}>
-                    <div
-                        style={{
-                            display: "grid",
-                            gap: "var(--spacing-md)",
-                        }}
-                    >
+                    <div className={styles.rideFormGrid}>
                         <FormField label="Abfahrtszeit">
                             <Input type="time" required value={formData.departureTime} onChange={(e) => handleChange("departureTime", e.target.value)} />
                         </FormField>
@@ -141,21 +71,14 @@ export default function EditRideForm({ ride, onRideUpdated, onCancel, onDelete }
                             />
                         </FormField>
 
-                        <div
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: "var(--spacing-sm)",
-                                marginTop: "var(--spacing-md)",
-                            }}
-                        >
-                            <Button type="submit" variant="primary" disabled={loading} style={{ width: "100%" }}>
+                        <div className={styles.rideFormActions}>
+                            <Button type="submit" variant="primary" disabled={loading} className={styles.rideFormButton}>
                                 {loading ? "Wird gespeichert..." : "Änderungen speichern"}
                             </Button>
-                            <Button type="button" variant="secondary" onClick={onCancel} disabled={loading} style={{ width: "100%" }}>
+                            <Button type="button" variant="secondary" onClick={onCancel} disabled={loading} className={styles.rideFormButton}>
                                 Abbrechen
                             </Button>
-                            <Button type="button" variant="danger" onClick={() => setShowDeleteConfirm(true)} disabled={loading} style={{ width: "100%" }}>
+                            <Button type="button" variant="danger" onClick={() => setShowDeleteConfirm(true)} disabled={loading} className={styles.rideFormButton}>
                                 Fahrt löschen
                             </Button>
                         </div>

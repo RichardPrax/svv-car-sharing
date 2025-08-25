@@ -1,20 +1,37 @@
 // src/lib/repositories/userProfileRepository.ts
 import { prisma } from "../prisma";
-import { UserProfile } from "../../entities/UserProfile";
+import { UserProfile, UserProfileWithPositions } from "../../entities/UserProfile";
+import { UserRole } from "@prisma/client";
 
 export class UserProfileRepository {
-    // Get all user profiles
-    async findAll(): Promise<UserProfile[]> {
+    // Get all user profiles with positions
+    async findAll(): Promise<UserProfileWithPositions[]> {
         return await prisma.userProfile.findMany({
+            include: {
+                playerPositions: {
+                    orderBy: [
+                        { isPrimary: 'desc' }, // Primary positions first
+                        { position: 'asc' }   // Then alphabetically
+                    ]
+                }
+            },
             orderBy: { firstName: "asc" },
-        });
+        }) as UserProfileWithPositions[];
     }
 
-    // Get user profile by ID
-    async findById(id: string): Promise<UserProfile | null> {
+    // Get user profile by ID with positions
+    async findById(id: string): Promise<UserProfileWithPositions | null> {
         return await prisma.userProfile.findUnique({
             where: { id },
-        });
+            include: {
+                playerPositions: {
+                    orderBy: [
+                        { isPrimary: 'desc' },
+                        { position: 'asc' }
+                    ]
+                }
+            }
+        }) as UserProfileWithPositions | null;
     }
 
     // Get multiple user profiles by IDs
@@ -61,18 +78,19 @@ export class UserProfileRepository {
         });
     }
 
-    // Create new user profile with specific ID (for auth webhook)
-    async createWithId(data: Omit<UserProfile, "createdAt" | "updatedAt">): Promise<UserProfile> {
-        return await prisma.userProfile.create({
+    // Update user profile
+    async update(id: string, data: Partial<Omit<UserProfile, "id" | "createdAt" | "updatedAt">>): Promise<UserProfile> {
+        return await prisma.userProfile.update({
+            where: { id },
             data,
         });
     }
 
-    // Update user profile
-    async update(id: string, data: Partial<Pick<UserProfile, "firstName" | "lastName">>): Promise<UserProfile> {
+    // Update user role (admin only)
+    async updateRole(id: string, role: UserRole): Promise<UserProfile> {
         return await prisma.userProfile.update({
             where: { id },
-            data,
+            data: { role },
         });
     }
 

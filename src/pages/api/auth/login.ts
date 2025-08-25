@@ -55,6 +55,6 @@ async function loginHandler(req: NextApiRequest, res: NextApiResponse): Promise<
     }
 }
 
-// Wende Rate Limiting und Security Middleware an
+// Restore security middleware with improved validation
 export default withRateLimit(authRateLimiter)(withAuthSecurity()(loginHandler));
 

@@ -1,36 +1,114 @@
 # 🚨 Häufige Probleme & Lösungen
 
-Sammlung der häufigsten Probleme und deren Lösungen beim SVV Car-Sharing Projekt.
+## 🔧 Setup-Probleme
 
-## 🔧 Setup & Installation
-
-### Problem: "Command not found: ./dev-setup.sh"
-
-**Symptome:**
-
-```bash
-./dev-setup.sh local
-# zsh: permission denied: ./dev-setup.sh
-```
-
-**Ursache:** Datei ist nicht ausführbar
-
-**Lösung:**
+### "Permission denied: dev-setup.sh"
 
 ```bash
 chmod +x dev-setup.sh
 ./dev-setup.sh local
 ```
 
----
+### "Docker is not running"
 
-### Problem: "Docker is not running"
+→ Docker Desktop starten und warten bis grünes Symbol
 
-**Symptome:**
+### "Port already in use"
 
 ```bash
-Cannot connect to the Docker daemon at unix:///var/run/docker.sock
+lsof -i :3000              # Wer belegt Port 3000?
+kill -9 <PID>              # Prozess killen
+# oder
+./dev-setup.sh reset       # Alles neu starten
 ```
+
+## 🗄️ Datenbank-Probleme
+
+### "Database connection failed"
+
+```bash
+./dev-setup.sh status      # Läuft Supabase?
+npm run supabase:start     # Falls nicht
+```
+
+### "Prisma Client not generated"
+
+```bash
+npm run db:generate        # Client neu generieren
+```
+
+### "Migration failed"
+
+```bash
+npm run db:push            # Schema ohne Migration pushen
+# oder für kompletten Reset:
+./dev-setup.sh reset
+```
+
+## 🌐 Environment-Probleme
+
+### "Missing environment variables"
+
+```bash
+ls -la .env*               # Existiert .env.local?
+npm run validate-env:local # Variablen prüfen
+./dev-setup.sh local       # Neu erstellen
+```
+
+### "CORS errors"
+
+→ Prüfe: URL ist `http://localhost:54321` (nicht https!)
+
+## 💻 Dev-Probleme
+
+### "Hot reload not working"
+
+```bash
+npm run clean              # Cache leeren
+npm run dev:local          # Neu starten
+```
+
+### "Build/TypeScript errors"
+
+```bash
+npm run db:generate        # Prisma Types neu
+# In VS Code: Cmd+Shift+P → "TypeScript: Restart TS Server"
+```
+
+## 🐳 Docker-Probleme
+
+### "Docker out of space"
+
+```bash
+docker system prune -f    # Docker aufräumen
+```
+
+### "Docker won't start"
+
+→ Computer neu starten, dann Docker Desktop
+
+## 🆘 Universal-Fix
+
+**Wenn gar nichts hilft:**
+
+```bash
+./dev-setup.sh reset       # ⚠️ Löscht ALLE Daten!
+./dev-setup.sh local       # Frisch aufsetzen
+```
+
+## 🔍 Debug-Hilfen
+
+```bash
+./dev-setup.sh status      # Vollständiger Status
+npm run validate-env:local # Environment prüfen
+npm run db:studio          # Datenbank GUI
+```
+
+---
+
+💡 **90% aller Probleme löst:** `./dev-setup.sh reset` + `./dev-setup.sh local`
+
+````
 
 **Ursache:** Docker Desktop ist nicht gestartet
 
@@ -53,7 +131,7 @@ Cannot connect to the Docker daemon at unix:///var/run/docker.sock
 ```bash
 Error: port 3000 is already allocated
 Error: port 54321 is already allocated
-```
+````
 
 **Ursache:** Ports sind von anderen Services belegt
 
@@ -527,6 +605,7 @@ Error: Prisma Client could not locate the Query Engine for runtime "rhel-openssl
 Dieses Problem wurde in unserem Projekt bereits behoben durch:
 
 1. **Prisma Schema Update** (bereits erledigt):
+
     ```prisma
     generator client {
       provider = "prisma-client-js"
@@ -537,3 +616,4 @@ Dieses Problem wurde in unserem Projekt bereits behoben durch:
 2. **Vercel-Konfiguration** (`vercel.json` bereits erstellt):
     ```json
     {
+    ```

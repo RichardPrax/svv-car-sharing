@@ -87,8 +87,8 @@ export class SecurityValidator {
             return baseCheck;
         }
 
-        // Prüfe auf erforderliche Headers
-        const requiredHeaders = ["user-agent", "accept", "accept-language"];
+        // Prüfe auf erforderliche Headers - make user-agent optional for now
+        const requiredHeaders = ["accept", "accept-language"];
         for (const header of requiredHeaders) {
             if (!req.headers[header]) {
                 return { valid: false, reason: `Missing required header: ${header}` };

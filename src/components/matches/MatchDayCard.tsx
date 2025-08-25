@@ -1,133 +1,124 @@
 // src/components/matches/MatchDayCard.tsx
 import { MatchDay } from "@/entities/MatchDay";
 import { useRouter } from "next/router";
+import { useState, useMemo } from "react";
 import { formatDate, formatTime, isMatchInPast } from "@/utils/dateTime";
+import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
+import { useRoleGuard } from "@/hooks/auth/useRoleGuard";
+import GameParticipationButtons from "./GameParticipationButtons";
+import { ParticipationOverview } from "@/hooks/matches/useBatchedParticipationOverview";
+import { ThumbsUpIcon, ThumbsDownIcon, ClockIcon } from "@/components/ui/GameParticipationIcons";
+import styles from "./Matches.module.css";
 
 type Props = {
     match: MatchDay;
+    participationOverview?: ParticipationOverview;
+    overviewLoading?: boolean;
+    onParticipationChange?: () => void;
 };
 
-export default function MatchDayCard({ match }: Props) {
+export default function MatchDayCard({ 
+    match, 
+    participationOverview, 
+    overviewLoading, 
+    onParticipationChange 
+}: Props) {
     const isPast = isMatchInPast(match.date, match.time);
     const router = useRouter();
+    const { user } = useOptimizedAuth();
+    const { hasPlayerAccess } = useRoleGuard();
+    const [participationRefreshTrigger, setParticipationRefreshTrigger] = useState(0);
+
+    // Extract user's participation from the overview data
+    const userParticipation = useMemo(() => {
+        if (!participationOverview || !user) return null;
+        
+        const allParticipations = [
+            ...participationOverview.participations.JOINING,
+            ...participationOverview.participations.DECLINING
+        ];
+        
+        return allParticipations.find(p => p.playerId === user.id) || null;
+    }, [participationOverview, user]);
 
     const handleCardClick = () => {
-        router.push(`/match/${match.id}`);
+        router.push(`/matches/${match.id}`);
     };
 
+    const handleParticipationClick = (e: React.MouseEvent) => {
+        e.stopPropagation(); // Prevent card click when clicking participation buttons
+    };
+
+    const cardClasses = [styles.matchCard, isPast && styles.matchCardPast].filter(Boolean).join(" ");
+
     return (
-        <div
-            className={`match-card ${isPast ? "match-card--past" : ""}`}
-            onClick={handleCardClick}
-            style={{
-                backgroundColor: isPast ? "var(--card-past-background)" : "var(--card-background)",
-                borderColor: isPast ? "var(--card-past-border)" : "var(--card-border)",
-                borderWidth: "1px",
-                borderStyle: "solid",
-                borderRadius: "var(--radius-lg)",
-                boxShadow: "var(--card-shadow)",
-                padding: "var(--spacing-lg)",
-                width: "100%",
-                transition: "all 0.2s ease-in-out",
-                cursor: "pointer",
-            }}
-        >
-            <div className="match-card__content">
-                <div className="match-card__header">
-                    <div className="match-card__date-time">
-                        <p
-                            className="match-card__date"
-                            style={{
-                                fontSize: "1.125rem",
-                                fontWeight: "700",
-                                color: "var(--text-primary)",
-                                margin: "0 0 var(--spacing-xs) 0",
-                                lineHeight: "1.4",
-                            }}
-                        >
-                            {formatDate(match.date)}
-                        </p>
-                        <p
-                            className="match-card__time"
-                            style={{
-                                fontSize: "0.875rem",
-                                color: "var(--text-secondary)",
-                                margin: "0",
-                            }}
-                        >
-                            {formatTime(match.time)}
-                        </p>
-                    </div>
-                    {isPast && (
-                        <div
-                            className="match-card__past-indicator"
-                            style={{
-                                fontSize: "0.75rem",
-                                color: "var(--text-accent)",
-                                fontWeight: "600",
-                                backgroundColor: "var(--card-past-border)",
-                                padding: "var(--spacing-xs) var(--spacing-sm)",
-                                borderRadius: "var(--radius-sm)",
-                                whiteSpace: "nowrap",
-                            }}
-                        >
-                            Beendet
-                        </div>
-                    )}
+        <div className={cardClasses} onClick={handleCardClick}>
+            <div className={styles.matchCardHeader}>
+                <div className={styles.matchCardDateTime}>
+                    <p className={styles.matchCardDate}>{formatDate(match.date)}</p>
+                    <p className={styles.matchCardTime}>{formatTime(match.time)}</p>
                 </div>
-
-                <div
-                    className="match-card__details"
-                    style={{
-                        marginTop: "var(--spacing-md)",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "var(--spacing-xs)",
-                    }}
-                >
-                    <div className="match-card__detail-row">
-                        <span
-                            style={{
-                                fontSize: "0.875rem",
-                                fontWeight: "600",
-                                color: "var(--text-primary)",
-                            }}
-                        >
-                            Gegner:
-                        </span>
-                        <span
-                            style={{
-                                fontSize: "0.875rem",
-                                color: "var(--text-secondary)",
-                                marginLeft: "var(--spacing-xs)",
-                            }}
-                        >
-                            {match.opponent}
-                        </span>
-                    </div>
-
-                    <div className="match-card__detail-row">
-                        <span
-                            style={{
-                                fontSize: "0.875rem",
-                                fontWeight: "600",
-                                color: "var(--text-primary)",
-                            }}
-                        >
-                            Ort:
-                        </span>
-                        <span
-                            style={{
-                                fontSize: "0.875rem",
-                                color: "var(--text-secondary)",
-                                marginLeft: "var(--spacing-xs)",
-                            }}
-                        >
-                            {match.location}
-                        </span>
-                    </div>
-                </div>
+                {isPast && <div className={styles.matchCardPastIndicator}>Beendet</div>}
             </div>
+
+            <div className={styles.matchCardDetails}>
+                <div className={styles.matchCardDetailRow}>
+                    <span className={styles.matchCardDetailLabel}>Gegner:</span>
+                    <span className={styles.matchCardDetailValue}>{match.opponent}</span>
+                </div>
+
+                <div className={styles.matchCardDetailRow}>
+                    <span className={styles.matchCardDetailLabel}>Ort:</span>
+                    <span className={styles.matchCardDetailValue}>{match.location}</span>
+                </div>
+
+                {/* Participation Summary - moved below Ort */}
+                {participationOverview && participationOverview.counts.total > 0 && (
+                    <div className={styles.matchCardParticipationSummary}>
+                        <span className={styles.matchCardParticipationLabel}>Teilnahme:</span>
+                        <div className={styles.matchCardParticipationCounts}>
+                            {participationOverview.counts.joining > 0 && (
+                                <span className={styles.matchCardParticipationCount} style={{ color: "#10b981" }}>
+                                    <ThumbsUpIcon size={16} />
+                                    <span style={{ marginLeft: "4px" }}>{participationOverview.counts.joining}</span>
+                                </span>
+                            )}
+                            {participationOverview.counts.declining > 0 && (
+                                <span className={styles.matchCardParticipationCount} style={{ color: "#ef4444" }}>
+                                    <ThumbsDownIcon size={16} />
+                                    <span style={{ marginLeft: "4px" }}>{participationOverview.counts.declining}</span>
+                                </span>
+                            )}
+                            {participationOverview.counts.open > 0 && (
+                                <span className={styles.matchCardParticipationCount} style={{ color: "#6b7280" }}>
+                                    <ClockIcon size={16} />
+                                    <span style={{ marginLeft: "4px" }}>{participationOverview.counts.open}</span>
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* Show participation buttons only for players and future matches */}
+            {user && hasPlayerAccess() && !isPast && (
+                <div onClick={handleParticipationClick}>
+                    <GameParticipationButtons
+                        matchDayId={match.id}
+                        userParticipation={userParticipation}
+                        refreshTrigger={participationRefreshTrigger}
+                        onParticipationChange={() => {
+                            // Trigger a refresh of the participation overview
+                            // Small delay to ensure the API call completes
+                            setTimeout(() => {
+                                setParticipationRefreshTrigger((prev) => prev + 1);
+                                onParticipationChange?.();
+                            }, 100);
+                        }}
+                    />
+                </div>
+            )}
         </div>
     );
 }
+

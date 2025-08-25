@@ -1,0 +1,255 @@
+/* Rides Components Shared Styles */
+
+/* Rides List */
+.ridesList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.ridesListEmpty {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-secondary);
+}
+
+.ridesListError {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--danger);
+}
+
+/* Ride Card */
+.rideCard {
+    background-color: var(--card-background);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    transition: all 0.2s ease-in-out;
+}
+
+.rideCard:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.12);
+}
+
+/* Ride Details */
+.rideDetails {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.rideDetailsInfo {
+    flex: 1;
+    min-width: 200px;
+}
+
+.rideDetailsTitle {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-xs) 0;
+}
+
+.rideDetailsLocation {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.rideDetailsDriver {
+    font-size: 0.75rem;
+    color: var(--text-accent);
+    margin: var(--spacing-xs) 0 0 0;
+    font-weight: 600;
+}
+
+.rideDetailsSeats {
+    text-align: right;
+}
+
+.rideDetailsSeatsCount {
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+}
+
+.rideDetailsSeatsAvailable {
+    color: var(--text-accent);
+    background-color: #f0fdf4;
+}
+
+.rideDetailsSeatsFull {
+    color: #dc2626;
+    background-color: #fef2f2;
+}
+
+/* Ride Additional Info */
+.rideAdditionalInfo {
+    background-color: var(--background);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-md);
+    border-left: 3px solid var(--text-accent);
+}
+
+.rideAdditionalInfoText {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+    font-style: italic;
+}
+
+/* Ride Passengers */
+.ridePassengers {
+    background-color: var(--background);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-md);
+    border-left: 3px solid var(--text-accent);
+}
+
+.ridePassengersLabel {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin: 0 0 var(--spacing-xs) 0;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.ridePassengersList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+}
+
+.ridePassengerTag {
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    background-color: var(--card-background);
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+/* Ride Actions */
+.rideActions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.rideActionsLeft {
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+}
+
+.rideActionsRight {
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+}
+
+/* Own Ride Indicator */
+.ownRideIndicator {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-accent);
+    background-color: #f0fdf4;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+}
+
+/* Action Buttons */
+.editButton {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    background-color: var(--card-background);
+    border: 1px solid var(--card-border);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.editButton:hover {
+    background-color: var(--background);
+    border-color: var(--text-accent);
+}
+
+.joinButton {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.joinButtonEnabled {
+    background-color: var(--text-accent);
+}
+
+.joinButtonEnabled:hover {
+    background-color: var(--primary-hover);
+}
+
+.joinButtonDisabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.leaveButton {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid #dc2626;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #dc2626;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.leaveButton:hover {
+    background-color: #fef2f2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .rideDetails {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .rideDetailsSeats {
+        text-align: left;
+    }
+
+    .rideActions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .rideActionsLeft,
+    .rideActionsRight {
+        justify-content: center;
+    }
+}
+

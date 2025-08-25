@@ -1,6 +1,7 @@
 // src/components/forms/CreateRideForm.tsx
 import { FormField, Input, Select, Textarea, Button } from "@/components/forms";
 import { useCreateRide } from "@/hooks/rides";
+import styles from "./Forms.module.css";
 
 type Props = {
     matchId: string;
@@ -15,51 +16,11 @@ export default function CreateRideForm({ matchId, onRideCreated, onCancel }: Pro
     });
 
     return (
-        <div
-            style={{
-                backgroundColor: "var(--card-background)",
-                border: "1px solid var(--card-border)",
-                borderRadius: "var(--radius-lg)",
-                padding: "var(--spacing-lg)",
-                marginTop: "var(--spacing-lg)",
-                maxWidth: "100%",
-                overflow: "hidden",
-            }}
-        >
-            <h3
-                style={{
-                    fontSize: "1.125rem",
-                    fontWeight: "700",
-                    color: "var(--text-primary)",
-                    marginBottom: "var(--spacing-lg)",
-                    textAlign: "center",
-                }}
-            >
-                Fahrt anbieten
-            </h3>
-
-            {error && (
-                <div
-                    style={{
-                        backgroundColor: "#fef2f2",
-                        color: "#dc2626",
-                        padding: "var(--spacing-sm)",
-                        borderRadius: "var(--radius-sm)",
-                        marginBottom: "var(--spacing-md)",
-                        fontSize: "0.875rem",
-                    }}
-                >
-                    {error}
-                </div>
-            )}
+        <div className={styles.rideForm}>
+            {error && <div className={styles.rideFormError}>{error}</div>}
 
             <form onSubmit={handleSubmit}>
-                <div
-                    style={{
-                        display: "grid",
-                        gap: "var(--spacing-md)",
-                    }}
-                >
+                <div className={styles.rideFormGrid}>
                     <FormField label="Abfahrtszeit">
                         <Input type="time" required value={formData.departureTime} onChange={(e) => handleChange("departureTime", e.target.value)} />
                     </FormField>
@@ -93,18 +54,11 @@ export default function CreateRideForm({ matchId, onRideCreated, onCancel }: Pro
                         />
                     </FormField>
 
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: "var(--spacing-sm)",
-                            marginTop: "var(--spacing-md)",
-                        }}
-                    >
-                        <Button type="submit" variant="primary" disabled={loading} style={{ width: "100%" }}>
+                    <div className={styles.rideFormActions}>
+                        <Button type="submit" variant="primary" disabled={loading} className={styles.rideFormButton}>
                             {loading ? "Wird erstellt..." : "Fahrt anbieten"}
                         </Button>
-                        <Button type="button" variant="secondary" onClick={onCancel} disabled={loading} style={{ width: "100%" }}>
+                        <Button type="button" variant="secondary" onClick={onCancel} disabled={loading} className={styles.rideFormButton}>
                             Abbrechen
                         </Button>
                     </div>
@@ -113,3 +67,4 @@ export default function CreateRideForm({ matchId, onRideCreated, onCancel }: Pro
         </div>
     );
 }
+

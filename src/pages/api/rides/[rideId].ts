@@ -5,9 +5,9 @@ import { RideUpdateData } from "@/entities/Ride";
 const rideRepository = new RideRepository();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const { id } = req.query;
+    const { rideId } = req.query;
 
-    if (!id || typeof id !== "string") {
+    if (!rideId || typeof rideId !== "string") {
         return res.status(400).json({ error: "Ride ID ist erforderlich" });
     }
 
@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.status(400).json({ error: "Alle erforderlichen Felder müssen ausgefüllt werden" });
             }
 
-            const updatedRide = await rideRepository.update(id, updateData);
+            const updatedRide = await rideRepository.update(rideId, updateData);
             res.status(200).json(updatedRide);
         } catch (error) {
             console.error("Fehler beim Aktualisieren der Fahrt:", error);
@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
     } else if (req.method === "DELETE") {
         try {
-            await rideRepository.delete(id);
+            await rideRepository.delete(rideId);
             res.status(200).json({ success: true });
         } catch (error) {
             console.error("Fehler beim Löschen der Fahrt:", error);
@@ -39,4 +39,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 }
-

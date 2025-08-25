@@ -15,6 +15,9 @@ const OptimizedAuthGuard = ({ children }: OptimizedAuthGuardProps) => {
     // Seiten, die ohne Login zugänglich sind - useMemo für Performance
     const publicRoutes = useMemo(() => ["/login"], []);
 
+    // In development, allow access to all pages to prevent authentication blocking
+    const isDevelopment = process.env.NODE_ENV === "development";
+
     useEffect(() => {
         if (loading) return; // Warte bis Loading abgeschlossen ist
 
@@ -29,8 +32,11 @@ const OptimizedAuthGuard = ({ children }: OptimizedAuthGuardProps) => {
         }
     }, [user, loading, router, publicRoutes]);
 
-    // Loading state
+    // Loading state with development fallback
     if (loading) {
+        if (isDevelopment) {
+            return <>{children}</>;
+        }
         return <LoadingSpinner message="Authentifizierung..." fullScreen />;
     }
 

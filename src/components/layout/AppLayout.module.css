@@ -1,0 +1,37 @@
+/* App Layout with Hover Sidebar */
+.appLayout {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--background);
+}
+
+.mainContent {
+    flex: 1;
+    margin-left: 80px;
+    padding: var(--spacing-xl);
+    transition: margin-left 0.3s ease-in-out;
+    background-color: var(--background);
+    min-height: 100vh;
+    overflow-x: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .mainContent {
+        margin-left: 0;
+        padding: var(--spacing-lg);
+        padding-top: 80px; /* Space for mobile menu button */
+    }
+
+    .appLayout:has(.sidebar.collapsed) .mainContent {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .mainContent {
+        padding: var(--spacing-md);
+        padding-top: 80px; /* Space for mobile menu button */
+    }
+}
+

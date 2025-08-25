@@ -5,6 +5,8 @@ import RideDetails from "./RideDetails";
 import RidePassengers from "./RidePassengers";
 import RideActions from "./RideActions";
 import { EditRideForm } from "@/components/forms";
+import { Modal } from "@/components/ui";
+import styles from "./Rides.module.css";
 
 interface RideCardProps {
     ride: RideWithDetails;
@@ -27,82 +29,60 @@ export default function RideCard({
     onLeaveRide,
     onRideUpdated,
 }: RideCardProps) {
-    const [editingRideId, setEditingRideId] = useState<string | null>(null);
+    const [showEditForm, setShowEditForm] = useState(false);
 
     const isRideFull = (): boolean => {
         return ride.passengers.length >= ride.availableSeats;
     };
 
     const handleEditRide = () => {
-        setEditingRideId(ride.id);
+        setShowEditForm(true);
     };
 
     const handleRideUpdated = () => {
-        setEditingRideId(null);
+        setShowEditForm(false);
         onRideUpdated();
     };
 
     const handleRideDeleted = () => {
-        setEditingRideId(null);
+        setShowEditForm(false);
         onRideUpdated();
     };
 
     const handleCancelEdit = () => {
-        setEditingRideId(null);
+        setShowEditForm(false);
     };
 
-    if (editingRideId === ride.id) {
-        return <EditRideForm ride={ride} onRideUpdated={handleRideUpdated} onCancel={handleCancelEdit} onDelete={handleRideDeleted} />;
-    }
-
     return (
-        <div
-            style={{
-                backgroundColor: "var(--card-background)",
-                border: "1px solid var(--card-border)",
-                borderRadius: "var(--radius-lg)",
-                padding: "var(--spacing-lg)",
-                transition: "all 0.2s ease-in-out",
-            }}
-        >
-            <RideDetails ride={ride} isRideFull={isRideFull()} />
+        <>
+            <div className={styles.rideCard}>
+                <RideDetails ride={ride} isRideFull={isRideFull()} />
 
-            <RidePassengers passengerCount={ride.passengerCount} passengerNames={ride.passengerNames} />
+                <RidePassengers passengerCount={ride.passengerCount} passengerNames={ride.passengerNames} />
 
-            {ride.additionalInfo && (
-                <div
-                    style={{
-                        backgroundColor: "var(--background)",
-                        padding: "var(--spacing-sm)",
-                        borderRadius: "var(--radius-sm)",
-                        marginBottom: "var(--spacing-md)",
-                        borderLeft: "3px solid var(--text-accent)",
-                    }}
-                >
-                    <p
-                        style={{
-                            fontSize: "0.875rem",
-                            color: "var(--text-secondary)",
-                            margin: 0,
-                            fontStyle: "italic",
-                        }}
-                    >
-                        &quot;{ride.additionalInfo}&quot;
-                    </p>
-                </div>
-            )}
+                {ride.additionalInfo && (
+                    <div className={styles.rideAdditionalInfo}>
+                        <p className={styles.rideAdditionalInfoText}>&quot;{ride.additionalInfo}&quot;</p>
+                    </div>
+                )}
 
-            <RideActions
-                isOwnRide={isUserDriverOfThisRide}
-                isUserInRide={isUserPassengerOfThisRide}
-                isRideFull={isRideFull()}
-                isUserDriver={hasExistingRide}
-                isUserParticipating={isParticipating}
-                onEdit={handleEditRide}
-                onJoin={() => onJoinRide(ride.id)}
-                onLeave={() => onLeaveRide(ride.id)}
-            />
-        </div>
+                <RideActions
+                    isOwnRide={isUserDriverOfThisRide}
+                    isUserInRide={isUserPassengerOfThisRide}
+                    isRideFull={isRideFull()}
+                    isUserDriver={hasExistingRide}
+                    isUserParticipating={isParticipating}
+                    onEdit={handleEditRide}
+                    onJoin={() => onJoinRide(ride.id)}
+                    onLeave={() => onLeaveRide(ride.id)}
+                />
+            </div>
+
+            {/* Modal für EditRideForm */}
+            <Modal isOpen={showEditForm} onClose={handleCancelEdit} title="Fahrt bearbeiten" maxWidth="md">
+                <EditRideForm ride={ride} onRideUpdated={handleRideUpdated} onCancel={handleCancelEdit} onDelete={handleRideDeleted} />
+            </Modal>
+        </>
     );
 }
 
