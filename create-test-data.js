@@ -5,10 +5,10 @@ const prisma = new PrismaClient();
 // Volleyball-Positionen mit Beschreibungen
 const volleyballPositions = {
     MB: "Mittelblock",
-    AA: "Außenannahme", 
+    AA: "Außenannahme",
     L: "Libero",
     Z: "Zuspiel",
-    D: "Diagonal"
+    D: "Diagonal",
 };
 
 // Realistische Volleyball-Positionen-Kombinationen
@@ -18,11 +18,26 @@ const volleyballPositionCombinations = [
     [{ position: "MB", isPrimary: true }], // Reine Mittelblocker
     [{ position: "D", isPrimary: true }], // Reine Diagonalangreifer
     [{ position: "L", isPrimary: true }], // Reine Liberos
-    [{ position: "AA", isPrimary: true }, { position: "Z", isPrimary: false }], // Außenannahme kann auch Zuspiel
-    [{ position: "MB", isPrimary: true }, { position: "D", isPrimary: false }], // Mittelblock kann auch Diagonal
-    [{ position: "Z", isPrimary: true }, { position: "AA", isPrimary: false }], // Zuspiel kann auch Außenannahme
-    [{ position: "D", isPrimary: true }, { position: "AA", isPrimary: false }], // Diagonal kann auch Außenannahme
-    [{ position: "AA", isPrimary: true }, { position: "L", isPrimary: false }], // Außenannahme kann auch Libero
+    [
+        { position: "AA", isPrimary: true },
+        { position: "Z", isPrimary: false },
+    ], // Außenannahme kann auch Zuspiel
+    [
+        { position: "MB", isPrimary: true },
+        { position: "D", isPrimary: false },
+    ], // Mittelblock kann auch Diagonal
+    [
+        { position: "Z", isPrimary: true },
+        { position: "AA", isPrimary: false },
+    ], // Zuspiel kann auch Außenannahme
+    [
+        { position: "D", isPrimary: true },
+        { position: "AA", isPrimary: false },
+    ], // Diagonal kann auch Außenannahme
+    [
+        { position: "AA", isPrimary: true },
+        { position: "L", isPrimary: false },
+    ], // Außenannahme kann auch Libero
 ];
 
 // Realistische Abfahrtsorte in Deutschland
@@ -317,7 +332,15 @@ async function createGameParticipationTestData() {
 
     for (let i = 0; i < matchDays.length; i++) {
         const matchDay = matchDays[i];
-        console.log(`\n🎯 Creating participation data for ${matchDay.opponent} on ${matchDay.date.toISOString().split("T")[0]}`);
+        const matchDateStr = matchDay.date.toISOString().split("T")[0];
+        console.log(`\n🎯 Creating participation data for ${matchDay.opponent} on ${matchDateStr}`);
+
+        // Spezielle Behandlung für 27.09.2025 - alle Spieler sollen offen sein
+        if (matchDateStr === "2025-09-27") {
+            console.log(`   🎯 Special scenario: All players remain open (no responses) for testing`);
+            console.log(`   ℹ️  No participation data created - all players will show as open`);
+            continue;
+        }
 
         // Verschiedene Beteiligungsszenarien für realistische Tests
         const participationScenarios = [
@@ -473,12 +496,12 @@ async function createVolleyballPositionsTestData() {
     for (const user of users) {
         // Prüfe ob der User bereits Positionen hat
         const existingPositions = await prisma.userPosition.findMany({
-            where: { userId: user.id }
+            where: { userId: user.id },
         });
 
         if (existingPositions.length > 0) {
             console.log(`✅ ${user.firstName} ${user.lastName}: Already has positions`);
-            existingPositions.forEach(pos => {
+            existingPositions.forEach((pos) => {
                 const primaryText = pos.isPrimary ? " (Hauptposition)" : " (Nebenposition)";
                 console.log(`   └─ ${volleyballPositions[pos.position]} (${pos.position})${primaryText}`);
             });
@@ -487,7 +510,7 @@ async function createVolleyballPositionsTestData() {
 
         // Zufällige Positionskombination auswählen
         const selectedCombination = getRandomElement(volleyballPositionCombinations);
-        
+
         console.log(`🏐 ${user.firstName} ${user.lastName}: Assigning volleyball positions...`);
 
         for (const positionData of selectedCombination) {
@@ -511,10 +534,10 @@ async function createVolleyballPositionsTestData() {
     // Statistik erstellen
     const positionStats = {};
     const allPositions = await prisma.userPosition.findMany({
-        include: { user: true }
+        include: { user: true },
     });
 
-    allPositions.forEach(pos => {
+    allPositions.forEach((pos) => {
         if (!positionStats[pos.position]) {
             positionStats[pos.position] = { total: 0, primary: 0, secondary: 0 };
         }
