@@ -2,7 +2,7 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useMatchDetailBatch } from "@/hooks/matches/useMatchDetailBatch";
-import { formatDate, formatTime } from "@/utils/dateTime";
+import { formatDate, formatTime, formatDateForId } from "@/utils/dateTime";
 import { CreateRideForm } from "@/components/forms";
 import { RidesList } from "@/components/rides";
 import { LoadingSpinner, Modal, Tabs, TabList, Tab, TabPanel, UsersIcon, CarIcon, BagIcon } from "@/components/ui";
@@ -98,11 +98,15 @@ export default function MatchDetailPage() {
     }
 
     return (
-        <div className={styles.matchDetailContainer}>
+        <div data-testid={`md-${formatDateForId(match.date)}-detail`} className={styles.matchDetailContainer}>
             <div className={styles.matchDetailWrapper}>
                 {/* Header with Back Button */}
                 <div className={styles.matchHeaderTop}>
-                    <button onClick={handleBackClick} className={styles.backButton}>
+                    <button 
+                        data-testid={`md-${formatDateForId(match.date)}-back`}
+                        onClick={handleBackClick} 
+                        className={styles.backButton}
+                    >
                         ← Zurück
                     </button>
                 </div>
@@ -132,30 +136,46 @@ export default function MatchDetailPage() {
                 {/* Tab Navigation */}
                 <Tabs defaultTab="participation" className={styles.matchTabs}>
                     <TabList>
-                        <Tab value="participation" icon={<UsersIcon size={18} />} badge={participationOverview?.counts.open}>
+                        <Tab 
+                            value="participation" 
+                            icon={<UsersIcon size={18} />} 
+                            badge={participationOverview?.counts.open}
+                            data-testid={`md-${formatDateForId(match.date)}-tab-participation`}
+                        >
                             Teilnahme
                         </Tab>
-                        <Tab value="rides" icon={<CarIcon size={18} />}>
+                        <Tab 
+                            value="rides" 
+                            icon={<CarIcon size={18} />}
+                            data-testid={`md-${formatDateForId(match.date)}-tab-rides`}
+                        >
                             Fahrten
                         </Tab>
-                        <Tab value="bring-items" icon={<BagIcon size={18} />}>
+                        <Tab 
+                            value="bring-items" 
+                            icon={<BagIcon size={18} />}
+                            data-testid={`md-${formatDateForId(match.date)}-tab-bring-items`}
+                        >
                             Mitbringen
                         </Tab>
                     </TabList>
 
                     <TabPanel value="participation">
-                        <ParticipationSummary 
-                            matchId={match.id} 
-                            participationOverview={participationOverview}
-                        />
+                        <div data-testid={`md-${formatDateForId(match.date)}-content-participation`}>
+                            <ParticipationSummary 
+                                matchId={match.id} 
+                                participationOverview={participationOverview}
+                            />
+                        </div>
                     </TabPanel>
 
                     <TabPanel value="rides">
-                        <div className={styles.ridesTabContent}>
+                        <div data-testid={`md-${formatDateForId(match.date)}-content-rides`} className={styles.ridesTabContent}>
                             <div className={styles.summaryHeader}>
                                 <h2 className={styles.summaryTitle}>Fahrten-Übersicht</h2>
                                 <div className={styles.summaryActions}>
                                     <button
+                                        data-testid={`md-${formatDateForId(match.date)}-create-ride`}
                                         onClick={handleShowCreateForm}
                                         disabled={userRideCheck?.hasExistingRide || userParticipationCheck?.isParticipating || loading}
                                         title={
@@ -208,7 +228,9 @@ export default function MatchDetailPage() {
                     </TabPanel>
 
                     <TabPanel value="bring-items">
-                        <BringItems matchId={match.id} />
+                        <div data-testid={`md-${formatDateForId(match.date)}-content-bring-items`}>
+                            <BringItems matchId={match.id} />
+                        </div>
                     </TabPanel>
                 </Tabs>
 

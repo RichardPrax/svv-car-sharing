@@ -25,6 +25,7 @@ interface TabProps {
     icon?: React.ReactNode;
     badge?: number;
     className?: string;
+    'data-testid'?: string;
 }
 
 interface TabPanelProps {
@@ -51,7 +52,7 @@ export const TabList: React.FC<TabListProps> = ({ children, className }) => {
     );
 };
 
-export const Tab: React.FC<TabProps> = ({ value, children, icon, badge, className }) => {
+export const Tab: React.FC<TabProps> = ({ value, children, icon, badge, className, 'data-testid': testId }) => {
     const context = useContext(TabsContext);
     if (!context) {
         throw new Error("Tab must be used within a Tabs component");
@@ -67,6 +68,7 @@ export const Tab: React.FC<TabProps> = ({ value, children, icon, badge, classNam
             role="tab"
             aria-selected={isActive}
             aria-controls={`tabpanel-${value}`}
+            data-testid={testId}
         >
             <div className={styles.tabContent}>
                 {icon && <span className={styles.tabIcon}>{icon}</span>}

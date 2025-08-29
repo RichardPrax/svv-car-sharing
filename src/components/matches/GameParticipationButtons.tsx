@@ -4,6 +4,7 @@ import { ThumbsUpIcon, ThumbsDownIcon } from "@/components/ui/GameParticipationI
 import DeclineReasonModal from "./DeclineReasonModal";
 import JoinInfoModal from "./JoinInfoModal";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
+import { formatDateForId } from "@/utils/dateTime";
 import styles from "./Matches.module.css";
 
 interface GameParticipation {
@@ -18,12 +19,13 @@ interface GameParticipation {
 
 interface GameParticipationButtonsProps {
     matchDayId: string;
+    matchDate: string | Date; // Neuer Prop für das Datum
     userParticipation?: GameParticipation | null;
     refreshTrigger?: number;
     onParticipationChange?: () => void;
 }
 
-export default function GameParticipationButtons({ matchDayId, userParticipation, onParticipationChange }: GameParticipationButtonsProps) {
+export default function GameParticipationButtons({ matchDayId, matchDate, userParticipation, onParticipationChange }: GameParticipationButtonsProps) {
     const [showDeclineModal, setShowDeclineModal] = useState(false);
     const [showJoinModal, setShowJoinModal] = useState(false);
     const [pendingStatus, setPendingStatus] = useState<GameParticipationStatus | null>(null);
@@ -188,6 +190,7 @@ export default function GameParticipationButtons({ matchDayId, userParticipation
             <div className={styles.participationButtonsLabel}>Teilnahme:</div>
             <div className={styles.participationButtons}>
                 <button
+                    data-testid={`md-${formatDateForId(matchDate)}-participate`}
                     className={buttonClasses.joining}
                     onClick={() => handleParticipationClick("JOINING")}
                     disabled={updating}
@@ -199,6 +202,7 @@ export default function GameParticipationButtons({ matchDayId, userParticipation
                 </button>
 
                 <button
+                    data-testid={`md-${formatDateForId(matchDate)}-decline`}
                     className={buttonClasses.declining}
                     onClick={() => handleParticipationClick("DECLINING")}
                     disabled={updating}
