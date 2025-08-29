@@ -60,24 +60,50 @@ export default function CreateBringItemForm({ matchId, onItemCreated, onCancel }
     };
 
     return (
-        <div className={styles.rideForm}>
-            {error && <div className={styles.rideFormError}>{error}</div>}
+        <div className={styles.rideForm} data-testid="create-bring-item-form">
+            {error && <div className={styles.rideFormError} data-testid="create-bring-item-form-error">{error}</div>}
 
             <form onSubmit={handleSubmit}>
                 <div className={styles.rideFormGrid}>
                     <FormField label="Was möchtest du mitbringen?">
-                        <Input type="text" required placeholder="z.B. Trikots, Getränke, Bälle, Erste Hilfe..." value={itemName} onChange={(e) => setItemName(e.target.value)} />
+                        <Input 
+                            type="text" 
+                            required 
+                            placeholder="z.B. Trikots, Getränke, Bälle, Erste Hilfe..." 
+                            value={itemName} 
+                            onChange={(e) => setItemName(e.target.value)}
+                            data-testid="create-bring-item-name"
+                        />
                     </FormField>
 
                     <FormField label="Beschreibung (optional)">
-                        <Textarea placeholder="Weitere Details zu dem Item..." value={description} onChange={(e) => setDescription(e.target.value)} rows={3} />
+                        <Textarea 
+                            placeholder="Weitere Details zu dem Item..." 
+                            value={description} 
+                            onChange={(e) => setDescription(e.target.value)} 
+                            rows={3}
+                            data-testid="create-bring-item-description"
+                        />
                     </FormField>
 
                     <div className={styles.rideFormActions}>
-                        <Button type="submit" variant="primary" disabled={loading || !itemName.trim()} className={styles.rideFormButton}>
+                        <Button 
+                            type="submit" 
+                            variant="primary" 
+                            disabled={loading || !itemName.trim()} 
+                            className={styles.rideFormButton}
+                            data-testid="create-bring-item-submit"
+                        >
                             {loading ? "Wird hinzugefügt..." : "Hinzufügen"}
                         </Button>
-                        <Button type="button" variant="secondary" onClick={onCancel} disabled={loading} className={styles.rideFormButton}>
+                        <Button 
+                            type="button" 
+                            variant="secondary" 
+                            onClick={onCancel} 
+                            disabled={loading} 
+                            className={styles.rideFormButton}
+                            data-testid="create-bring-item-cancel"
+                        >
                             Abbrechen
                         </Button>
                     </div>

@@ -6,13 +6,15 @@ import { CreateBringItemForm } from "@/components/forms";
 import { DeleteBringItemConfirm } from "@/components/matches";
 import { Modal } from "@/components/ui";
 import { BringItem } from "@/entities/BringItem";
+import { formatDateForId } from "@/utils/dateTime";
 import styles from "./BringItems.module.css";
 
 interface BringItemsProps {
     matchId: string;
+    matchDate: string | Date;
 }
 
-export default function BringItems({ matchId }: BringItemsProps) {
+export default function BringItems({ matchId, matchDate }: BringItemsProps) {
     const { user } = useOptimizedAuth();
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const { bringItems, loading, error, deleteBringItem } = useBringItems({ matchId, refreshTrigger });
@@ -20,6 +22,8 @@ export default function BringItems({ matchId }: BringItemsProps) {
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [deleteItem, setDeleteItem] = useState<BringItem | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
+    
+    const testIdPrefix = `md-${formatDateForId(matchDate)}`;
 
     const handleItemCreated = () => {
         setShowCreateForm(false);
@@ -63,31 +67,39 @@ export default function BringItems({ matchId }: BringItemsProps) {
 
     if (loading && bringItems.length === 0) {
         return (
-            <div className={styles.bringItemsContainer}>
+            <div className={styles.bringItemsContainer} data-testid={`${testIdPrefix}-bring-items`}>
                 <div className={styles.summaryHeader}>
                     <h2 className={styles.summaryTitle}>Mitbringen-Übersicht</h2>
                     <div className={styles.summaryActions}>
                         {user && (
-                            <button onClick={() => setShowCreateForm(true)} className={styles.headerActionButton}>
+                            <button 
+                                onClick={() => setShowCreateForm(true)} 
+                                className={styles.headerActionButton}
+                                data-testid={`${testIdPrefix}-add-bring-item`}
+                            >
                                 ➕ Etwas mitbringen
                             </button>
                         )}
                     </div>
                 </div>
                 <div className={styles.container}>
-                    <div className={styles.loading}>Lade Mitbringen-Liste...</div>
+                    <div className={styles.loading} data-testid={`${testIdPrefix}-bring-items-loading`}>Lade Mitbringen-Liste...</div>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className={styles.bringItemsContainer}>
+        <div className={styles.bringItemsContainer} data-testid={`${testIdPrefix}-bring-items`}>
             <div className={styles.summaryHeader}>
                 <h2 className={styles.summaryTitle}>Mitbringen-Übersicht</h2>
                 <div className={styles.summaryActions}>
                     {user && (
-                        <button onClick={() => setShowCreateForm(true)} className={styles.headerActionButton}>
+                        <button 
+                            onClick={() => setShowCreateForm(true)} 
+                            className={styles.headerActionButton}
+                            data-testid={`${testIdPrefix}-add-bring-item`}
+                        >
                             ➕ Etwas mitbringen
                         </button>
                     )}
@@ -95,24 +107,29 @@ export default function BringItems({ matchId }: BringItemsProps) {
             </div>
 
             <div className={styles.container}>
-                {error && <div className={styles.error}>{error}</div>}
+                {error && <div className={styles.error} data-testid={`${testIdPrefix}-bring-items-error`}>{error}</div>}
 
                 {/* Items List */}
-                <div className={styles.itemsList}>
+                <div className={styles.itemsList} data-testid={`${testIdPrefix}-bring-items-list`}>
                     {bringItems.length === 0 ? (
-                        <div className={styles.emptyState}>
+                        <div className={styles.emptyState} data-testid={`${testIdPrefix}-bring-items-empty`}>
                             <p className={styles.emptyText}>Noch keine Einträge</p>
                         </div>
                     ) : (
                         <>
-                            {bringItems.map((item) => (
-                                <div key={item.id} className={styles.item}>
+                            {bringItems.map((item, index) => (
+                                <div key={item.id} className={styles.item} data-testid={`${testIdPrefix}-bring-item-${index}`}>
                                     <div className={styles.itemHeader}>
                                         <span className={styles.itemName}>{item.itemName}</span>
                                         <div className={styles.itemMeta}>
                                             <span className={styles.itemUser}>✅ {getUserDisplayName(item.user.firstName, item.user.lastName)}</span>
                                             {isUserItem(item.userId) && (
-                                                <button onClick={() => handleDeleteClick(item)} className={styles.deleteButton} title="Löschen">
+                                                <button 
+                                                    onClick={() => handleDeleteClick(item)} 
+                                                    className={styles.deleteButton} 
+                                                    title="Löschen"
+                                                    data-testid={`${testIdPrefix}-delete-bring-item-${index}`}
+                                                >
                                                     🗑️
                                                 </button>
                                             )}
@@ -127,12 +144,24 @@ export default function BringItems({ matchId }: BringItemsProps) {
             </div>
 
             {/* Create Item Modal */}
-            <Modal isOpen={showCreateForm} onClose={handleCancelCreate} title="Etwas mitbringen" maxWidth="md">
+            <Modal 
+                isOpen={showCreateForm} 
+                onClose={handleCancelCreate} 
+                title="Etwas mitbringen" 
+                maxWidth="md"
+                data-testid={`${testIdPrefix}-create-bring-item-modal`}
+            >
                 <CreateBringItemForm matchId={matchId} onItemCreated={handleItemCreated} onCancel={handleCancelCreate} />
             </Modal>
 
             {/* Delete Confirmation Modal */}
-            <Modal isOpen={!!deleteItem} onClose={handleDeleteCancel} title="Item löschen" maxWidth="sm">
+            <Modal 
+                isOpen={!!deleteItem} 
+                onClose={handleDeleteCancel} 
+                title="Item löschen" 
+                maxWidth="sm"
+                data-testid={`${testIdPrefix}-delete-bring-item-modal`}
+            >
                 {deleteItem && <DeleteBringItemConfirm itemName={deleteItem.itemName} loading={isDeleting} onConfirm={handleDeleteConfirm} onCancel={handleDeleteCancel} />}
             </Modal>
         </div>

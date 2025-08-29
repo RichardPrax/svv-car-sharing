@@ -1,6 +1,7 @@
 import { ParticipationData, ParticipationPlayer, ParticipationOverview } from "@/hooks/matches/useBatchedParticipationOverview";
 import { ThumbsUpIcon, ThumbsDownIcon, ClockIcon } from "@/components/ui/GameParticipationIcons";
 import { getPositionDisplayName, getPositionColor, VolleyballPosition } from "@/entities/UserProfile";
+import { formatDateForId } from "@/utils/dateTime";
 import styles from "./ParticipationSummary.module.css";
 
 // Helper function to safely convert string position to enum
@@ -13,6 +14,7 @@ const getPositionEnum = (position: string): VolleyballPosition => {
 
 interface ParticipationSummaryProps {
     matchId: string;
+    matchDate: string | Date;
     refreshTrigger?: number;
     participationOverview?: ParticipationOverview | null;
 }
@@ -25,11 +27,13 @@ interface ParticipationGroupProps {
     count: number;
     sectionType?: "participation" | "open";
     color: string;
+    testIdPrefix: string;
+    groupType: string;
 }
 
-const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, participations, openUsers, count, sectionType = "participation", color }) => {
+const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, participations, openUsers, count, sectionType = "participation", color, testIdPrefix, groupType }) => {
     return (
-        <div className={styles.participationGroup}>
+        <div className={styles.participationGroup} data-testid={`${testIdPrefix}-group-${groupType}`}>
             <div className={styles.groupHeader} style={{ borderLeftColor: color }}>
                 <div className={styles.groupIcon} style={{ color }}>
                     {icon}
@@ -45,8 +49,8 @@ const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, pa
             <div className={styles.groupContent}>
                 {count === 0 ? null : sectionType === "open" ? (
                     <div className={styles.userGrid}>
-                        {openUsers?.map((user) => (
-                            <div key={user.id} className={styles.userCard}>
+                        {openUsers?.map((user, index) => (
+                            <div key={user.id} className={styles.userCard} data-testid={`${testIdPrefix}-user-${groupType}-${index}`}>
                                 <div className={styles.userInfo}>
                                     <span className={styles.userName}>
                                         {user.firstName} {user.lastName}
@@ -75,8 +79,8 @@ const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, pa
                     </div>
                 ) : (
                     <div className={styles.userGrid}>
-                        {participations?.map((participation) => (
-                            <div key={participation.id} className={styles.userCard}>
+                        {participations?.map((participation, index) => (
+                            <div key={participation.id} className={styles.userCard} data-testid={`${testIdPrefix}-user-${groupType}-${index}`}>
                                 <div className={styles.userInfo}>
                                     <span className={styles.userName}>
                                         {participation.player.firstName} {participation.player.lastName}
@@ -118,11 +122,11 @@ const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, pa
     );
 };
 
-export default function ParticipationSummary({ participationOverview }: ParticipationSummaryProps) {
+export default function ParticipationSummary({ participationOverview, matchDate }: ParticipationSummaryProps) {
     // Use passed data if available, otherwise show loading
     if (!participationOverview) {
         return (
-            <div className={styles.loadingContainer}>
+            <div className={styles.loadingContainer} data-testid={`md-${formatDateForId(matchDate)}-participation-loading`}>
                 <div className={styles.loadingSpinner}></div>
                 <span>Lade Teilnahme-Übersicht...</span>
             </div>
@@ -130,10 +134,11 @@ export default function ParticipationSummary({ participationOverview }: Particip
     }
 
     const overview = participationOverview;
+    const testIdPrefix = `md-${formatDateForId(matchDate)}`;
 
     if (overview.counts.total === 0) {
         return (
-            <div className={styles.emptyContainer}>
+            <div className={styles.emptyContainer} data-testid={`${testIdPrefix}-participation-empty`}>
                 <div className={styles.emptyIcon}>👥</div>
                 <h3 className={styles.emptyTitle}>Keine Spieler registriert</h3>
                 <p className={styles.emptyText}>Es sind noch keine Spieler im System registriert.</p>
@@ -145,7 +150,7 @@ export default function ParticipationSummary({ participationOverview }: Particip
     const gridClassName = `${styles.participationGroups} ${styles.gridThreeColumns}`;
 
     return (
-        <div className={styles.participationSummaryContainer}>
+        <div className={styles.participationSummaryContainer} data-testid={`${testIdPrefix}-participation-summary`}>
             <div className={styles.summaryHeader}>
                 <h2 className={styles.summaryTitle}>Teilnahme-Übersicht</h2>
                 <div className={styles.summaryStats}>
@@ -168,6 +173,8 @@ export default function ParticipationSummary({ participationOverview }: Particip
                     participations={overview.participations.JOINING}
                     count={overview.counts.joining}
                     color="#10b981"
+                    testIdPrefix={testIdPrefix}
+                    groupType="joining"
                 />
 
                 <ParticipationGroup
@@ -176,6 +183,8 @@ export default function ParticipationSummary({ participationOverview }: Particip
                     participations={overview.participations.DECLINING}
                     count={overview.counts.declining}
                     color="#ef4444"
+                    testIdPrefix={testIdPrefix}
+                    groupType="declining"
                 />
 
                 <ParticipationGroup
@@ -185,6 +194,8 @@ export default function ParticipationSummary({ participationOverview }: Particip
                     count={overview.counts.open}
                     sectionType="open"
                     color="#6b7280"
+                    testIdPrefix={testIdPrefix}
+                    groupType="open"
                 />
             </div>
         </div>

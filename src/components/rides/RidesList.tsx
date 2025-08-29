@@ -5,10 +5,12 @@ import { useRideActions } from "@/hooks/rides";
 import RideCard from "./RideCard";
 import { LoadingSpinner } from "@/components/ui";
 import { RideWithDetails } from "@/entities/Ride";
+import { formatDateForId } from "@/utils/dateTime";
 import styles from "./Rides.module.css";
 
 interface RidesListProps {
     matchId: string;
+    matchDate: string | Date;
     onRideUpdated?: () => void;
     rides?: RideWithDetails[];
     userRideCheck?: {
@@ -23,6 +25,7 @@ interface RidesListProps {
 
 export default function RidesList({ 
     matchId, 
+    matchDate,
     onRideUpdated, 
     rides: passedRides, 
     userRideCheck, 
@@ -36,6 +39,8 @@ export default function RidesList({
     const error = null; // No error handling for passed data
     const hasExistingRide = userRideCheck?.hasExistingRide || false;
     const isParticipating = userParticipationCheck?.isParticipating || false;
+    
+    const testIdPrefix = `md-${formatDateForId(matchDate)}`;
 
     // Sammle alle User-IDs aus den Rides für optimiertes Preloading
     const allUserIds = rides
@@ -84,16 +89,16 @@ export default function RidesList({
     }));
 
     if (loading) {
-        return <LoadingSpinner message="Lade Fahrten..." />;
+        return <LoadingSpinner message="Lade Fahrten..." data-testid={`${testIdPrefix}-rides-loading`} />;
     }
 
     if (error) {
-        return <div className={styles.ridesListError}>{error}</div>;
+        return <div className={styles.ridesListError} data-testid={`${testIdPrefix}-rides-error`}>{error}</div>;
     }
 
     if (enrichedRides.length === 0) {
         return (
-            <div className={styles.ridesListEmpty}>
+            <div className={styles.ridesListEmpty} data-testid={`${testIdPrefix}-rides-empty`}>
                 Noch keine Fahrten erstellt.
                 {!hasExistingRide && !isParticipating && (
                     <>
@@ -106,8 +111,8 @@ export default function RidesList({
     }
 
     return (
-        <div className={styles.ridesList}>
-            {enrichedRides.map((ride) => {
+        <div className={styles.ridesList} data-testid={`${testIdPrefix}-rides-list`}>
+            {enrichedRides.map((ride, index) => {
                 // Check ob User bereits Fahrer oder Mitfahrer ist
                 const isUserDriverOfThisRide = ride.driverId === currentUserId;
                 const isUserPassengerOfThisRide = ride.passengers.some((p) => p.passengerId === currentUserId);
@@ -116,6 +121,8 @@ export default function RidesList({
                     <RideCard
                         key={ride.id}
                         ride={ride}
+                        matchDate={matchDate}
+                        rideIndex={index}
                         isUserDriverOfThisRide={isUserDriverOfThisRide}
                         isUserPassengerOfThisRide={isUserPassengerOfThisRide}
                         hasExistingRide={hasExistingRide}

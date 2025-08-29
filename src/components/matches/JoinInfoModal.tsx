@@ -26,8 +26,8 @@ export default function JoinInfoModal({ isOpen, onClose, onConfirm, isLoading = 
     if (!isOpen) return null;
 
     return (
-        <Modal isOpen={isOpen} onClose={handleClose} title="Zusage bestätigen" maxWidth="sm">
-            <form onSubmit={handleSubmit}>
+        <Modal isOpen={isOpen} onClose={handleClose} title="Zusage bestätigen" maxWidth="sm" data-testid="join-info-modal">
+            <form onSubmit={handleSubmit} data-testid="join-info-form">
                 <p className={styles.modalDescription}>Super, du bist dabei! Falls du zusätzliche Informationen hast, kannst du sie hier optional angeben.</p>
 
                 <div className={styles.formField}>
@@ -43,14 +43,26 @@ export default function JoinInfoModal({ isOpen, onClose, onConfirm, isLoading = 
                         rows={2}
                         disabled={isLoading}
                         maxLength={255}
+                        data-testid="join-info-input"
                     />
                 </div>
 
                 <div className={styles.modalFooter}>
-                    <Button type="button" variant="secondary" onClick={handleClose} disabled={isLoading}>
+                    <Button 
+                        type="button" 
+                        variant="secondary" 
+                        onClick={handleClose} 
+                        disabled={isLoading}
+                        data-testid="join-info-cancel"
+                    >
                         Abbrechen
                     </Button>
-                    <Button type="submit" variant="primary" loading={isLoading}>
+                    <Button 
+                        type="submit" 
+                        variant="primary" 
+                        loading={isLoading}
+                        data-testid="join-info-submit"
+                    >
                         Zusage bestätigen
                     </Button>
                 </div>

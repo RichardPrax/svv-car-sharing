@@ -42,8 +42,8 @@ export default function DeclineReasonModal({ isOpen, onClose, onConfirm, isLoadi
     if (!isOpen) return null;
 
     return (
-        <Modal isOpen={isOpen} onClose={handleClose} title="Absage begründen" maxWidth="sm">
-            <form onSubmit={handleSubmit}>
+        <Modal isOpen={isOpen} onClose={handleClose} title="Absage begründen" maxWidth="sm" data-testid="decline-reason-modal">
+            <form onSubmit={handleSubmit} data-testid="decline-reason-form">
                 <p className={styles.modalDescription}>Bitte geben Sie einen Grund für Ihre Absage an. Dies hilft bei der Planung und Kommunikation.</p>
 
                 <div className={styles.formField}>
@@ -59,15 +59,28 @@ export default function DeclineReasonModal({ isOpen, onClose, onConfirm, isLoadi
                         rows={3}
                         disabled={isLoading}
                         maxLength={255}
+                        data-testid="decline-reason-input"
                     />
-                    {error && <div className={styles.formError}>{error}</div>}
+                    {error && <div className={styles.formError} data-testid="decline-reason-error">{error}</div>}
                 </div>
 
                 <div className={styles.modalFooter}>
-                    <Button type="button" variant="secondary" onClick={handleClose} disabled={isLoading}>
+                    <Button 
+                        type="button" 
+                        variant="secondary" 
+                        onClick={handleClose} 
+                        disabled={isLoading}
+                        data-testid="decline-reason-cancel"
+                    >
                         Abbrechen
                     </Button>
-                    <Button type="submit" variant="primary" loading={isLoading} disabled={!reason.trim() || reason.trim().length < 3}>
+                    <Button 
+                        type="submit" 
+                        variant="primary" 
+                        loading={isLoading} 
+                        disabled={!reason.trim() || reason.trim().length < 3}
+                        data-testid="decline-reason-submit"
+                    >
                         Absage bestätigen
                     </Button>
                 </div>

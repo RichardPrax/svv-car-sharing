@@ -6,10 +6,13 @@ import RidePassengers from "./RidePassengers";
 import RideActions from "./RideActions";
 import { EditRideForm } from "@/components/forms";
 import { Modal } from "@/components/ui";
+import { formatDateForId } from "@/utils/dateTime";
 import styles from "./Rides.module.css";
 
 interface RideCardProps {
     ride: RideWithDetails;
+    matchDate: string | Date;
+    rideIndex: number;
     isUserDriverOfThisRide: boolean;
     isUserPassengerOfThisRide: boolean;
     hasExistingRide: boolean;
@@ -21,6 +24,8 @@ interface RideCardProps {
 
 export default function RideCard({
     ride,
+    matchDate,
+    rideIndex,
     isUserDriverOfThisRide,
     isUserPassengerOfThisRide,
     hasExistingRide,
@@ -30,6 +35,7 @@ export default function RideCard({
     onRideUpdated,
 }: RideCardProps) {
     const [showEditForm, setShowEditForm] = useState(false);
+    const testIdPrefix = `md-${formatDateForId(matchDate)}-ride-${rideIndex}`;
 
     const isRideFull = (): boolean => {
         return ride.passengers.length >= ride.availableSeats;
@@ -55,13 +61,16 @@ export default function RideCard({
 
     return (
         <>
-            <div className={styles.rideCard}>
+            <div className={styles.rideCard} data-testid={testIdPrefix}>
                 <RideDetails ride={ride} isRideFull={isRideFull()} />
 
-                <RidePassengers passengerCount={ride.passengerCount} passengerNames={ride.passengerNames} />
+                <RidePassengers 
+                    passengerCount={ride.passengerCount} 
+                    passengerNames={ride.passengerNames} 
+                />
 
                 {ride.additionalInfo && (
-                    <div className={styles.rideAdditionalInfo}>
+                    <div className={styles.rideAdditionalInfo} data-testid={`${testIdPrefix}-additional-info`}>
                         <p className={styles.rideAdditionalInfoText}>&quot;{ride.additionalInfo}&quot;</p>
                     </div>
                 )}
@@ -79,7 +88,13 @@ export default function RideCard({
             </div>
 
             {/* Modal für EditRideForm */}
-            <Modal isOpen={showEditForm} onClose={handleCancelEdit} title="Fahrt bearbeiten" maxWidth="md">
+            <Modal 
+                isOpen={showEditForm} 
+                onClose={handleCancelEdit} 
+                title="Fahrt bearbeiten" 
+                maxWidth="md"
+                data-testid={`${testIdPrefix}-edit-modal`}
+            >
                 <EditRideForm ride={ride} onRideUpdated={handleRideUpdated} onCancel={handleCancelEdit} onDelete={handleRideDeleted} />
             </Modal>
         </>

@@ -9,9 +9,10 @@ type Props = {
     title?: string;
     children: ReactNode;
     maxWidth?: "sm" | "md" | "lg" | "xl";
+    'data-testid'?: string;
 };
 
-export default function Modal({ isOpen, onClose, title, children, maxWidth = "md" }: Props) {
+export default function Modal({ isOpen, onClose, title, children, maxWidth = "md", 'data-testid': testId }: Props) {
     // Verhindere Scrollen im Hintergrund, wenn Modal offen ist
     useEffect(() => {
         if (isOpen) {
@@ -66,12 +67,17 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = "md
 
     // Modal-Content als Portal ins body rendern
     return createPortal(
-        <div className={styles.modalOverlay} onClick={handleBackdropClick}>
+        <div className={styles.modalOverlay} onClick={handleBackdropClick} data-testid={testId}>
             <div className={`${styles.modalContent} ${getModalSizeClass()}`}>
                 {title && (
                     <div className={styles.modalHeader}>
                         <h2 className={styles.modalTitle}>{title}</h2>
-                        <button className={styles.modalCloseButton} onClick={onClose} aria-label="Modal schließen">
+                        <button 
+                            className={styles.modalCloseButton} 
+                            onClick={onClose} 
+                            aria-label="Modal schließen"
+                            data-testid={testId ? `${testId}-close` : undefined}
+                        >
                             ×
                         </button>
                     </div>

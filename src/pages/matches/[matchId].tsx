@@ -163,7 +163,8 @@ export default function MatchDetailPage() {
                     <TabPanel value="participation">
                         <div data-testid={`md-${formatDateForId(match.date)}-content-participation`}>
                             <ParticipationSummary 
-                                matchId={match.id} 
+                                matchId={match.id}
+                                matchDate={match.date}
                                 participationOverview={participationOverview}
                             />
                         </div>
@@ -218,7 +219,8 @@ export default function MatchDetailPage() {
                             </div>
 
                             <RidesList 
-                                matchId={match.id} 
+                                matchId={match.id}
+                                matchDate={match.date}
                                 onRideUpdated={handleRideUpdated}
                                 rides={rides}
                                 userRideCheck={userRideCheck}
@@ -229,7 +231,7 @@ export default function MatchDetailPage() {
 
                     <TabPanel value="bring-items">
                         <div data-testid={`md-${formatDateForId(match.date)}-content-bring-items`}>
-                            <BringItems matchId={match.id} />
+                            <BringItems matchId={match.id} matchDate={match.date} />
                         </div>
                     </TabPanel>
                 </Tabs>
