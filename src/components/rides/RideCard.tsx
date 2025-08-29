@@ -35,7 +35,7 @@ export default function RideCard({
     onRideUpdated,
 }: RideCardProps) {
     const [showEditForm, setShowEditForm] = useState(false);
-    const testIdPrefix = `md-${formatDateForId(matchDate)}-ride-${rideIndex}`;
+    const testIdPrefix = `md-ride-${rideIndex}`;
 
     const isRideFull = (): boolean => {
         return ride.passengers.length >= ride.availableSeats;

@@ -126,7 +126,7 @@ export default function ParticipationSummary({ participationOverview, matchDate 
     // Use passed data if available, otherwise show loading
     if (!participationOverview) {
         return (
-            <div className={styles.loadingContainer} data-testid={`md-${formatDateForId(matchDate)}-participation-loading`}>
+            <div className={styles.loadingContainer} data-testid="md-participation-loading">
                 <div className={styles.loadingSpinner}></div>
                 <span>Lade Teilnahme-Übersicht...</span>
             </div>
@@ -134,11 +134,10 @@ export default function ParticipationSummary({ participationOverview, matchDate 
     }
 
     const overview = participationOverview;
-    const testIdPrefix = `md-${formatDateForId(matchDate)}`;
 
     if (overview.counts.total === 0) {
         return (
-            <div className={styles.emptyContainer} data-testid={`${testIdPrefix}-participation-empty`}>
+            <div className={styles.emptyContainer} data-testid="md-participation-empty">
                 <div className={styles.emptyIcon}>👥</div>
                 <h3 className={styles.emptyTitle}>Keine Spieler registriert</h3>
                 <p className={styles.emptyText}>Es sind noch keine Spieler im System registriert.</p>
@@ -150,7 +149,7 @@ export default function ParticipationSummary({ participationOverview, matchDate 
     const gridClassName = `${styles.participationGroups} ${styles.gridThreeColumns}`;
 
     return (
-        <div className={styles.participationSummaryContainer} data-testid={`${testIdPrefix}-participation-summary`}>
+        <div className={styles.participationSummaryContainer} data-testid="md-participation-summary">
             <div className={styles.summaryHeader}>
                 <h2 className={styles.summaryTitle}>Teilnahme-Übersicht</h2>
                 <div className={styles.summaryStats}>
@@ -173,7 +172,7 @@ export default function ParticipationSummary({ participationOverview, matchDate 
                     participations={overview.participations.JOINING}
                     count={overview.counts.joining}
                     color="#10b981"
-                    testIdPrefix={testIdPrefix}
+                    testIdPrefix="md"
                     groupType="joining"
                 />
 
@@ -183,7 +182,7 @@ export default function ParticipationSummary({ participationOverview, matchDate 
                     participations={overview.participations.DECLINING}
                     count={overview.counts.declining}
                     color="#ef4444"
-                    testIdPrefix={testIdPrefix}
+                    testIdPrefix="md"
                     groupType="declining"
                 />
 
@@ -194,7 +193,7 @@ export default function ParticipationSummary({ participationOverview, matchDate 
                     count={overview.counts.open}
                     sectionType="open"
                     color="#6b7280"
-                    testIdPrefix={testIdPrefix}
+                    testIdPrefix="md"
                     groupType="open"
                 />
             </div>

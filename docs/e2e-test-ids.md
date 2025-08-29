@@ -1,10 +1,23 @@
 # E2E Test ID Strategie
 
-Diese Dokumentation beschreibt die HTML-ID Konventionen für End-to-End Tests.
+Diese Dokumentation beschreibt die HTML-ID Konventionen für End-to-End Tests mit kontextbewusster Strategie.
 
 ## ID-Format
 
-Alle Test-IDs folgen dem Schema: `{component}-{identifier}-{action}`
+Wir verwenden eine **kontextbewusste** ID-Strategie:
+
+- **Datum-spezifische IDs** für Elemente die zwischen verschiedenen MatchDays unterscheiden müssen
+- **Vereinfachte IDs** für Elemente innerhalb einer spezifischen MatchDay-Detailseite
+
+### Datum-basierte IDs (für Listen und Überblick)
+```
+md-{YYYY-MM-DD}-{action}
+```
+
+### Vereinfachte IDs (für Detailseiten)
+```
+md-{element}
+```
 
 ## Verfügbare Test-IDs
 
@@ -15,120 +28,339 @@ Alle Test-IDs folgen dem Schema: `{component}-{identifier}-{action}`
 | Participate Button | `md-{YYYY-MM-DD}-participate` | `md-2025-08-30-participate` | "Dabei" Button für Spielteilnahme |
 | Decline Button | `md-{YYYY-MM-DD}-decline` | `md-2025-08-30-decline` | "Nicht dabei" Button für Spielabsage |
 | **MatchDay Detail** | | | |
-| Detail Container | `md-{YYYY-MM-DD}-detail` | `md-2025-08-30-detail` | Hauptcontainer der Detail-Seite |
-| Zurück Button | `md-{YYYY-MM-DD}-back` | `md-2025-08-30-back` | Zurück zur Übersicht Button |
-| Tab Teilnahme | `md-{YYYY-MM-DD}-tab-participation` | `md-2025-08-30-tab-participation` | Tab für Teilnahme-Übersicht |
-| Tab Fahrten | `md-{YYYY-MM-DD}-tab-rides` | `md-2025-08-30-tab-rides` | Tab für Fahrten-Übersicht |
-| Tab Mitbringen | `md-{YYYY-MM-DD}-tab-bring-items` | `md-2025-08-30-tab-bring-items` | Tab für Mitbring-Items |
-| Content Teilnahme | `md-{YYYY-MM-DD}-content-participation` | `md-2025-08-30-content-participation` | Inhalt des Teilnahme-Tabs |
-| Content Fahrten | `md-{YYYY-MM-DD}-content-rides` | `md-2025-08-30-content-rides` | Inhalt des Fahrten-Tabs |
-| Content Mitbringen | `md-{YYYY-MM-DD}-content-bring-items` | `md-2025-08-30-content-bring-items` | Inhalt des Mitbring-Tabs |
-| Fahrt erstellen Button | `md-{YYYY-MM-DD}-create-ride` | `md-2025-08-30-create-ride` | Button zum Erstellen einer neuen Fahrt |
+| Tab Teilnahme | `md-tab-participation` | `md-tab-participation` | Tab für Teilnahme-Übersicht |
+| Tab Fahrten | `md-tab-rides` | `md-tab-rides` | Tab für Fahrten-Übersicht |
+| Tab Mitbringen | `md-tab-bring-items` | `md-tab-bring-items` | Tab für Mitbring-Items |
+| Content Teilnahme | `md-content-participation` | `md-content-participation` | Inhalt des Teilnahme-Tabs |
+| Content Fahrten | `md-content-rides` | `md-content-rides` | Inhalt des Fahrten-Tabs |
+| Content Mitbringen | `md-content-bring-items` | `md-content-bring-items` | Inhalt des Mitbring-Tabs |
+| Fahrt erstellen Button | `md-create-ride` | `md-create-ride` | Button zum Erstellen einer neuen Fahrt |
+| Mitbringen hinzufügen | `md-add-bring-item` | `md-add-bring-item` | Button zum Hinzufügen eines Mitbring-Items |
 | **Teilnahme-Übersicht** | | | |
-| Teilnahme Container | `md-{YYYY-MM-DD}-participation-summary` | `md-2025-08-30-participation-summary` | Hauptcontainer der Teilnahme-Übersicht |
-| Gruppe "Dabei" | `md-{YYYY-MM-DD}-group-joining` | `md-2025-08-30-group-joining` | Gruppe der zusagenden Spieler |
-| Gruppe "Absage" | `md-{YYYY-MM-DD}-group-declining` | `md-2025-08-30-group-declining` | Gruppe der absagenden Spieler |
-| Gruppe "Offen" | `md-{YYYY-MM-DD}-group-open` | `md-2025-08-30-group-open` | Gruppe der noch offenen Spieler |
-| User in Gruppe | `md-{YYYY-MM-DD}-user-{type}-{index}` | `md-2025-08-30-user-joining-0` | Einzelner User in einer Gruppe |
-| **Fahrten** | | | |
-| Fahrten Liste | `md-{YYYY-MM-DD}-rides-list` | `md-2025-08-30-rides-list` | Container für alle Fahrten |
-| Einzelne Fahrt | `md-{YYYY-MM-DD}-ride-{index}` | `md-2025-08-30-ride-0` | Einzelne Fahrt-Karte |
-| Fahrt bearbeiten Modal | `md-{YYYY-MM-DD}-ride-{index}-edit-modal` | `md-2025-08-30-ride-0-edit-modal` | Modal zum Bearbeiten einer Fahrt |
-| Zusatzinfo | `md-{YYYY-MM-DD}-ride-{index}-additional-info` | `md-2025-08-30-ride-0-additional-info` | Zusatzinformationen einer Fahrt |
-| **Mitbringen** | | | |
-| Mitbringen Container | `md-{YYYY-MM-DD}-bring-items` | `md-2025-08-30-bring-items` | Hauptcontainer der Mitbringen-Übersicht |
-| Hinzufügen Button | `md-{YYYY-MM-DD}-add-bring-item` | `md-2025-08-30-add-bring-item` | Button zum Hinzufügen eines Items |
-| Items Liste | `md-{YYYY-MM-DD}-bring-items-list` | `md-2025-08-30-bring-items-list` | Liste aller Mitbring-Items |
-| Einzelnes Item | `md-{YYYY-MM-DD}-bring-item-{index}` | `md-2025-08-30-bring-item-0` | Einzelnes Mitbring-Item |
-| Item löschen | `md-{YYYY-MM-DD}-delete-bring-item-{index}` | `md-2025-08-30-delete-bring-item-0` | Button zum Löschen eines Items |
-| Erstellen Modal | `md-{YYYY-MM-DD}-create-bring-item-modal` | `md-2025-08-30-create-bring-item-modal` | Modal zum Erstellen eines Items |
-| Löschen Modal | `md-{YYYY-MM-DD}-delete-bring-item-modal` | `md-2025-08-30-delete-bring-item-modal` | Modal zum Bestätigen des Löschens |
+| Teilnahme Container | `md-participation-summary` | `md-participation-summary` | Hauptcontainer der Teilnahme-Übersicht |
+| Loading State | `md-participation-loading` | `md-participation-loading` | Ladeindikator für Teilnahme-Daten |
+| Empty State | `md-participation-empty` | `md-participation-empty` | Anzeige wenn keine Spieler registriert |
+| Gruppe "Dabei" | `md-group-joining` | `md-group-joining` | Gruppe der zusagenden Spieler |
+| Gruppe "Absage" | `md-group-declining` | `md-group-declining` | Gruppe der absagenden Spieler |
+| Gruppe "Offen" | `md-group-open` | `md-group-open` | Gruppe der noch nicht entschiedenen Spieler |
+| User in Gruppe | `md-user-{type}-{index}` | `md-user-joining-0` | Einzelner User in Teilnahme-Gruppe |
+| **Mitbringen (Detail)** | | | |
+| Mitbringen Container | `md-bring-items` | `md-bring-items` | Hauptcontainer für Mitbring-Items |
+| Items Liste | `md-bring-items-list` | `md-bring-items-list` | Liste aller Mitbring-Items |
+| Einzelnes Item | `md-bring-item-{index}` | `md-bring-item-0` | Einzelnes Mitbring-Item |
+| Item beitreten | `md-bring-item-{index}-join` | `md-bring-item-0-join` | Button um sich einem Item anzuschließen |
+| Item verlassen | `md-bring-item-{index}-leave` | `md-bring-item-0-leave` | Button um Item zu verlassen |
+| Item löschen | `md-bring-item-{index}-delete` | `md-bring-item-0-delete` | Button zum Löschen eines Items |
+| Create Modal | `md-create-bring-item-modal` | `md-create-bring-item-modal` | Modal zum Erstellen neuer Items |
+| **Fahrten (Detail)** | | | |
+| Fahrten Liste | `md-rides-list` | `md-rides-list` | Container für alle Fahrten |
+| Einzelne Fahrt | `md-ride-{index}` | `md-ride-0` | Einzelne Fahrt-Karte |
+| Fahrt beitreten | `md-ride-{index}-join` | `md-ride-0-join` | Button um Fahrt beizutreten |
+| Fahrt verlassen | `md-ride-{index}-leave` | `md-ride-0-leave` | Button um Fahrt zu verlassen |
+| Fahrt bearbeiten | `md-ride-{index}-edit` | `md-ride-0-edit` | Button zum Bearbeiten einer Fahrt |
+| Fahrt löschen | `md-ride-{index}-delete` | `md-ride-0-delete` | Button zum Löschen einer Fahrt |
+| Edit Modal | `md-edit-ride-{index}-modal` | `md-edit-ride-0-modal` | Modal zum Bearbeiten von Fahrten |
 | **Formulare** | | | |
 | Fahrt erstellen Form | `create-ride-form` | `create-ride-form` | Formular zum Erstellen einer Fahrt |
-| Abfahrtszeit Feld | `create-ride-departure-time` | `create-ride-departure-time` | Zeit-Input für Abfahrt |
-| Abfahrtsort Feld | `create-ride-departure-location` | `create-ride-departure-location` | Text-Input für Abfahrtsort |
-| Verfügbare Plätze | `create-ride-available-seats` | `create-ride-available-seats` | Select für Anzahl Plätze |
-| Zusatzinfo Feld | `create-ride-additional-info` | `create-ride-additional-info` | Textarea für Zusatzinfos |
-| Fahrt erstellen Button | `create-ride-submit` | `create-ride-submit` | Submit-Button für Fahrt |
-| Fahrt Abbrechen | `create-ride-cancel` | `create-ride-cancel` | Cancel-Button für Fahrt |
-| Mitbringen Form | `create-bring-item-form` | `create-bring-item-form` | Formular zum Hinzufügen eines Items |
-| Item Name Feld | `create-bring-item-name` | `create-bring-item-name` | Text-Input für Item-Name |
-| Item Beschreibung | `create-bring-item-description` | `create-bring-item-description` | Textarea für Item-Beschreibung |
-| Item erstellen Button | `create-bring-item-submit` | `create-bring-item-submit` | Submit-Button für Item |
-| Item Abbrechen | `create-bring-item-cancel` | `create-bring-item-cancel` | Cancel-Button für Item |
-| **Teilnahme Modals** | | | |
-| Absage Modal | `decline-reason-modal` | `decline-reason-modal` | Modal für Absage-Begründung |
-| Absage Form | `decline-reason-form` | `decline-reason-form` | Formular für Absage-Grund |
-| Grund Input | `decline-reason-input` | `decline-reason-input` | Textarea für Absage-Grund |
-| Absage Bestätigen | `decline-reason-submit` | `decline-reason-submit` | Submit-Button für Absage |
-| Absage Abbrechen | `decline-reason-cancel` | `decline-reason-cancel` | Cancel-Button für Absage |
-| Zusage Modal | `join-info-modal` | `join-info-modal` | Modal für Zusage-Info |
-| Zusage Form | `join-info-form` | `join-info-form` | Formular für Zusage-Info |
-| Info Input | `join-info-input` | `join-info-input` | Textarea für Zusage-Info |
-| Zusage Bestätigen | `join-info-submit` | `join-info-submit` | Submit-Button für Zusage |
-| Zusage Abbrechen | `join-info-cancel` | `join-info-cancel` | Cancel-Button für Zusage |
+| Abfahrtszeit | `create-ride-departure-time` | `create-ride-departure-time` | Eingabefeld für Abfahrtszeit |
+| Abfahrtsort | `create-ride-departure-location` | `create-ride-departure-location` | Eingabefeld für Abfahrtsort |
+| Verfügbare Plätze | `create-ride-available-seats` | `create-ride-available-seats` | Eingabefeld für Sitzplätze |
+| Notizen | `create-ride-notes` | `create-ride-notes` | Textfeld für zusätzliche Informationen |
+| Form absenden | `create-ride-submit` | `create-ride-submit` | Button zum Speichern der Fahrt |
+| Form abbrechen | `create-ride-cancel` | `create-ride-cancel` | Button zum Abbrechen |
+| Mitbringen erstellen Form | `create-bring-item-form` | `create-bring-item-form` | Formular zum Erstellen eines Items |
+| Item Name | `create-bring-item-name` | `create-bring-item-name` | Eingabefeld für Item-Name |
+| Item Menge | `create-bring-item-quantity` | `create-bring-item-quantity` | Eingabefeld für Anzahl |
+| Item Notizen | `create-bring-item-notes` | `create-bring-item-notes` | Textfeld für Notizen |
+| Item absenden | `create-bring-item-submit` | `create-bring-item-submit` | Button zum Speichern des Items |
+| Item abbrechen | `create-bring-item-cancel` | `create-bring-item-cancel` | Button zum Abbrechen |
+| **Modals** | | | |
+| Absage-Grund Modal | `md-decline-reason-modal` | `md-decline-reason-modal` | Modal für Absage-Begründung |
+| Absage-Grund Form | `md-decline-reason-form` | `md-decline-reason-form` | Formular für Absage-Grund |
+| Absage-Grund Text | `md-decline-reason-textarea` | `md-decline-reason-textarea` | Textfeld für Absage-Begründung |
+| Absage bestätigen | `md-decline-reason-submit` | `md-decline-reason-submit` | Button zum Bestätigen der Absage |
+| Absage abbrechen | `md-decline-reason-cancel` | `md-decline-reason-cancel` | Button zum Abbrechen der Absage |
+| Teilnahme Info Modal | `md-join-info-modal` | `md-join-info-modal` | Modal für Teilnahme-Informationen |
+| Teilnahme Info Form | `md-join-info-form` | `md-join-info-form` | Formular für Teilnahme-Details |
+| Position eingeben | `md-join-info-position` | `md-join-info-position` | Eingabefeld für Spielposition |
+| Teilnahme bestätigen | `md-join-info-submit` | `md-join-info-submit` | Button zum Bestätigen der Teilnahme |
+| Teilnahme abbrechen | `md-join-info-cancel` | `md-join-info-cancel` | Button zum Abbrechen der Teilnahme |
 
 ## Verwendung in Tests
 
 ```javascript
-// MatchDay Navigation
-await page.getByTestId('md-2025-08-30').click();                    // Zur Detail-Seite
-await page.getByTestId('md-2025-08-30-back').click();               // Zurück zur Übersicht
+// MatchDay Navigation (Übersicht -> Detail)
+await page.click('[data-testid="md-2025-08-30"]');
 
-// Tab Navigation
-await page.getByTestId('md-2025-08-30-tab-participation').click();  // Teilnahme-Tab
-await page.getByTestId('md-2025-08-30-tab-rides').click();          // Fahrten-Tab
-await page.getByTestId('md-2025-08-30-tab-bring-items').click();    // Mitbringen-Tab
+// Teilnahme (Übersicht)
+await page.click('[data-testid="md-2025-08-30-participate"]');
+await page.click('[data-testid="md-2025-08-30-decline"]');
 
-// Teilnahme
-await page.getByTestId('md-2025-08-30-participate').click();        // Teilnahme zusagen
-await page.getByTestId('md-2025-08-30-decline').click();            // Teilnahme absagen
+// Tab Navigation (Detail)
+await page.click('[data-testid="md-tab-participation"]');
+await page.click('[data-testid="md-tab-rides"]');
+await page.click('[data-testid="md-tab-bring-items"]');
 
-// Fahrten verwalten
-await page.getByTestId('md-2025-08-30-create-ride').click();        // Neue Fahrt erstellen
+// Content-Bereiche prüfen (Detail)
+await page.waitForSelector('[data-testid="md-content-participation"]');
+await page.waitForSelector('[data-testid="md-content-rides"]');
+await page.waitForSelector('[data-testid="md-content-bring-items"]');
 
-// Fahrt-Formular ausfüllen
-await page.getByTestId('create-ride-departure-time').fill('14:00');
-await page.getByTestId('create-ride-departure-location').fill('Hauptbahnhof');
-await page.getByTestId('create-ride-available-seats').selectOption('3');
-await page.getByTestId('create-ride-additional-info').fill('Rückfahrt um 18:00');
-await page.getByTestId('create-ride-submit').click();
+// Fahrten (Detail)
+await page.click('[data-testid="md-create-ride"]');
+await page.click('[data-testid="md-ride-0-join"]');
+await page.click('[data-testid="md-ride-0-edit"]');
 
-// Mitbringen verwalten
-await page.getByTestId('md-2025-08-30-add-bring-item').click();     // Neues Item hinzufügen
+// Mitbringen (Detail)
+await page.click('[data-testid="md-add-bring-item"]');
+await page.click('[data-testid="md-bring-item-0-join"]');
+await page.click('[data-testid="md-bring-item-1-delete"]');
 
-// Mitbring-Formular ausfüllen
-await page.getByTestId('create-bring-item-name').fill('Getränke');
-await page.getByTestId('create-bring-item-description').fill('Wasser und Sportgetränke');
-await page.getByTestId('create-bring-item-submit').click();
+// Formulare ausfüllen
+await page.fill('[data-testid="create-ride-departure-time"]', '14:00');
+await page.fill('[data-testid="create-ride-departure-location"]', 'Bahnhof');
+await page.click('[data-testid="create-ride-submit"]');
 
-// Teilnahme mit Begründung
-await page.getByTestId('md-2025-08-30-decline').click();            // Absage starten
-await page.getByTestId('decline-reason-input').fill('Verletzung');  // Grund eingeben
-await page.getByTestId('decline-reason-submit').click();            // Absage bestätigen
-
-// Zusage mit Info
-await page.getByTestId('md-2025-08-30-participate').click();        // Zusage starten
-await page.getByTestId('join-info-input').fill('Komme etwas später'); // Info eingeben
-await page.getByTestId('join-info-submit').click();                 // Zusage bestätigen
-
-// Kompletter Workflow: Fahrt erstellen
-await page.getByTestId('md-2025-08-30').click();                    // Detail-Seite öffnen
-await page.getByTestId('md-2025-08-30-tab-rides').click();          // Fahrten-Tab
-await page.getByTestId('md-2025-08-30-create-ride').click();        // Fahrt erstellen
-await page.getByTestId('create-ride-departure-time').fill('15:30');
-await page.getByTestId('create-ride-departure-location').fill('Parkplatz Sporthalle');
-await page.getByTestId('create-ride-available-seats').selectOption('4');
-await page.getByTestId('create-ride-submit').click();
-await page.getByTestId('md-2025-08-30-back').click();               // Zurück zur Übersicht
+// Playwright specific (empfohlen)
+await page.getByTestId('md-2025-08-30').click();
+await page.getByTestId('md-tab-rides').click();
+await page.getByTestId('md-create-ride').click();
 ```
+
+## Kontextbewusste Strategie
+
+### Warum zwei verschiedene Ansätze?
+
+1. **Übersicht (Datum-basiert):** 
+   - Mehrere MatchDays sind gleichzeitig sichtbar
+   - Eindeutige Identifikation zwischen verschiedenen Tagen erforderlich
+   - Format: `md-{YYYY-MM-DD}-{action}`
+
+2. **Detail (Vereinfacht):**
+   - Nur ein MatchDay ist gleichzeitig sichtbar
+   - Redundante Datumsinformation wird vermieden
+   - Format: `md-{element}`
+
+### Vorteile
+
+- **Einfachere Tests:** Weniger komplexe Selektoren in Detail-Ansichten
+- **Bessere Lesbarkeit:** Logische und intuitive ID-Namen
+- **Wartungsfreundlich:** Reduzierte Komplexität bei Änderungen
 
 ## Hinweise
 
 - Datumsformat ist immer `YYYY-MM-DD` (ISO-Format)
 - Alle Test-IDs verwenden `data-testid` Attribute (nicht `id`)
-- IDs sind eindeutig pro Datum und enthalten Index für Listen-Elemente
-- Buttons sind nur bei zukünftigen Matches und für entsprechende Rollen sichtbar
-- Index-basierte IDs (z.B. `ride-0`, `bring-item-1`) für dynamische Listen
-- Für Playwright wird `page.getByTestId()` empfohlen (einfacher als Selektoren)
-- Modals verwenden das Suffix `-modal` für eindeutige Identifikation
+- IDs sind eindeutig pro Kontext (Übersicht vs. Detail)
+- Für Playwright wird `page.getByTestId()` empfohlen
+- Index-basierte IDs beginnen bei 0
+- Modal- und Form-IDs sind kontextspezifisch benannt
+
+### 1. MatchDay Cards (Übersicht)
+**Datei:** `src/components/matches/MatchDayCard.tsx`
+
+```html
+<!-- MatchDay Card -->
+<div data-testid="md-2024-01-15">
+
+<!-- Teilnahme-Buttons -->
+<button data-testid="md-2024-01-15-participate">
+<button data-testid="md-2024-01-15-decline">
+```
+
+### 2. MatchDay Detail Page (Spezifische Seite)
+**Datei:** `src/pages/matches/[matchId].tsx`
+
+```html
+<!-- Tab Navigation -->
+<button data-testid="md-tab-participation">
+<button data-testid="md-tab-rides">  
+<button data-testid="md-tab-bring-items">
+
+<!-- Content Areas -->
+<div data-testid="md-content-participation">
+<div data-testid="md-content-rides">
+<div data-testid="md-content-bring-items">
+
+<!-- Action Buttons -->
+<button data-testid="md-create-ride">
+<button data-testid="md-add-bring-item">
+```
+
+### 3. Participation Summary (Detail)
+**Datei:** `src/components/matches/ParticipationSummary.tsx`
+
+```html
+<!-- Main Container -->
+<div data-testid="md-participation-summary">
+
+<!-- Loading/Empty States -->
+<div data-testid="md-participation-loading">
+<div data-testid="md-participation-empty">
+
+<!-- Groups -->
+<div data-testid="md-group-joining">
+<div data-testid="md-group-declining">  
+<div data-testid="md-group-open">
+
+<!-- Individual Users -->
+<div data-testid="md-user-joining-0">
+<div data-testid="md-user-declining-1">
+<div data-testid="md-user-open-2">
+```
+
+### 4. Bring Items (Detail)
+**Datei:** `src/components/matches/BringItems.tsx`
+
+```html
+<!-- Main Container -->
+<div data-testid="md-bring-items">
+
+<!-- Add Button -->
+<button data-testid="md-add-bring-item">
+
+<!-- Items List -->
+<div data-testid="md-bring-items-list">
+
+<!-- Individual Items -->
+<div data-testid="md-bring-item-0">
+<div data-testid="md-bring-item-1">
+
+<!-- Item Actions -->
+<button data-testid="md-bring-item-0-join">
+<button data-testid="md-bring-item-0-leave">
+<button data-testid="md-bring-item-0-delete">
+
+<!-- Create Modal -->
+<div data-testid="md-create-bring-item-modal">
+```
+
+### 5. Rides (Detail)
+**Datei:** `src/components/rides/RidesList.tsx`, `RideCard.tsx`
+
+```html
+<!-- Rides Container -->
+<div data-testid="md-rides-list">
+
+<!-- Individual Rides -->
+<div data-testid="md-ride-0">
+<div data-testid="md-ride-1">
+
+<!-- Ride Actions -->
+<button data-testid="md-ride-0-join">
+<button data-testid="md-ride-0-leave">
+<button data-testid="md-ride-0-edit">
+<button data-testid="md-ride-0-delete">
+
+<!-- Edit Modal -->
+<div data-testid="md-edit-ride-0-modal">
+```
+
+### 6. Forms
+**Dateien:** `src/components/forms/CreateRideForm.tsx`, `CreateBringItemForm.tsx`
+
+```html
+<!-- Create Ride Form -->
+<form data-testid="create-ride-form">
+<input data-testid="create-ride-departure-time">
+<input data-testid="create-ride-departure-location">
+<input data-testid="create-ride-available-seats">
+<textarea data-testid="create-ride-notes">
+<button data-testid="create-ride-submit">
+<button data-testid="create-ride-cancel">
+
+<!-- Create Bring Item Form -->
+<form data-testid="create-bring-item-form">
+<input data-testid="create-bring-item-name">
+<input data-testid="create-bring-item-quantity">
+<textarea data-testid="create-bring-item-notes">
+<button data-testid="create-bring-item-submit">
+<button data-testid="create-bring-item-cancel">
+```
+
+### 7. Modals
+**Dateien:** `src/components/matches/DeclineReasonModal.tsx`, `JoinInfoModal.tsx`
+
+```html
+<!-- Decline Reason Modal -->
+<div data-testid="md-decline-reason-modal">
+<form data-testid="md-decline-reason-form">
+<textarea data-testid="md-decline-reason-textarea">
+<button data-testid="md-decline-reason-submit">
+<button data-testid="md-decline-reason-cancel">
+
+<!-- Join Info Modal -->  
+<div data-testid="md-join-info-modal">
+<form data-testid="md-join-info-form">
+<input data-testid="md-join-info-position">
+<button data-testid="md-join-info-submit">
+<button data-testid="md-join-info-cancel">
+```
+
+## Verwendung in Tests
+
+### Playwright Beispiele
+
+```javascript
+// MatchDay auswählen (Übersicht)
+await page.click('[data-testid="md-2024-01-15"]');
+
+// Teilnehmen (Übersicht)
+await page.click('[data-testid="md-2024-01-15-participate"]');
+
+// Tab Navigation (Detail)
+await page.click('[data-testid="md-tab-rides"]');
+
+// Ride erstellen (Detail)
+await page.click('[data-testid="md-create-ride"]');
+
+// Formular ausfüllen
+await page.fill('[data-testid="create-ride-departure-time"]', '14:00');
+await page.fill('[data-testid="create-ride-departure-location"]', 'Bahnhof');
+
+// Ride beitreten (Detail)
+await page.click('[data-testid="md-ride-0-join"]');
+```
+
+## Implementierung
+
+### Hilfsfunktionen
+
+**Datum Formatierung:**
+```typescript
+// src/utils/dateTime.ts
+export function formatDateForId(date: string | Date): string {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toISOString().split('T')[0]; // YYYY-MM-DD
+}
+```
+
+### Komponenten Pattern
+
+**Datum-basierte IDs (Übersicht):**
+```typescript
+const testId = `md-${formatDateForId(matchDate)}`;
+```
+
+**Vereinfachte IDs (Detail):**
+```typescript
+const testId = "md-tab-participation";
+const testId = "md-ride-0";
+```
+
+## Wartung
+
+- **Bei neuen Komponenten:** Folge der kontextbewussten Strategie
+- **Bei Änderungen:** Aktualisiere diese Dokumentation
+- **Test Updates:** Prüfe betroffene E2E Tests bei ID-Änderungen
+
+## Zusammenfassung der Änderungen
+
+Die ID-Strategie wurde von einer universell datum-basierten Ansatz zu einer kontextbewussten Strategie geändert:
+
+- **Vorher:** Alle IDs hatten das Format `md-{YYYY-MM-DD}-{element}`
+- **Nachher:** 
+  - Übersicht: `md-{YYYY-MM-DD}` für Unterscheidung zwischen MatchDays
+  - Detail: `md-{element}` da nur ein MatchDay sichtbar ist
+
+Dies macht die Test-IDs einfacher und logischer, da redundante Datumsinformationen in kontextuellen Bereichen vermieden werden.

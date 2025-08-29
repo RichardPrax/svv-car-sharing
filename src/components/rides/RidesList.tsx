@@ -40,7 +40,7 @@ export default function RidesList({
     const hasExistingRide = userRideCheck?.hasExistingRide || false;
     const isParticipating = userParticipationCheck?.isParticipating || false;
     
-    const testIdPrefix = `md-${formatDateForId(matchDate)}`;
+    const testIdPrefix = "md";
 
     // Sammle alle User-IDs aus den Rides für optimiertes Preloading
     const allUserIds = rides

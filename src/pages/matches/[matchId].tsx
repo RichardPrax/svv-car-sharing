@@ -140,28 +140,28 @@ export default function MatchDetailPage() {
                             value="participation" 
                             icon={<UsersIcon size={18} />} 
                             badge={participationOverview?.counts.open}
-                            data-testid={`md-${formatDateForId(match.date)}-tab-participation`}
+                            data-testid="md-tab-participation"
                         >
                             Teilnahme
                         </Tab>
                         <Tab 
                             value="rides" 
                             icon={<CarIcon size={18} />}
-                            data-testid={`md-${formatDateForId(match.date)}-tab-rides`}
+                            data-testid="md-tab-rides"
                         >
                             Fahrten
                         </Tab>
                         <Tab 
                             value="bring-items" 
                             icon={<BagIcon size={18} />}
-                            data-testid={`md-${formatDateForId(match.date)}-tab-bring-items`}
+                            data-testid="md-tab-bring-items"
                         >
                             Mitbringen
                         </Tab>
                     </TabList>
 
                     <TabPanel value="participation">
-                        <div data-testid={`md-${formatDateForId(match.date)}-content-participation`}>
+                        <div data-testid="md-content-participation">
                             <ParticipationSummary 
                                 matchId={match.id}
                                 matchDate={match.date}
@@ -171,12 +171,12 @@ export default function MatchDetailPage() {
                     </TabPanel>
 
                     <TabPanel value="rides">
-                        <div data-testid={`md-${formatDateForId(match.date)}-content-rides`} className={styles.ridesTabContent}>
+                        <div data-testid="md-content-rides" className={styles.ridesTabContent}>
                             <div className={styles.summaryHeader}>
                                 <h2 className={styles.summaryTitle}>Fahrten-Übersicht</h2>
                                 <div className={styles.summaryActions}>
                                     <button
-                                        data-testid={`md-${formatDateForId(match.date)}-create-ride`}
+                                        data-testid="md-create-ride"
                                         onClick={handleShowCreateForm}
                                         disabled={userRideCheck?.hasExistingRide || userParticipationCheck?.isParticipating || loading}
                                         title={
@@ -230,7 +230,7 @@ export default function MatchDetailPage() {
                     </TabPanel>
 
                     <TabPanel value="bring-items">
-                        <div data-testid={`md-${formatDateForId(match.date)}-content-bring-items`}>
+                        <div data-testid="md-content-bring-items">
                             <BringItems matchId={match.id} matchDate={match.date} />
                         </div>
                     </TabPanel>
