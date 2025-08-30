@@ -8,36 +8,20 @@ type Props = {
     ride: RideWithDetails;
     onRideUpdated: () => void;
     onCancel: () => void;
-    onDelete: () => void;
 };
 
-export default function EditRideForm({ ride, onRideUpdated, onCancel, onDelete }: Props) {
-    const { formData, loading, error, showDeleteConfirm, handleChange, handleSubmit, setShowDeleteConfirm, handleDeleteConfirm } = useEditRide({
+export default function EditRideForm({ ride, onRideUpdated, onCancel }: Props) {
+    const { formData, loading, error, handleChange, handleSubmit } = useEditRide({
         ride,
         onSuccess: onRideUpdated,
-        onDelete,
     });
 
     return (
         <div className={styles.rideForm}>
             {error && <div className={styles.rideFormError}>{error}</div>}
 
-            {showDeleteConfirm ? (
-                <div className={styles.deleteConfirm}>
-                    <h4 className={styles.deleteConfirmTitle}>Fahrt wirklich löschen?</h4>
-                    <p className={styles.deleteConfirmMessage}>Diese Aktion kann nicht rückgängig gemacht werden. Die Fahrt und alle Anmeldungen werden permanent gelöscht.</p>
-                    <div className={styles.deleteConfirmActions}>
-                        <Button variant="secondary" onClick={() => setShowDeleteConfirm(false)} disabled={loading} className={styles.deleteConfirmButton}>
-                            Abbrechen
-                        </Button>
-                        <Button variant="danger" onClick={handleDeleteConfirm} disabled={loading} className={styles.deleteConfirmButtonDanger}>
-                            {loading ? "Wird gelöscht..." : "Endgültig löschen"}
-                        </Button>
-                    </div>
-                </div>
-            ) : (
-                <form onSubmit={handleSubmit}>
-                    <div className={styles.rideFormGrid}>
+            <form onSubmit={handleSubmit}>
+                <div className={styles.rideFormGrid}>
                         <FormField label="Abfahrtszeit">
                             <Input type="time" required value={formData.departureTime} onChange={(e) => handleChange("departureTime", e.target.value)} />
                         </FormField>
@@ -78,13 +62,9 @@ export default function EditRideForm({ ride, onRideUpdated, onCancel, onDelete }
                             <Button type="button" variant="secondary" onClick={onCancel} disabled={loading} className={styles.rideFormButton}>
                                 Abbrechen
                             </Button>
-                            <Button type="button" variant="danger" onClick={() => setShowDeleteConfirm(true)} disabled={loading} className={styles.rideFormButton}>
-                                Fahrt löschen
-                            </Button>
                         </div>
                     </div>
                 </form>
-            )}
         </div>
     );
 }

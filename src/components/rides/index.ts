@@ -4,3 +4,4 @@ export { default as RideCard } from "./RideCard";
 export { default as RideDetails } from "./RideDetails";
 export { default as RidePassengers } from "./RidePassengers";
 export { default as RideActions } from "./RideActions";
+export { default as DeleteRideConfirm } from "./DeleteRideConfirm";

@@ -9,11 +9,12 @@ interface RideActionsProps {
     isUserDriver: boolean;
     isUserParticipating: boolean;
     onEdit: () => void;
+    onDelete: () => void;
     onJoin: () => void;
     onLeave: () => void;
 }
 
-export default function RideActions({ isOwnRide, isUserInRide, isRideFull, isUserDriver, isUserParticipating, onEdit, onJoin, onLeave }: RideActionsProps) {
+export default function RideActions({ isOwnRide, isUserInRide, isRideFull, isUserDriver, isUserParticipating, onEdit, onDelete, onJoin, onLeave }: RideActionsProps) {
     // Bestimme, ob der "Mitfahren" Button deaktiviert werden soll
     // isUserDriver bedeutet hier: "Bietet der User bereits eine Fahrt für diesen Spieltag an"
     // isUserParticipating bedeutet: "Ist der User bereits Mitfahrer in einer anderen Fahrt"
@@ -42,6 +43,10 @@ export default function RideActions({ isOwnRide, isUserInRide, isRideFull, isUse
                         <button onClick={onEdit} className={styles.editButton}>
                             <Icon name="edit" size={16} color="currentColor" />
                             Bearbeiten
+                        </button>
+                        <button onClick={onDelete} className={styles.deleteButton} title="Fahrt löschen">
+                            <Icon name="delete" size={16} color="currentColor" />
+                            Löschen
                         </button>
                     </>
                 )}

@@ -4,6 +4,7 @@ import { RideWithDetails } from "@/entities/Ride";
 import RideDetails from "./RideDetails";
 import RidePassengers from "./RidePassengers";
 import RideActions from "./RideActions";
+import DeleteRideConfirm from "./DeleteRideConfirm";
 import { EditRideForm } from "@/components/forms";
 import { Modal } from "@/components/ui";
 import { formatDateForId } from "@/utils/dateTime";
@@ -35,6 +36,8 @@ export default function RideCard({
     onRideUpdated,
 }: RideCardProps) {
     const [showEditForm, setShowEditForm] = useState(false);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const testIdPrefix = `md-ride-${rideIndex}`;
 
     const isRideFull = (): boolean => {
@@ -45,12 +48,36 @@ export default function RideCard({
         setShowEditForm(true);
     };
 
-    const handleRideUpdated = () => {
-        setShowEditForm(false);
-        onRideUpdated();
+    const handleDeleteRide = () => {
+        setShowDeleteConfirm(true);
     };
 
-    const handleRideDeleted = () => {
+    const handleConfirmDelete = async () => {
+        setIsDeleting(true);
+        try {
+            const response = await fetch(`/api/rides/${ride.id}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('Fehler beim Löschen der Fahrt');
+            }
+
+            setShowDeleteConfirm(false);
+            onRideUpdated();
+        } catch (error) {
+            console.error('Fehler beim Löschen der Fahrt:', error);
+            // Hier könnte man eine Fehlerbehandlung hinzufügen
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const handleCancelDelete = () => {
+        setShowDeleteConfirm(false);
+    };
+
+    const handleRideUpdated = () => {
         setShowEditForm(false);
         onRideUpdated();
     };
@@ -82,6 +109,7 @@ export default function RideCard({
                     isUserDriver={hasExistingRide}
                     isUserParticipating={isParticipating}
                     onEdit={handleEditRide}
+                    onDelete={handleDeleteRide}
                     onJoin={() => onJoinRide(ride.id)}
                     onLeave={() => onLeaveRide(ride.id)}
                 />
@@ -95,7 +123,22 @@ export default function RideCard({
                 maxWidth="md"
                 data-testid={`${testIdPrefix}-edit-modal`}
             >
-                <EditRideForm ride={ride} onRideUpdated={handleRideUpdated} onCancel={handleCancelEdit} onDelete={handleRideDeleted} />
+                <EditRideForm ride={ride} onRideUpdated={handleRideUpdated} onCancel={handleCancelEdit} />
+            </Modal>
+
+            {/* Modal für Delete Confirmation */}
+            <Modal 
+                isOpen={showDeleteConfirm} 
+                onClose={handleCancelDelete} 
+                title="Fahrt löschen" 
+                maxWidth="sm"
+                data-testid={`${testIdPrefix}-delete-modal`}
+            >
+                <DeleteRideConfirm 
+                    onConfirm={handleConfirmDelete} 
+                    onCancel={handleCancelDelete}
+                    loading={isDeleting}
+                />
             </Modal>
         </>
     );

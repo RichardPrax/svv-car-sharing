@@ -1,44 +1,36 @@
 // src/components/rides/RidesList.tsx
+import { useState } from "react";
 import { useOptimizedCurrentUser } from "@/hooks/rides/useOptimizedCurrentUser";
 import { useOptimizedUserProfiles } from "@/hooks/auth/useUserProfileCache";
 import { useRideActions } from "@/hooks/rides";
+import { useRides } from "@/hooks/rides/useRides";
+import { useUserRideCheck } from "@/hooks/rides/useUserRideCheck";
+import { useUserParticipationCheck } from "@/hooks/rides/useUserParticipationCheck";
 import RideCard from "./RideCard";
-import { LoadingSpinner } from "@/components/ui";
-import { RideWithDetails } from "@/entities/Ride";
+import { CreateRideForm } from "@/components/forms";
+import { LoadingSpinner, Modal } from "@/components/ui";
 import { formatDateForId } from "@/utils/dateTime";
 import styles from "./Rides.module.css";
+import pageStyles from "../../styles/Pages.module.css";
 
 interface RidesListProps {
     matchId: string;
     matchDate: string | Date;
-    onRideUpdated?: () => void;
-    rides?: RideWithDetails[];
-    userRideCheck?: {
-        hasExistingRide: boolean;
-        rideId: string | null;
-    } | null;
-    userParticipationCheck?: {
-        isParticipating: boolean;
-        participatingRideId: string | null;
-    } | null;
 }
 
 export default function RidesList({ 
     matchId, 
-    matchDate,
-    onRideUpdated, 
-    rides: passedRides, 
-    userRideCheck, 
-    userParticipationCheck 
+    matchDate
 }: RidesListProps) {
     const { currentUserId } = useOptimizedCurrentUser();
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
+    const [showCreateForm, setShowCreateForm] = useState(false);
+    const [showExistingRideWarning, setShowExistingRideWarning] = useState(false);
     
-    // Use passed data if available
-    const rides = passedRides || [];
-    const loading = !passedRides;
-    const error = null; // No error handling for passed data
-    const hasExistingRide = userRideCheck?.hasExistingRide || false;
-    const isParticipating = userParticipationCheck?.isParticipating || false;
+    // Verwende eigene Hooks für Daten
+    const { rides, loading, error } = useRides({ matchId, refreshTrigger });
+    const { hasExistingRide } = useUserRideCheck({ matchId, refreshTrigger });
+    const { isParticipating, participatingRideId } = useUserParticipationCheck({ matchId, refreshTrigger });
     
     const testIdPrefix = "md";
 
@@ -57,12 +49,35 @@ export default function RidesList({
         currentUserId,
         matchId,
         onSuccess: () => {
-            onRideUpdated?.();
+            setRefreshTrigger((prev) => prev + 1);
         },
     });
 
     const handleRideUpdated = () => {
-        onRideUpdated?.();
+        setRefreshTrigger((prev) => prev + 1);
+    };
+
+    const handleShowCreateForm = () => {
+        if (hasExistingRide) {
+            setShowExistingRideWarning(true);
+            setTimeout(() => setShowExistingRideWarning(false), 3000);
+            return;
+        }
+        if (isParticipating) {
+            setShowExistingRideWarning(true);
+            setTimeout(() => setShowExistingRideWarning(false), 3000);
+            return;
+        }
+        setShowCreateForm(true);
+    };
+
+    const handleRideCreated = () => {
+        setShowCreateForm(false);
+        setRefreshTrigger((prev) => prev + 1);
+    };
+
+    const handleCancelCreate = () => {
+        setShowCreateForm(false);
     };
 
     const handleJoinRide = async (rideId: string) => {
@@ -89,50 +104,134 @@ export default function RidesList({
     }));
 
     if (loading) {
-        return <LoadingSpinner message="Lade Fahrten..." data-testid={`${testIdPrefix}-rides-loading`} />;
+        return (
+            <div>
+                <div className={pageStyles.summaryHeader}>
+                    <h2 className={pageStyles.summaryTitle}>Fahrten-Übersicht</h2>
+                    <div className={pageStyles.summaryActions}>
+                        <button
+                            disabled={true}
+                            className={pageStyles.headerActionButton}
+                            style={{ opacity: 0.7 }}
+                        >
+                            Wird geladen...
+                        </button>
+                    </div>
+                </div>
+                <LoadingSpinner message="Lade Fahrten..." data-testid={`${testIdPrefix}-rides-loading`} />
+            </div>
+        );
     }
 
     if (error) {
-        return <div className={styles.ridesListError} data-testid={`${testIdPrefix}-rides-error`}>{error}</div>;
-    }
-
-    if (enrichedRides.length === 0) {
         return (
-            <div className={styles.ridesListEmpty} data-testid={`${testIdPrefix}-rides-empty`}>
-                Noch keine Fahrten erstellt.
-                {!hasExistingRide && !isParticipating && (
-                    <>
-                        <br />
-                        Erstelle die erste Fahrt!
-                    </>
-                )}
+            <div>
+                <div className={pageStyles.summaryHeader}>
+                    <h2 className={pageStyles.summaryTitle}>Fahrten-Übersicht</h2>
+                    <div className={pageStyles.summaryActions}>
+                        <button
+                            disabled={true}
+                            className={pageStyles.headerActionButton}
+                            style={{ opacity: 0.7 }}
+                        >
+                            Fehler
+                        </button>
+                    </div>
+                </div>
+                <div className={styles.ridesListError} data-testid={`${testIdPrefix}-rides-error`}>{error}</div>
             </div>
         );
     }
 
     return (
-        <div className={styles.ridesList} data-testid={`${testIdPrefix}-rides-list`}>
-            {enrichedRides.map((ride, index) => {
-                // Check ob User bereits Fahrer oder Mitfahrer ist
-                const isUserDriverOfThisRide = ride.driverId === currentUserId;
-                const isUserPassengerOfThisRide = ride.passengers.some((p) => p.passengerId === currentUserId);
+        <div>
+            <div className={pageStyles.summaryHeader}>
+                <h2 className={pageStyles.summaryTitle}>Fahrten-Übersicht</h2>
+                <div className={pageStyles.summaryActions}>
+                    <button
+                        data-testid="md-create-ride"
+                        onClick={handleShowCreateForm}
+                        disabled={hasExistingRide || isParticipating || loading}
+                        title={
+                            hasExistingRide
+                                ? "Sie haben bereits eine Fahrt für diesen Spieltag angeboten"
+                                : isParticipating
+                                ? "Sie können keine eigene Fahrt anbieten, da Sie bereits als Mitfahrer angemeldet sind"
+                                : "Neue Fahrt anbieten"
+                        }
+                        className={pageStyles.headerActionButton}
+                        style={{
+                            backgroundColor: hasExistingRide || isParticipating ? "#9ca3af" : undefined,
+                            cursor: hasExistingRide || isParticipating ? "not-allowed" : "pointer",
+                            opacity: hasExistingRide || isParticipating ? 0.7 : 1,
+                            position: "relative"
+                        }}
+                    >
+                        {loading ? "Überprüfe..." : hasExistingRide ? "Bereits angeboten" : isParticipating ? "Als Mitfahrer angemeldet" : "+ Fahrt anbieten"}
+                    </button>
 
-                return (
-                    <RideCard
-                        key={ride.id}
-                        ride={ride}
-                        matchDate={matchDate}
-                        rideIndex={index}
-                        isUserDriverOfThisRide={isUserDriverOfThisRide}
-                        isUserPassengerOfThisRide={isUserPassengerOfThisRide}
-                        hasExistingRide={hasExistingRide}
-                        isParticipating={isParticipating}
-                        onJoinRide={handleJoinRide}
-                        onLeaveRide={handleLeaveRide}
-                        onRideUpdated={handleRideUpdated}
-                    />
-                );
-            })}
+                    {showExistingRideWarning && (
+                        <div
+                            className={pageStyles.warningAlert}
+                            style={{
+                                position: "absolute",
+                                top: "calc(100% + 8px)",
+                                right: "0",
+                                fontSize: "0.875rem",
+                                boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                                zIndex: 10,
+                                maxWidth: "300px",
+                                whiteSpace: "normal",
+                            }}
+                        >
+                            {hasExistingRide
+                                ? "Sie haben bereits eine Fahrt für diesen Spieltag angeboten"
+                                : "Sie können keine eigene Fahrt anbieten, da Sie bereits als Mitfahrer angemeldet sind"}
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {enrichedRides.length === 0 ? (
+                <div className={styles.ridesListEmpty} data-testid={`${testIdPrefix}-rides-empty`}>
+                    Noch keine Fahrten erstellt.
+                    {!hasExistingRide && !isParticipating && (
+                        <>
+                            <br />
+                            Erstelle die erste Fahrt!
+                        </>
+                    )}
+                </div>
+            ) : (
+                <div className={styles.ridesList} data-testid={`${testIdPrefix}-rides-list`}>
+                    {enrichedRides.map((ride, index) => {
+                        // Check ob User bereits Fahrer oder Mitfahrer ist
+                        const isUserDriverOfThisRide = ride.driverId === currentUserId;
+                        const isUserPassengerOfThisRide = ride.passengers.some((p) => p.passengerId === currentUserId);
+
+                        return (
+                            <RideCard
+                                key={ride.id}
+                                ride={ride}
+                                matchDate={matchDate}
+                                rideIndex={index}
+                                isUserDriverOfThisRide={isUserDriverOfThisRide}
+                                isUserPassengerOfThisRide={isUserPassengerOfThisRide}
+                                hasExistingRide={hasExistingRide}
+                                isParticipating={isParticipating}
+                                onJoinRide={handleJoinRide}
+                                onLeaveRide={handleLeaveRide}
+                                onRideUpdated={handleRideUpdated}
+                            />
+                        );
+                    })}
+                </div>
+            )}
+
+            {/* Modal für CreateRideForm */}
+            <Modal isOpen={showCreateForm} onClose={handleCancelCreate} title="Fahrt anbieten" maxWidth="md">
+                <CreateRideForm matchId={matchId} onRideCreated={handleRideCreated} onCancel={handleCancelCreate} />
+            </Modal>
         </div>
     );
 }

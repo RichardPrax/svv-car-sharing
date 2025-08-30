@@ -12,13 +12,11 @@ export interface EditRideData {
 interface UseEditRideProps {
     ride: RideWithDetails;
     onSuccess: () => void;
-    onDelete: () => void;
 }
 
-export function useEditRide({ ride, onSuccess, onDelete }: UseEditRideProps) {
+export function useEditRide({ ride, onSuccess }: UseEditRideProps) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [formData, setFormData] = useState<EditRideData>({
         departureTime: (() => {
             const date = new Date(ride.departureTime);
@@ -83,41 +81,12 @@ export function useEditRide({ ride, onSuccess, onDelete }: UseEditRideProps) {
         }
     };
 
-    const handleDeleteConfirm = async () => {
-        setLoading(true);
-        setError(null);
-
-        try {
-            const response = await fetch(`/api/rides/${ride.id}`, {
-                method: "DELETE",
-            });
-
-            if (!response.ok) {
-                throw new Error("Fehler beim Löschen der Fahrt");
-            }
-
-            setShowDeleteConfirm(false);
-            onDelete();
-            return { success: true };
-        } catch (err) {
-            console.error("Error deleting ride:", err);
-            const errorMessage = "Ein unerwarteter Fehler ist aufgetreten";
-            setError(errorMessage);
-            return { error: errorMessage };
-        } finally {
-            setLoading(false);
-        }
-    };
-
     return {
         formData,
         loading,
         error,
-        showDeleteConfirm,
         handleChange,
         handleSubmit,
-        setShowDeleteConfirm,
-        handleDeleteConfirm,
     };
 }
 

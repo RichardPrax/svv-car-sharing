@@ -190,6 +190,24 @@
     border-color: var(--text-accent);
 }
 
+.deleteButton {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    background-color: var(--card-background);
+    border: 1px solid var(--card-border);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    margin-left: var(--spacing-xs);
+}
+
+.deleteButton:hover {
+    background-color: var(--background);
+    border-color: var(--text-accent);
+}
+
 .joinButton {
     padding: var(--spacing-xs) var(--spacing-sm);
     border: none;
