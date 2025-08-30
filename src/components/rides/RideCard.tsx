@@ -89,11 +89,12 @@ export default function RideCard({
     return (
         <>
             <div className={styles.rideCard} data-testid={testIdPrefix}>
-                <RideDetails ride={ride} isRideFull={isRideFull()} />
+                <RideDetails ride={ride} isRideFull={isRideFull()} testIdPrefix={testIdPrefix} />
 
                 <RidePassengers 
                     passengerCount={ride.passengerCount} 
-                    passengerNames={ride.passengerNames} 
+                    passengerNames={ride.passengerNames}
+                    testIdPrefix={testIdPrefix}
                 />
 
                 {ride.additionalInfo && (
@@ -108,6 +109,7 @@ export default function RideCard({
                     isRideFull={isRideFull()}
                     isUserDriver={hasExistingRide}
                     isUserParticipating={isParticipating}
+                    testIdPrefix={testIdPrefix}
                     onEdit={handleEditRide}
                     onDelete={handleDeleteRide}
                     onJoin={() => onJoinRide(ride.id)}
@@ -121,7 +123,7 @@ export default function RideCard({
                 onClose={handleCancelEdit} 
                 title="Fahrt bearbeiten" 
                 maxWidth="md"
-                data-testid={`${testIdPrefix}-edit-modal`}
+                data-testid={`md-edit-ride-${rideIndex}-modal`}
             >
                 <EditRideForm ride={ride} onRideUpdated={handleRideUpdated} onCancel={handleCancelEdit} />
             </Modal>

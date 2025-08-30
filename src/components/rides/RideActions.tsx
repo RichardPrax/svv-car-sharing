@@ -8,13 +8,14 @@ interface RideActionsProps {
     isRideFull: boolean;
     isUserDriver: boolean;
     isUserParticipating: boolean;
+    testIdPrefix?: string;
     onEdit: () => void;
     onDelete: () => void;
     onJoin: () => void;
     onLeave: () => void;
 }
 
-export default function RideActions({ isOwnRide, isUserInRide, isRideFull, isUserDriver, isUserParticipating, onEdit, onDelete, onJoin, onLeave }: RideActionsProps) {
+export default function RideActions({ isOwnRide, isUserInRide, isRideFull, isUserDriver, isUserParticipating, testIdPrefix, onEdit, onDelete, onJoin, onLeave }: RideActionsProps) {
     // Bestimme, ob der "Mitfahren" Button deaktiviert werden soll
     // isUserDriver bedeutet hier: "Bietet der User bereits eine Fahrt für diesen Spieltag an"
     // isUserParticipating bedeutet: "Ist der User bereits Mitfahrer in einer anderen Fahrt"
@@ -40,11 +41,11 @@ export default function RideActions({ isOwnRide, isUserInRide, isRideFull, isUse
                 {isOwnRide && (
                     <>
                         <span className={styles.ownRideIndicator}>Ihre Fahrt</span>
-                        <button onClick={onEdit} className={styles.editButton}>
+                        <button onClick={onEdit} className={styles.editButton} data-testid={testIdPrefix ? `${testIdPrefix}-edit` : undefined}>
                             <Icon name="edit" size={16} color="currentColor" />
                             Bearbeiten
                         </button>
-                        <button onClick={onDelete} className={styles.deleteButton} title="Fahrt löschen">
+                        <button onClick={onDelete} className={styles.deleteButton} title="Fahrt löschen" data-testid={testIdPrefix ? `${testIdPrefix}-delete` : undefined}>
                             <Icon name="delete" size={16} color="currentColor" />
                             Löschen
                         </button>
@@ -55,7 +56,7 @@ export default function RideActions({ isOwnRide, isUserInRide, isRideFull, isUse
                 {!isOwnRide && (
                     <>
                         {isUserInRide ? (
-                            <button onClick={onLeave} className={styles.leaveButton}>
+                            <button onClick={onLeave} className={styles.leaveButton} data-testid={testIdPrefix ? `${testIdPrefix}-leave` : undefined}>
                                 Aussteigen
                             </button>
                         ) : (
@@ -64,6 +65,7 @@ export default function RideActions({ isOwnRide, isUserInRide, isRideFull, isUse
                                 disabled={!canJoin}
                                 title={getJoinButtonTitle()}
                                 className={`${styles.joinButton} ${canJoin ? styles.joinButtonEnabled : styles.joinButtonDisabled}`}
+                                data-testid={testIdPrefix ? `${testIdPrefix}-join` : undefined}
                             >
                                 {getJoinButtonText()}
                             </button>
