@@ -104,6 +104,11 @@ md-{element}
 | Position eingeben | `md-join-info-position` | `md-join-info-position` | Eingabefeld für Spielposition |
 | Teilnahme bestätigen | `md-join-info-submit` | `md-join-info-submit` | Button zum Bestätigen der Teilnahme |
 | Teilnahme abbrechen | `md-join-info-cancel` | `md-join-info-cancel` | Button zum Abbrechen der Teilnahme |
+| Fahrt löschen Modal | `md-ride-{index}-delete-modal` | `md-ride-0-delete-modal` | Modal zum Bestätigen der Fahrt-Löschung |
+| Fahrt löschen bestätigen | `delete-ride-confirm` | `delete-ride-confirm` | Button zum endgültigen Löschen der Fahrt |
+| Fahrt löschen abbrechen | `delete-ride-cancel` | `delete-ride-cancel` | Button zum Abbrechen der Löschung |
+| Mitbring löschen bestätigen | `delete-bring-item-confirm` | `delete-bring-item-confirm` | Button zum endgültigen Löschen der BringItem Sache |
+| Mitbring löschen abbrechen | `delete-bringt-item-cancel` | `delete-bring-item-cancel` | Button zum Abbrechen der Löschung |
 
 ## Kontextbewusste Strategie
 
@@ -162,59 +167,23 @@ const testId = "md-ride-0";
 
 ## Verwendungsbeispiele
 
-### Ride Details Testing
+### Fahrt löschen Testing
 
 ```javascript
-// Fahrt-Details validieren
-const rideTitle = await page.getByTestId('md-ride-0-title');
-await expect(rideTitle).toContainText('14:00 Uhr');
+// Fahrt löschen Dialog öffnen
+await page.getByTestId('md-ride-0-delete').click();
 
-const rideLocation = await page.getByTestId('md-ride-0-location');
-await expect(rideLocation).toContainText('Hauptbahnhof');
+// Delete Modal sollte erscheinen
+await expect(page.getByTestId('md-ride-0-delete-modal')).toBeVisible();
 
-const rideDriver = await page.getByTestId('md-ride-0-driver');
-await expect(rideDriver).toContainText('Max Mustermann');
+// Löschung abbrechen
+await page.getByTestId('delete-ride-cancel').click();
+await expect(page.getByTestId('md-ride-0-delete-modal')).not.toBeVisible();
 
-const rideSeats = await page.getByTestId('md-ride-0-seats');
-await expect(rideSeats).toContainText('2/4 Plätze');
+// Fahrt endgültig löschen
+await page.getByTestId('md-ride-0-delete').click();
+await page.getByTestId('delete-ride-confirm').click();
 
-// Zusätzliche Informationen prüfen (falls vorhanden)
-const additionalInfo = await page.getByTestId('md-ride-0-additional-info');
-await expect(additionalInfo).toContainText('Rückfahrt um 18:00');
-```
-
-### Mitfahrer Testing
-
-```javascript
-// Mitfahrer-Liste validieren
-const passengersContainer = await page.getByTestId('md-ride-0-passengers');
-await expect(passengersContainer).toBeVisible();
-
-const passengersLabel = await page.getByTestId('md-ride-0-passengers-label');
-await expect(passengersLabel).toContainText('Mitfahrer (2)');
-
-// Einzelne Mitfahrer prüfen
-const firstPassenger = await page.getByTestId('md-ride-0-passenger-0');
-await expect(firstPassenger).toContainText('Anna Schmidt');
-
-const secondPassenger = await page.getByTestId('md-ride-0-passenger-1');
-await expect(secondPassenger).toContainText('Tom Weber');
-```
-
-### Fahrt Update Testing
-
-```javascript
-// Fahrt bearbeiten und Änderungen validieren
-await page.getByTestId('md-ride-0-edit').click();
-
-// Im Edit-Modal Änderungen vornehmen
-await page.getByTestId('edit-ride-departure-time').fill('15:30');
-await page.getByTestId('edit-ride-departure-location').fill('Stadtzentrum');
-await page.getByTestId('edit-ride-additional-info').fill('Neue Rückfahrt um 19:00');
-await page.getByTestId('edit-ride-submit').click();
-
-// Validierung der Änderungen
-await expect(page.getByTestId('md-ride-0-title')).toContainText('15:30 Uhr');
-await expect(page.getByTestId('md-ride-0-location')).toContainText('Stadtzentrum');
-await expect(page.getByTestId('md-ride-0-additional-info')).toContainText('Neue Rückfahrt um 19:00');
+// Validierung dass Fahrt entfernt wurde
+await expect(page.getByTestId('md-ride-0')).not.toBeVisible();
 ```

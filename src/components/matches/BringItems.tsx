@@ -6,15 +6,13 @@ import { CreateBringItemForm } from "@/components/forms";
 import { DeleteBringItemConfirm } from "@/components/matches";
 import { Modal } from "@/components/ui";
 import { BringItem } from "@/entities/BringItem";
-import { formatDateForId } from "@/utils/dateTime";
 import styles from "./BringItems.module.css";
 
 interface BringItemsProps {
     matchId: string;
-    matchDate: string | Date;
 }
 
-export default function BringItems({ matchId, matchDate }: BringItemsProps) {
+export default function BringItems({ matchId }: BringItemsProps) {
     const { user } = useOptimizedAuth();
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const { bringItems, loading, error, deleteBringItem } = useBringItems({ matchId, refreshTrigger });

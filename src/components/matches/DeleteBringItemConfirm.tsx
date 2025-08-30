@@ -17,10 +17,10 @@ export default function DeleteBringItemConfirm({ itemName, loading, onConfirm, o
                 Möchten Sie &quot;<strong>{itemName}</strong>&quot; wirklich aus der Mitbringen-Liste entfernen? Diese Aktion kann nicht rückgängig gemacht werden.
             </p>
             <div className={styles.deleteConfirmActions}>
-                <Button variant="secondary" onClick={onCancel} disabled={loading} className={styles.deleteConfirmButton}>
+                <Button variant="secondary" onClick={onCancel} disabled={loading} className={styles.deleteConfirmButton} data-testid="delete-bring-item-cancel">
                     Abbrechen
                 </Button>
-                <Button variant="danger" onClick={onConfirm} disabled={loading} className={styles.deleteConfirmButtonDanger}>
+                <Button variant="danger" onClick={onConfirm} disabled={loading} className={styles.deleteConfirmButtonDanger} data-testid="delete-bring-item-confirm">
                     {loading ? "Wird gelöscht..." : "Endgültig löschen"}
                 </Button>
             </div>

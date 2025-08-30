@@ -148,7 +148,7 @@ export default function MatchDetailPage() {
 
                     <TabPanel value="bring-items">
                         <div data-testid="md-content-bring-items">
-                            <BringItems matchId={match.id} matchDate={match.date} />
+                            <BringItems matchId={match.id} />
                         </div>
                     </TabPanel>
                 </Tabs>

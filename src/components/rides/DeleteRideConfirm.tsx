@@ -13,13 +13,13 @@ export default function DeleteRideConfirm({ loading, onConfirm, onCancel }: Dele
         <div className={styles.deleteConfirm}>
             <h4 className={styles.deleteConfirmTitle}>Fahrt wirklich löschen?</h4>
             <p className={styles.deleteConfirmMessage}>
-                Alle angemeldeten Mitfahrer werden automatisch ausgetragen. Diese Aktion kann nicht rückgängig gemacht werden.
+                Diese Aktion kann nicht rückgängig gemacht werden.
             </p>
             <div className={styles.deleteConfirmActions}>
-                <Button variant="secondary" onClick={onCancel} disabled={loading} className={styles.deleteConfirmButton}>
+                <Button variant="secondary" onClick={onCancel} disabled={loading} className={styles.deleteConfirmButton} data-testid="delete-ride-cancel">
                     Abbrechen
                 </Button>
-                <Button variant="danger" onClick={onConfirm} disabled={loading} className={styles.deleteConfirmButtonDanger}>
+                <Button variant="danger" onClick={onConfirm} disabled={loading} className={styles.deleteConfirmButtonDanger} data-testid="delete-ride-confirm">
                     {loading ? "Wird gelöscht..." : "Endgültig löschen"}
                 </Button>
             </div>
