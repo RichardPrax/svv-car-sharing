@@ -10,13 +10,24 @@ interface AuthFieldProps {
     onChange: (value: string) => void;
     required?: boolean;
     hasError?: boolean;
+    testId?: string;
 }
 
-export default function AuthField({ label, type = "text", placeholder, value, onChange, required = false, hasError = false }: AuthFieldProps) {
+export default function AuthField({ label, type = "text", placeholder, value, onChange, required = false, hasError = false, testId }: AuthFieldProps) {
+    
+    console.log("AuthField render with testId:", testId);
     return (
         <div>
             <label className={styles.authLabel}>{label}</label>
-            <Input type={type} placeholder={placeholder} value={value} onChange={(e) => onChange(e.target.value)} required={required} variant={hasError ? "error" : "default"} />
+            <Input 
+                type={type} 
+                placeholder={placeholder} 
+                value={value} 
+                onChange={(e) => onChange(e.target.value)} 
+                required={required} 
+                variant={hasError ? "error" : "default"}
+                data-testid={testId}
+            />
         </div>
     );
 }

@@ -106,6 +106,10 @@ md-{element}
 | Mitbringen löschen | `md-delete-bring-item-{index}` | `md-delete-bring-item-0` | Button zum Löschen eines Mitbring-Items |
 | Mitbring löschen bestätigen | `delete-bring-item-confirm` | `delete-bring-item-confirm` | Button zum endgültigen Löschen der BringItem Sache |
 | Mitbring löschen abbrechen | `delete-bringt-item-cancel` | `delete-bring-item-cancel` | Button zum Abbrechen der Löschung |
+| **Authentication** | **Login** | | |
+| Login E-Mail Feld | `login-email` | `login-email` | Eingabefeld für E-Mail-Adresse |
+| Login Passwort Feld | `login-password` | `login-password` | Eingabefeld für Passwort |
+| Login Submit Button | `login-submit` | `login-submit` | Button zum Absenden des Login-Formulars |
 
 ## Hinweise
 

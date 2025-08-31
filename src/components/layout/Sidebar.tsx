@@ -158,7 +158,7 @@ const Sidebar = () => {
                         </div>
                     )}
 
-                    <button onClick={handleLogout} disabled={loading} className={styles.logoutButton} title={!isHovered ? "Abmelden" : undefined}>
+                    <button onClick={handleLogout} disabled={loading} className={styles.logoutButton} title={!isHovered ? "Abmelden" : undefined} data-testid="logout-button">
                         <span className={styles.logoutIcon}>
                             <Icon name="logout" size={20} />
                         </span>

@@ -27,7 +27,8 @@ function LoginFormWithToggle({ onToggleToRegister }: { onToggleToRegister: () =>
                     value={email} 
                     onChange={setEmail} 
                     required 
-                    hasError={!!error} 
+                    hasError={!!error}
+                    testId="login-email"
                 />
 
                 <AuthField 
@@ -37,7 +38,8 @@ function LoginFormWithToggle({ onToggleToRegister }: { onToggleToRegister: () =>
                     value={password} 
                     onChange={setPassword} 
                     required 
-                    hasError={!!error} 
+                    hasError={!!error}
+                    testId="login-password"
                 />
 
                 <AuthError message={error} />
@@ -48,6 +50,7 @@ function LoginFormWithToggle({ onToggleToRegister }: { onToggleToRegister: () =>
                     disabled={!email || !password} 
                     size="large" 
                     className={styles.loginButton}
+                    testId="login-submit"
                 >
                     Anmelden
                 </Button>

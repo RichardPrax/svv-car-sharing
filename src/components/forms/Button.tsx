@@ -6,9 +6,10 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: "primary" | "secondary" | "danger";
     size?: "small" | "medium" | "large";
     loading?: boolean;
+    testId?: string;
 }
 
-export default function Button({ variant = "primary", size = "medium", loading = false, disabled, children, className, ...props }: ButtonProps) {
+export default function Button({ variant = "primary", size = "medium", loading = false, disabled, children, className, testId, ...props }: ButtonProps) {
     const isDisabled = disabled || loading;
 
     const buttonClasses = [
@@ -22,7 +23,12 @@ export default function Button({ variant = "primary", size = "medium", loading =
         .join(" ");
 
     return (
-        <button className={buttonClasses} disabled={isDisabled} {...props}>
+        <button 
+            className={buttonClasses} 
+            disabled={isDisabled} 
+            data-testid={testId}
+            {...props}
+        >
             {loading ? "Lädt..." : children}
         </button>
     );
