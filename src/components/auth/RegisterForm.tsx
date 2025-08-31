@@ -30,14 +30,11 @@ export default function RegisterForm({ onToggleToLogin }: RegisterFormProps) {
 
     if (success) {
         return (
-            <AuthContainer>
-                <AuthSuccess 
-                    title="Registrierung erfolgreich!"
-                    message="Ihre Registrierung war erfolgreich. Sie können sich jetzt anmelden."
-                    buttonText="Zum Login"
-                    onButtonClick={onToggleToLogin}
-                />
-            </AuthContainer>
+            <AuthSuccess 
+                title="Registrierung erfolgreich!"
+                message="Bitte überprüfen Sie Ihr E-Mail-Postfach und klicken Sie auf den Bestätigungslink, um Ihr Konto zu aktivieren."
+                submessage="Sobald Sie Ihr Konto bestätigt haben, werden Sie automatisch angemeldet."
+            />
         );
     }
 
