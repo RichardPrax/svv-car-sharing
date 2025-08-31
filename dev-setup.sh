@@ -228,26 +228,7 @@ setup_local() {
     print_status "You can now run: npm run dev:local"
 }
 
-# Setup production environment
-setup_production() {
-    print_header "Setting up production environment..."
-    
-    # Check if production env file exists
-    print_progress "Checking production environment configuration..."
-    if [ ! -f ".env.production" ]; then
-        print_error ".env.production file not found!"
-        print_status "Please create .env.production with your production variables."
-        exit 1
-    fi
-    print_debug ".env.production file found"
-    
-    # Generate Prisma client with production env
-    print_progress "Generating Prisma client for production environment..."
-    run_command "Prisma generate (production)" "npm run db:production:generate"
-    
-    print_status "Production environment setup complete!"
-    print_status "You can now run: npm run build:production"
-}
+
 
 # Clean up function
 cleanup() {
@@ -503,11 +484,7 @@ show_status() {
         echo "  - Local env file: ❌ missing"
     fi
     
-    if [ -f ".env.production" ]; then
-        echo "  - Production env file: ✅ exists"
-    else
-        echo "  - Production env file: ❌ missing"
-    fi
+
     
     echo ""
     echo "🔧 Supabase Status:"
@@ -542,14 +519,13 @@ show_menu() {
     echo "====================================="
     echo ""
     echo "1) Setup Local Development Environment"
-    echo "2) Setup Production Environment"
-    echo "3) Show Status"
-    echo "4) Get Supabase Keys"
-    echo "5) Cleanup"
-    echo "6) 🔥 Complete Reset (DESTROYS ALL DATA)"
-    echo "7) Exit"
+    echo "2) Show Status"
+    echo "3) Get Supabase Keys"
+    echo "4) Cleanup"
+    echo "5) 🔥 Complete Reset (DESTROYS ALL DATA)"
+    echo "6) Exit"
     echo ""
-    read -p "Choose an option [1-7]: " choice
+    read -p "Choose an option [1-6]: " choice
     
     case $choice in
         1)
@@ -557,27 +533,23 @@ show_menu() {
             setup_local
             ;;
         2)
-            check_requirements
-            setup_production
-            ;;
-        3)
             show_status
             ;;
-        4)
+        3)
             get_supabase_keys
             ;;
-        5)
+        4)
             cleanup
             ;;
-        6)
+        5)
             reset_all
             ;;
-        7)
+        6)
             print_status "Goodbye!"
             exit 0
             ;;
         *)
-            print_error "Invalid option. Please choose 1-7."
+            print_error "Invalid option. Please choose 1-6."
             show_menu
             ;;
     esac
@@ -590,10 +562,7 @@ if [ $# -gt 0 ]; then
             check_requirements
             setup_local
             ;;
-        "production")
-            check_requirements
-            setup_production
-            ;;
+
         "status")
             show_status
             ;;
@@ -608,7 +577,7 @@ if [ $# -gt 0 ]; then
             ;;
         *)
             print_error "Unknown command: $1"
-            echo "Usage: $0 [local|production|status|cleanup|reset|keys]"
+            echo "Usage: $0 [local|status|cleanup|reset|keys]"
             echo "Debug mode: DEBUG=true $0 [command]"
             exit 1
             ;;

@@ -4,17 +4,32 @@ Eine moderne Web-App zur Koordination und Absprache des SVV Weimar Volleyball-Te
 
 ## 🚀 Sofort loslegen
 
+### Voraussetzungen
+
+-   **Node.js** (Version 18+) - [Download](https://nodejs.org/)
+-   **Docker Desktop** - [Download](https://www.docker.com/products/docker-desktop/)
+-   **Git** und einen **Code-Editor** (z.B. VS Code)
+
+### 5-Minuten Setup
+
+1. **Projekt herunterladen**
 ```bash
 git clone <repository-url>
 cd svv-car-sharing
 npm install
+```
+
+2. **Docker Desktop starten** - Öffne Docker Desktop und warte bis es bereit ist (grünes Symbol)
+
+3. **Alles automatisch einrichten**
+```bash
 ./dev-setup.sh local
 npm run dev:local
 ```
 
 **Fertig!** 🎉 App läuft unter `http://localhost:3000`
 
-## � Worum geht's?
+## 🎯 Worum geht's?
 
 Diese App hilft dabei:
 
@@ -29,6 +44,31 @@ Bald verfügbar:
 -   **Abstimmung Spieltage** - Wer erfüllt welche Aufgabe? Wer bringt was mit?
 -   **Strafenverwaltung** - Führen und Pflegen eines Strafenkataloges inklusive der Strafen (möglicherweise direkt begleichbar über PayPal)
 
+## 🔧 Was passiert beim Setup?
+
+Das Setup-Script macht automatisch:
+
+1. **Lokale Datenbank starten**
+2. **Datenbank-Schema einrichten**
+3. **Spielplan importieren**
+4. **Testdaten erstellen**
+
+### 🔑 Testnutzer
+
+Das Setup erstellt automatisch 7 vollständige Testnutzer:
+
+-   **Emails**: `max.mustermann@test.com`, `anna.schmidt@test.com`, etc.
+-   **Passwort für alle**: `test1234`
+-   **Funktionen**: Login, Profil, Fahrten erstellen/teilnehmen
+
+## 📱 Die App verwenden
+
+Nach dem Setup:
+
+-   **Hauptseite**: `http://localhost:3000` - Startseite mit Kacheln zur Navigation
+-   **Login**: Mit den Testbenutzern anmelden
+-   **Admin**: `http://localhost:54323` - Supabase Studio (Datenbank)
+
 ## 🛠️ Tech Stack
 
 -   **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS
@@ -37,7 +77,15 @@ Bald verfügbar:
 -   **Auth & Hosting**: Supabase
 -   **Development**: Docker (lokale DB), ESLint
 
-## ⚡ Wichtige Befehle
+## ⚡ Entwicklung & Befehle
+# Wichtige Ordner:
+# src/pages/       → Webseiten
+# src/components/  → UI-Bausteine
+# src/lib/         → Backend-Logic
+# prisma/          → Datenbank-Schema
+```
+
+### Wichtige Befehle
 
 ```bash
 # Entwicklung
@@ -46,8 +94,8 @@ npm run dev:local           # Lokaler Dev-Server
 npm run db:studio           # Datenbank GUI öffnen
 
 # Wartung
-./dev-setup.sh cleanup      # Aufräumen
-./dev-setup.sh reset        # Komplett neu starten
+./dev-setup.sh cleanup      # Aufräumen (behält Daten)
+./dev-setup.sh reset        # ⚠️ Komplett neu starten (löscht Daten!)
 ```
 
 ## 📁 Projekt-Übersicht
@@ -62,16 +110,22 @@ src/
 prisma/            # Datenbank Schema
 ```
 
-## 🧑‍ Für Entwickler
+## 🆘 Problemlösung
 
-Das Setup-Script macht alles automatisch:
+**"Port bereits belegt"**
+```bash
+lsof -ti:3000 | xargs kill
+```
 
--   Startet lokale Supabase-Datenbank
--   Richtet Schema und Testdaten ein
--   Erstellt Testbenutzer
--   Importiert Spielplan-Daten
+**"Docker-Fehler"**  
+→ Docker Desktop starten und warten
+
+**"Setup funktioniert nicht"**
+```bash
+chmod +x dev-setup.sh
+./dev-setup.sh reset  # Neustart
+```
 
 ---
 
-_Fragen? Schau in `GETTING_STARTED.md` für eine ausführlichere Anleitung._
-
+**Viel Spaß beim Entwickeln!** 🚀
