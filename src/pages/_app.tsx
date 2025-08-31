@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
+import { Analytics } from '@vercel/analytics/react';
 import { AuthProvider } from "@/hooks/auth/useOptimizedAuth";
 import { UserProfileProvider } from "@/hooks/auth/useUserProfileCache";
 import OptimizedAuthGuard from "../components/auth/OptimizedAuthGuard";
@@ -31,6 +32,7 @@ export default function App({ Component, pageProps, router }: AppProps) {
         <AuthProvider>
             <UserProfileProvider>
                 <AppContent Component={Component} pageProps={pageProps} router={router} />
+                <Analytics />
             </UserProfileProvider>
         </AuthProvider>
     );
