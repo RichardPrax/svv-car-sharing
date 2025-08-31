@@ -106,6 +106,12 @@ md-{element}
 | Mitbringen löschen | `md-delete-bring-item-{index}` | `md-delete-bring-item-0` | Button zum Löschen eines Mitbring-Items |
 | Mitbring löschen bestätigen | `delete-bring-item-confirm` | `delete-bring-item-confirm` | Button zum endgültigen Löschen der BringItem Sache |
 | Mitbring löschen abbrechen | `delete-bringt-item-cancel` | `delete-bring-item-cancel` | Button zum Abbrechen der Löschung |
+| **Homepage** | **Kategorien** | | |
+| Training Kategorie | `category-training` | `category-training` | Kategorie-Karte für Training |
+| Spieltage Kategorie | `category-matches` | `category-matches` | Kategorie-Karte für Spieltage |
+| Strafen Kategorie | `category-penalties` | `category-penalties` | Kategorie-Karte für Strafen |
+| Statistiken Kategorie | `category-statistics` | `category-statistics` | Kategorie-Karte für Statistiken |
+| Benutzer verwalten Kategorie | `category-user-management` | `category-user-management` | Kategorie-Karte für Benutzerverwaltung (nur für Admins) |
 | **Authentication** | **Login** | | |
 | Login E-Mail Feld | `login-email` | `login-email` | Eingabefeld für E-Mail-Adresse |
 | Login Passwort Feld | `login-password` | `login-password` | Eingabefeld für Passwort |

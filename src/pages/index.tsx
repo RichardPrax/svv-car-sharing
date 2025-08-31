@@ -81,19 +81,36 @@ export default function HomePage() {
                     {/* Kategorien Grid */}
                     <section>
                         <div className={styles.categoriesGrid}>
-                            {categories.map((category) => (
-                                <div key={category.title} onClick={() => handleCategoryClick(category.route)} className={styles.categoryCard}>
-                                    <div className={styles.categoryCardIcon}>
-                                        <Icon name={category.icon} size={32} color={category.color} />
-                                    </div>
-                                    <h3 className={styles.categoryCardTitle} style={{ color: category.color }}>
-                                        {category.title}
-                                    </h3>
-                                    <p className={styles.categoryCardDescription}>{category.description}</p>
+                            {categories.map((category) => {
+                                // Generate English test ID based on category title
+                                const titleToTestId: { [key: string]: string } = {
+                                    'Training': 'category-training',
+                                    'Spieltage': 'category-matches',
+                                    'Strafen': 'category-penalties',
+                                    'Statistiken': 'category-statistics',
+                                    'Benutzer verwalten': 'category-user-management'
+                                };
+                                const testId = titleToTestId[category.title] || `category-${category.title.toLowerCase().replace(/\s+/g, '-')}`;
+                                
+                                return (
+                                    <div 
+                                        key={category.title} 
+                                        onClick={() => handleCategoryClick(category.route)} 
+                                        className={styles.categoryCard}
+                                        data-testid={testId}
+                                    >
+                                        <div className={styles.categoryCardIcon}>
+                                            <Icon name={category.icon} size={32} color={category.color} />
+                                        </div>
+                                        <h3 className={styles.categoryCardTitle} style={{ color: category.color }}>
+                                            {category.title}
+                                        </h3>
+                                        <p className={styles.categoryCardDescription}>{category.description}</p>
 
-                                    <div className={styles.categoryCardDecorative} style={{ background: `linear-gradient(135deg, ${category.color}20, transparent)` }} />
-                                </div>
-                            ))}
+                                        <div className={styles.categoryCardDecorative} style={{ background: `linear-gradient(135deg, ${category.color}20, transparent)` }} />
+                                    </div>
+                                );
+                            })}
                         </div>
                     </section>
                 </div>
