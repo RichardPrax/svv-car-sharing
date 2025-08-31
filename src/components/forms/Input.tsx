@@ -9,9 +9,6 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export default function Input({ variant = "default", className, testId, ...props }: InputProps) {
     const inputClasses = [styles.input, variant === "error" && styles.inputError, className].filter(Boolean).join(" ");
-
-    console.log("Input render with testId:", testId);
-
     return <input className={inputClasses} data-testid={testId} {...props} />;
 }
 

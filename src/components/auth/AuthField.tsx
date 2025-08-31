@@ -14,8 +14,6 @@ interface AuthFieldProps {
 }
 
 export default function AuthField({ label, type = "text", placeholder, value, onChange, required = false, hasError = false, testId }: AuthFieldProps) {
-    
-    console.log("AuthField render with testId:", testId);
     return (
         <div>
             <label className={styles.authLabel}>{label}</label>

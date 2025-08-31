@@ -10,6 +10,7 @@ interface CategoryCard {
     route: string;
     icon: IconName;
     color: string;
+    testId: string;
 }
 
 export default function HomePage() {
@@ -24,6 +25,7 @@ export default function HomePage() {
             route: "/training",
             icon: "runner" as IconName,
             color: "#3B82F6",
+            testId: "category-training"
         },
         {
             title: "Spieltage",
@@ -31,6 +33,7 @@ export default function HomePage() {
             route: "/matches",
             icon: "volleyball" as IconName,
             color: "#10B981",
+            testId: "category-matches"
         },
         {
             title: "Strafen",
@@ -38,6 +41,7 @@ export default function HomePage() {
             route: "/penalties",
             icon: "scales" as IconName,
             color: "#EF4444",
+            testId: "category-penalties"
         },
         {
             title: "Statistiken",
@@ -45,6 +49,7 @@ export default function HomePage() {
             route: "/statistics",
             icon: "chart" as IconName,
             color: "#8B5CF6",
+            testId: "category-statistics"
         },
     ];
 
@@ -56,6 +61,7 @@ export default function HomePage() {
             route: "/admin/users",
             icon: "users" as IconName,
             color: "#F59E0B",
+            testId: "category-user-management"
         },
     ];
 
@@ -82,22 +88,12 @@ export default function HomePage() {
                     <section>
                         <div className={styles.categoriesGrid}>
                             {categories.map((category) => {
-                                // Generate English test ID based on category title
-                                const titleToTestId: { [key: string]: string } = {
-                                    'Training': 'category-training',
-                                    'Spieltage': 'category-matches',
-                                    'Strafen': 'category-penalties',
-                                    'Statistiken': 'category-statistics',
-                                    'Benutzer verwalten': 'category-user-management'
-                                };
-                                const testId = titleToTestId[category.title] || `category-${category.title.toLowerCase().replace(/\s+/g, '-')}`;
-                                
                                 return (
                                     <div 
                                         key={category.title} 
                                         onClick={() => handleCategoryClick(category.route)} 
                                         className={styles.categoryCard}
-                                        data-testid={testId}
+                                        data-testid={category.testId}
                                     >
                                         <div className={styles.categoryCardIcon}>
                                             <Icon name={category.icon} size={32} color={category.color} />
