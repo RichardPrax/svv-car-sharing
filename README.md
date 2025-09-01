@@ -2,130 +2,73 @@
 
 Eine moderne Web-App zur Koordination und Absprache des SVV Weimar Volleyball-Teams.
 
-## 🚀 Sofort loslegen
+## 🚀 Quick Start
 
-### Voraussetzungen
-
--   **Node.js** (Version 18+) - [Download](https://nodejs.org/)
--   **Docker Desktop** - [Download](https://www.docker.com/products/docker-desktop/)
--   **Git** und einen **Code-Editor** (z.B. VS Code)
-
-### 5-Minuten Setup
-
-1. **Projekt herunterladen**
+### Schnelles Setup
 ```bash
 git clone <repository-url>
 cd svv-car-sharing
 npm install
-```
-
-2. **Docker Desktop starten** - Öffne Docker Desktop und warte bis es bereit ist (grünes Symbol)
-
-3. **Alles automatisch einrichten**
-```bash
 ./dev-setup.sh local
 npm run dev:local
 ```
 
 **Fertig!** 🎉 App läuft unter `http://localhost:3000`
 
-## 🎯 Worum geht's?
+> **Detaillierte Setup-Anleitung**: [docs/setup-script.md](docs/setup-script.md)
 
-Diese App hilft dabei:
+## 🎯 Features
 
--   **Spieltage zu verwalten** - Automatischer Import aus CSV-Dateien
--   **Fahrgemeinschaften zu organisieren** - Wer fährt mit wem?
--   **Plätze zu koordinieren** - Freie Plätze und Mitfahrgelegenheiten
--   **Benutzer zu verwalten** - Einfache Anmeldung und Profile
+### Aktuelle Funktionen
+-   **Spieltage verwalten** - Automatischer Import und Übersicht
+-   **Fahrgemeinschaften** - Fahrten erstellen und beitreten
+-   **Benutzer-Verwaltung** - Profile und Rollensystem
+-   **Spiel-Teilnahme** - Zu-/Absagen für Spiele
 
-Bald verfügbar:
+### Geplante Features
+-   **Trainingsverwaltung** - Training-Teilnahme koordinieren
+-   **Mitbring-Organisation** - "Wer bringt was mit?"
+-   **Strafenverwaltung** - Katalog mit PayPal-Integration
 
--   **Trainingsverwaltung** - Zu-/Absagen von Spielern für das Training
--   **Abstimmung Spieltage** - Wer erfüllt welche Aufgabe? Wer bringt was mit?
--   **Strafenverwaltung** - Führen und Pflegen eines Strafenkataloges inklusive der Strafen (möglicherweise direkt begleichbar über PayPal)
+## � Dokumentation
 
-## 🔧 Was passiert beim Setup?
+| Thema | Beschreibung | Link |
+|-------|-------------|------|
+| **Setup & Installation** | Detaillierte Einrichtung | [setup-script.md](docs/setup-script.md) |
+| **API Endpunkte** | Vollständige API-Referenz | [api-endpoints.md](docs/api-endpoints.md) |
+| **Berechtigungen** | Rollen und Zugriffsrechte | [role-system.md](docs/role-system.md) |
+| **Authentifizierung** | Auth-System und Middleware | [auth-middleware-system.md](docs/auth-middleware-system.md) |
+| **Datenbank** | Schema und Setup | [database-setup.md](docs/database-setup.md) |
+| **Projekt-Struktur** | Code-Organisation | [project-structure.md](docs/project-structure.md) |
+| **Environment** | Konfiguration & Umgebungen | [environment-config.md](docs/environment-config.md) |
+| **Testing** | E2E Test-IDs | [e2e-test-ids.md](docs/e2e-test-ids.md) |
 
-Das Setup-Script macht automatisch:
+## 🔧 Entwicklung
 
-1. **Lokale Datenbank starten**
-2. **Datenbank-Schema einrichten**
-3. **Spielplan importieren**
-4. **Testdaten erstellen**
+### Wichtige Befehle
+```bash
+# Development
+npm run dev:local           # Lokaler Dev-Server
+./dev-setup.sh status       # Status prüfen
+npm run db:studio           # Datenbank GUI
 
-### 🔑 Testnutzer
+# Wartung
+./dev-setup.sh cleanup      # Services stoppen
+./dev-setup.sh reset        # ⚠️ Alles zurücksetzen
+```
 
-Das Setup erstellt automatisch 7 vollständige Testnutzer:
-
--   **Emails**: `max.mustermann@test.com`, `anna.schmidt@test.com`, etc.
--   **Passwort für alle**: `test1234`
--   **Funktionen**: Login, Profil, Fahrten erstellen/teilnehmen
-
-## 📱 Die App verwenden
-
-Nach dem Setup:
-
--   **Hauptseite**: `http://localhost:3000` - Startseite mit Kacheln zur Navigation
--   **Login**: Mit den Testbenutzern anmelden
--   **Admin**: `http://localhost:54323` - Supabase Studio (Datenbank)
+### Testnutzer
+- **Emails**: `max.mustermann@test.com`, `anna.schmidt@test.com`, etc.
+- **Passwort**: `test1234` (für alle)
 
 ## 🛠️ Tech Stack
 
--   **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS
--   **Backend**: Next.js API Routes
--   **Database**: PostgreSQL mit Prisma ORM
--   **Auth & Hosting**: Supabase
--   **Development**: Docker (lokale DB), ESLint
-
-## ⚡ Entwicklung & Befehle
-# Wichtige Ordner:
-# src/pages/       → Webseiten
-# src/components/  → UI-Bausteine
-# src/lib/         → Backend-Logic
-# prisma/          → Datenbank-Schema
-```
-
-### Wichtige Befehle
-
-```bash
-# Entwicklung
-npm run dev:local           # Lokaler Dev-Server
-./dev-setup.sh status       # Status aller Services
-npm run db:studio           # Datenbank GUI öffnen
-
-# Wartung
-./dev-setup.sh cleanup      # Aufräumen (behält Daten)
-./dev-setup.sh reset        # ⚠️ Komplett neu starten (löscht Daten!)
-```
-
-## 📁 Projekt-Übersicht
-
-```
-src/
-├── components/    # UI-Komponenten (Auth, Rides, Matches)
-├── pages/         # Next.js Seiten und API Routes
-├── hooks/         # Custom React Hooks
-└── lib/           # Utilities und Backend-Logic
-
-prisma/            # Datenbank Schema
-```
-
-## 🆘 Problemlösung
-
-**"Port bereits belegt"**
-```bash
-lsof -ti:3000 | xargs kill
-```
-
-**"Docker-Fehler"**  
-→ Docker Desktop starten und warten
-
-**"Setup funktioniert nicht"**
-```bash
-chmod +x dev-setup.sh
-./dev-setup.sh reset  # Neustart
-```
+- **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS
+- **Backend**: Next.js API Routes, Prisma ORM
+- **Database**: PostgreSQL
+- **Auth**: Supabase
+- **Development**: Docker
 
 ---
 
-**Viel Spaß beim Entwickeln!** 🚀
+**Los geht's!** 🚀 Weitere Details in der [Dokumentation](docs/)

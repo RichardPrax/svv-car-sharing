@@ -1,44 +1,82 @@
 # Rollensystem Dokumentation
 
-## Übersicht
+## Überblick
 
-Das SVV Car-Sharing App verfügt über ein rollenbasiertes Berechtigungssystem, das verschiedene Zugriffsebenen für Benutzer ermöglicht.
+Das SVV Car Sharing System verwendet ein rollenbasiertes Berechtigungssystem, das sowohl Frontend-UX als auch Backend-Sicherheit gewährleistet. Die Rollen sind hierarchisch organisiert und ermöglichen eine granulare Kontrolle über Systemfunktionen.
 
 ## Verfügbare Rollen
 
 ```typescript
 enum UserRole {
-    USER           // Standard-Benutzer
-    ADMIN          // Administrator (volle Berechtigung)
-    TRAINER        // Trainer (Admin-Zugriff)
-    PENALTY_MASTER // Strafenmeister (zukünftig)
-    PLAYER         // Spieler (zukünftig)
+    USER           = "USER"           // Standard-Benutzer
+    ADMIN          = "ADMIN"          // Administrator (volle Berechtigung)  
+    TRAINER        = "TRAINER"        // Trainer (erweiterte Berechtigung)
+    PENALTY_MASTER = "PENALTY_MASTER" // Strafenmeister (geplant)
+    PLAYER         = "PLAYER"         // Spieler (geplant)
 }
 ```
 
-## Aktuell implementierte Berechtigungen
+### Rollen-Details
 
--   **USER**: Grundfunktionen (Training, Spieltage, etc.)
--   **ADMIN/TRAINER**: Zusätzlich Nutzerverwaltung und Admin-Features
+| Rolle | Beschreibung | Berechtigungen | Status |
+|-------|-------------|----------------|--------|
+| **USER** | Standard-Mitglied | • Fahrt-Teilnahme<br>• Spiel-Teilnahme<br>• Eigene Daten einsehen | ✅ Aktiv |
+| **ADMIN** | Administrator | • Alle USER-Rechte<br>• Nutzerverwaltung<br>• System-Administration<br>• Alle Admin-Features | ✅ Aktiv |
+| **TRAINER** | Trainer/Coach | • Alle USER-Rechte<br>• Nutzerverwaltung<br>• Admin-Panel-Zugriff | ✅ Aktiv |
+| **PENALTY_MASTER** | Strafenmeister | • Alle USER-Rechte<br>• Strafen verwalten | 🔄 Geplant |
+| **PLAYER** | Aktiver Spieler | • Alle USER-Rechte<br>• Erweiterte Spiel-Features | 🔄 Geplant |
 
-## Verwendung in Komponenten
+## Berechtigungs-Hierarchie
 
-### 1. Rollen-Checks in Komponenten
+```typescript
+// Aktuelle Berechtigungsgruppen
+hasAdminAccess(user) = isAdmin(user) || isTrainer(user)
+hasPlayerAccess(user) = isPlayer(user) || isUser(user) || isAdmin(user)
+```
+
+### Zugriffs-Matrix
+
+| Feature | USER | PLAYER | TRAINER | PENALTY_MASTER | ADMIN |
+|---------|------|--------|---------|----------------|-------|
+| Fahrt erstellen/beitreten | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Spiel-Teilnahme | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Admin-Panel | ❌ | ❌ | ✅ | ❌ | ✅ |
+| Nutzerverwaltung | ❌ | ❌ | ✅ | ❌ | ✅ |
+| Strafen verwalten | ❌ | ❌ | 🔄 | 🔄 | ✅ |
+| System-Konfiguration | ❌ | ❌ | ❌ | ❌ | ✅ |
+
+## Implementierung
+
+### Frontend-Implementierung
+
+#### 1. Rollen-Guards verwenden
 
 ```typescript
 import { useRoleGuard } from "@/hooks/auth/useRoleGuard";
 
 function MyComponent() {
-    const { hasAdminAccess, userProfile } = useRoleGuard();
+    const { 
+        hasAdminAccess, 
+        hasRole, 
+        userProfile,
+        currentRole 
+    } = useRoleGuard();
 
+    // Einfache Admin-Prüfung
     if (hasAdminAccess()) {
         return <AdminFeature />;
     }
+
+    // Spezifische Rollen-Prüfung
+    if (hasRole(UserRole.TRAINER)) {
+        return <TrainerFeature />;
+    }
+
     return <StandardFeature />;
 }
 ```
 
-### 2. Seiten-Protection
+#### 2. Seiten-Protection mit AdminGuard
 
 ```typescript
 // pages/admin/users.tsx
@@ -53,41 +91,81 @@ export default function AdminUsersPage() {
 }
 ```
 
-### 3. Navigation basierend auf Rollen
+#### 3. Bedingte Navigation
 
 ```typescript
-// Automatisch in Sidebar und Homepage integriert
-const { hasAdminAccess } = useRoleGuard();
-// Admin-Navigation wird automatisch angezeigt
+// Automatisch in Layout-Komponenten integriert
+const { canAccessAdminPanel } = useRoleGuard();
+
+{canAccessAdminPanel() && (
+    <AdminNavigationItem />
+)}
 ```
 
-## Architektur
+### Backend-Implementierung
 
-### Auth Context
+#### 1. API-Routen schützen
 
--   **Einmaliger API-Call** beim Login lädt UserProfile mit Rolle
--   **Context-basierte Verteilung** verhindert unnötige API-Aufrufe
--   **Optimized Auth Hook** für Performance
+```typescript
+// src/pages/api/admin/users.ts
+async function adminUsersHandler(req: AuthenticatedRequest, res: NextApiResponse) {
+    const { user } = req;
+    
+    // UserProfile laden und Berechtigung prüfen
+    const userProfile = await userProfileRepository.findById(user.id);
+    
+    // Strikte Backend-Validierung
+    if (!userProfile || (userProfile.role !== "ADMIN" && userProfile.role !== "TRAINER")) {
+        return res.status(403).json({ 
+            error: "Insufficient permissions. Admin access required." 
+        });
+    }
+    
+    // Feature-Code hier...
+}
+```
+
+#### 2. Granulare Berechtigungen
+
+```typescript
+// Beispiel: Nur eigene Daten oder Admin kann alles
+const isOwnData = user.id === requestedUserId;
+const isAdmin = userProfile.role === "ADMIN";
+
+if (!isOwnData && !isAdmin) {
+    return res.status(403).json({ error: "Access denied" });
+}
+```
 
 ### Utility Functions
 
 ```typescript
 // src/entities/UserProfile.ts
-export function hasAdminAccess(user: UserProfile): boolean {
-    return isAdmin(user) || isTrainer(user);
+
+// Basis-Rollen-Checks
+export function isAdmin(user: UserProfile | null | undefined): boolean {
+    return user?.role === UserRole.ADMIN;
 }
 
-export function isAdmin(user: UserProfile): boolean {
-    return user?.role === UserRole.ADMIN;
+export function isTrainer(user: UserProfile | null | undefined): boolean {
+    return user?.role === UserRole.TRAINER;
+}
+
+export function isPenaltyMaster(user: UserProfile | null | undefined): boolean {
+    return user?.role === UserRole.PENALTY_MASTER;
+}
+
+// Berechtigungs-Gruppen
+export function hasAdminAccess(user: UserProfile | null | undefined): boolean {
+    return isAdmin(user) || isTrainer(user);
 }
 ```
 
-## Erweiterung des Systems
+## System erweitern
 
 ### Neue Rolle hinzufügen
 
-1. **Database Schema erweitern**
-
+#### 1. Schema erweitern
 ```prisma
 // prisma/schema.prisma
 enum UserRole {
@@ -96,92 +174,62 @@ enum UserRole {
   TRAINER
   PENALTY_MASTER
   PLAYER
-  NEW_ROLE        // <-- Neue Rolle hinzufügen
+  NEW_ROLE        // <-- Neue Rolle
 }
 ```
 
-2. **Migration ausführen**
-
+#### 2. Migration ausführen
 ```bash
 npx prisma migrate dev --name add-new-role
 ```
 
-3. **Utility Functions erweitern**
-
+#### 3. Utility Functions erweitern
 ```typescript
 // src/entities/UserProfile.ts
-export function isNewRole(user: UserProfile): boolean {
+export function isNewRole(user: UserProfile | null | undefined): boolean {
     return user?.role === UserRole.NEW_ROLE;
 }
 
-// Berechtigungen definieren
-export function hasSpecialAccess(user: UserProfile): boolean {
+export function hasSpecialAccess(user: UserProfile | null | undefined): boolean {
     return isAdmin(user) || isNewRole(user);
 }
 ```
 
-4. **Hook erweitern**
-
+#### 4. Frontend-Hooks erweitern
 ```typescript
 // src/hooks/auth/useRoleGuard.tsx
 export function useRoleGuard() {
-    // ...
+    // ... existing code ...
+
     const hasSpecialAccess = (): boolean => {
         return hasSpecialAccess(userProfile);
     };
 
     return {
-        // ...
+        // ... existing returns ...
         hasSpecialAccess,
     };
 }
 ```
 
-5. **Komponenten anpassen**
-
+#### 5. Display-Namen hinzufügen
 ```typescript
-const { hasSpecialAccess } = useRoleGuard();
-
-if (hasSpecialAccess()) {
-    // Neue Features anzeigen
-}
+// src/components/admin/UsersList.tsx
+const getRoleDisplayName = (role: UserRole): string => {
+    switch (role) {
+        case UserRole.ADMIN: return "Administrator";
+        case UserRole.TRAINER: return "Trainer";
+        case UserRole.PENALTY_MASTER: return "Strafenmeister";
+        case UserRole.PLAYER: return "Spieler";
+        case UserRole.NEW_ROLE: return "Neue Rolle";  // <--
+        default: return "Benutzer";
+    }
+};
 ```
 
 ### Neue Admin-Features hinzufügen
 
 1. **Route erstellen**: `/pages/admin/new-feature.tsx`
-2. **Komponente mit AdminGuard schützen**
-3. **Navigation in Sidebar erweitern**
-4. **Homepage-Kategorie hinzufügen**
-
-## Test-Benutzer
-
-Für Development stehen folgende Test-Accounts zur Verfügung:
-
-```javascript
-// Erstellt durch create-auth-users.js
-ADMIN:   max.mustermann@test.com   (password: test1234)
-TRAINER: anna.schmidt@test.com     (password: test1234)
-USER:    tom.mueller@test.com      (password: test1234)
-// ... weitere User
-```
-
-## Sicherheitshinweise
-
--   **Frontend-Checks** sind nur für UX - nie für Sicherheit verlassen
--   **Backend-APIs** müssen Rollen serverseitig validieren
--   **Admin-APIs** sollten immer Berechtigungen prüfen
-
-## Dateien-Übersicht
-
-```
-src/
-├── entities/UserProfile.ts          # Rollen-Definitionen & Utility Functions
-├── hooks/auth/
-│   ├── useOptimizedAuth.tsx         # Auth Context mit UserProfile
-│   └── useRoleGuard.tsx             # Rollen-basierte Hooks
-├── components/admin/
-│   ├── AdminGuard.tsx               # Seiten-Protection
-│   └── UsersList.tsx                # Admin-Features
-└── pages/admin/                     # Admin-Seiten
-```
+2. **AdminGuard verwenden** für Zugriffskontrolle
+3. **Navigation erweitern** in Sidebar-Komponente
+4. **Backend-API** mit Berechtigungsprüfung erstellen
