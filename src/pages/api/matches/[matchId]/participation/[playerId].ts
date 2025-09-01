@@ -1,29 +1,16 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/prisma";
-import { supabase } from "@/lib/supabaseClient";
+import { withAuth, AuthenticatedRequest } from "@/lib/middleware/authMiddleware";
 import { UserProfileRepository } from "@/lib/repositories/userProfileRepository";
 
 const userProfileRepository = new UserProfileRepository();
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function playerParticipationHandler(req: AuthenticatedRequest, res: NextApiResponse) {
     const { method } = req;
 
     try {
-        // Check authentication
-        const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            return res.status(401).json({ error: "No valid authorization token provided" });
-        }
-
-        const token = authHeader.split(" ")[1];
-        const {
-            data: { user },
-            error: authError,
-        } = await supabase.auth.getUser(token);
-
-        if (authError || !user) {
-            return res.status(401).json({ error: "Invalid or expired token" });
-        }
+        // User is already authenticated via middleware
+        const { user } = req;
 
         const { matchId, playerId } = req.query;
 
@@ -91,4 +78,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(500).json({ error: "Internal server error" });
     }
 }
+
+// Export with auth middleware
+export default (req: NextApiRequest, res: NextApiResponse) => 
+    withAuth(req, res, playerParticipationHandler);
 

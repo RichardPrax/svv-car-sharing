@@ -1,7 +1,7 @@
 import { ParticipationData, ParticipationPlayer, ParticipationOverview } from "@/hooks/matches/useBatchedParticipationOverview";
 import { ThumbsUpIcon, ThumbsDownIcon, ClockIcon } from "@/components/ui/GameParticipationIcons";
 import { getPositionDisplayName, getPositionColor, VolleyballPosition } from "@/entities/UserProfile";
-import { formatDateForId } from "@/utils/dateTime";
+import React from "react";
 import styles from "./ParticipationSummary.module.css";
 
 // Helper function to safely convert string position to enum
@@ -122,7 +122,7 @@ const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, pa
     );
 };
 
-export default function ParticipationSummary({ participationOverview, matchDate }: ParticipationSummaryProps) {
+export default function ParticipationSummary({ participationOverview }: ParticipationSummaryProps) {
     // Use passed data if available, otherwise show loading
     if (!participationOverview) {
         return (

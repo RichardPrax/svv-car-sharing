@@ -1,18 +1,18 @@
 // src/components/rides/RideCard.tsx
 import { useState } from "react";
 import { RideWithDetails } from "@/entities/Ride";
+import { useRideActions } from "@/hooks/rides/useRideActions";
+import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import RideDetails from "./RideDetails";
 import RidePassengers from "./RidePassengers";
 import RideActions from "./RideActions";
 import DeleteRideConfirm from "./DeleteRideConfirm";
 import { EditRideForm } from "@/components/forms";
 import { Modal } from "@/components/ui";
-import { formatDateForId } from "@/utils/dateTime";
 import styles from "./Rides.module.css";
 
 interface RideCardProps {
     ride: RideWithDetails;
-    matchDate: string | Date;
     rideIndex: number;
     isUserDriverOfThisRide: boolean;
     isUserPassengerOfThisRide: boolean;
@@ -25,7 +25,6 @@ interface RideCardProps {
 
 export default function RideCard({
     ride,
-    matchDate,
     rideIndex,
     isUserDriverOfThisRide,
     isUserPassengerOfThisRide,
@@ -38,6 +37,14 @@ export default function RideCard({
     const [showEditForm, setShowEditForm] = useState(false);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    
+    const { user } = useOptimizedAuth();
+    const { deleteRide } = useRideActions({ 
+        currentUserId: user?.id || null, 
+        matchId: ride.matchDayId,
+        onSuccess: onRideUpdated 
+    });
+    
     const testIdPrefix = `md-ride-${rideIndex}`;
 
     const isRideFull = (): boolean => {
@@ -54,17 +61,16 @@ export default function RideCard({
 
     const handleConfirmDelete = async () => {
         setIsDeleting(true);
+        
         try {
-            const response = await fetch(`/api/rides/${ride.id}`, {
-                method: 'DELETE',
-            });
-
-            if (!response.ok) {
-                throw new Error('Fehler beim Löschen der Fahrt');
+            const result = await deleteRide(ride.id);
+            
+            if (result?.error) {
+                throw new Error(result.error);
             }
-
+            
             setShowDeleteConfirm(false);
-            onRideUpdated();
+            // onRideUpdated wird bereits vom Hook aufgerufen
         } catch (error) {
             console.error('Fehler beim Löschen der Fahrt:', error);
             // Hier könnte man eine Fehlerbehandlung hinzufügen

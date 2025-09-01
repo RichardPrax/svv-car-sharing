@@ -1,5 +1,6 @@
 // src/hooks/rides/useRideActions.tsx
 import { useCallback } from "react";
+import { useAuthenticatedFetch } from "@/hooks/auth/useAuthenticatedFetch";
 import { Ride } from "@/entities/Ride";
 
 interface UseRideActionsProps {
@@ -9,13 +10,15 @@ interface UseRideActionsProps {
 }
 
 export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideActionsProps) {
+    const { authenticatedFetch } = useAuthenticatedFetch();
+
     const joinRide = useCallback(
         async (rideId: string) => {
             if (!currentUserId) return { error: "Nicht angemeldet" };
 
             try {
                 // 1. Überprüfe, ob User bereits Fahrer für diesen Spieltag ist
-                const driverResponse = await fetch(`/api/rides/driver/${currentUserId}`);
+                const driverResponse = await authenticatedFetch(`/api/rides/driver/${currentUserId}`);
                 if (!driverResponse.ok) {
                     throw new Error("Fehler beim Laden der Fahrerfahrten");
                 }
@@ -27,7 +30,7 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
                 }
 
                 // 2. Überprüfe, ob User bereits als Mitfahrer in einer anderen Fahrt angemeldet ist
-                const passengerResponse = await fetch(`/api/rides/passenger/${currentUserId}`);
+                const passengerResponse = await authenticatedFetch(`/api/rides/passenger/${currentUserId}`);
                 if (!passengerResponse.ok) {
                     throw new Error("Fehler beim Laden der Mitfahrerfahrten");
                 }
@@ -39,7 +42,7 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
                 }
 
                 // 3. Jetzt zur Fahrt anmelden
-                const joinResponse = await fetch("/api/rides/actions", {
+                const joinResponse = await authenticatedFetch("/api/rides/actions", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -58,7 +61,7 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
                 return { error: "Ein unerwarteter Fehler ist aufgetreten" };
             }
         },
-        [currentUserId, matchId, onSuccess]
+        [currentUserId, matchId, onSuccess, authenticatedFetch]
     );
 
     const leaveRide = useCallback(
@@ -66,7 +69,7 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
             if (!currentUserId) return { error: "Nicht angemeldet" };
 
             try {
-                const response = await fetch("/api/rides/actions", {
+                const response = await authenticatedFetch("/api/rides/actions", {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
@@ -85,7 +88,7 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
                 return { error: "Ein unerwarteter Fehler ist aufgetreten" };
             }
         },
-        [currentUserId, onSuccess]
+        [currentUserId, onSuccess, authenticatedFetch]
     );
 
     const deleteRide = useCallback(
@@ -93,7 +96,7 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
             if (!currentUserId) return { error: "Nicht angemeldet" };
 
             try {
-                const response = await fetch(`/api/rides/${rideId}`, {
+                const response = await authenticatedFetch(`/api/rides/${rideId}`, {
                     method: "DELETE",
                 });
 
@@ -108,7 +111,7 @@ export function useRideActions({ currentUserId, matchId, onSuccess }: UseRideAct
                 return { error: "Ein unerwarteter Fehler ist aufgetreten" };
             }
         },
-        [currentUserId, onSuccess]
+        [currentUserId, onSuccess, authenticatedFetch]
     );
 
     return {

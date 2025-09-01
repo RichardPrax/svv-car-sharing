@@ -1,5 +1,6 @@
 // src/hooks/rides/useEditRide.tsx
 import { useState } from "react";
+import { useAuthenticatedFetch } from "@/hooks/auth/useAuthenticatedFetch";
 import { RideWithDetails } from "@/entities/Ride";
 
 export interface EditRideData {
@@ -17,6 +18,7 @@ interface UseEditRideProps {
 export function useEditRide({ ride, onSuccess }: UseEditRideProps) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { authenticatedFetch } = useAuthenticatedFetch();
     const [formData, setFormData] = useState<EditRideData>({
         departureTime: (() => {
             const date = new Date(ride.departureTime);
@@ -57,7 +59,7 @@ export function useEditRide({ ride, onSuccess }: UseEditRideProps) {
                 additionalInfo: formData.additionalInfo || null,
             };
 
-            const response = await fetch(`/api/rides/${ride.id}`, {
+            const response = await authenticatedFetch(`/api/rides/${ride.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -66,13 +68,15 @@ export function useEditRide({ ride, onSuccess }: UseEditRideProps) {
             });
 
             if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                console.error('🚗 Edit failed', errorData);
                 throw new Error("Fehler beim Aktualisieren der Fahrt");
             }
 
             onSuccess();
             return { success: true };
         } catch (err) {
-            console.error("Error updating ride:", err);
+            console.error("🚗 Error updating ride:", err);
             const errorMessage = "Ein unerwarteter Fehler ist aufgetreten";
             setError(errorMessage);
             return { error: errorMessage };

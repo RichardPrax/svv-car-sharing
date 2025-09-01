@@ -1,6 +1,7 @@
 // src/hooks/rides/useCreateRide.tsx
 import { useState } from "react";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
+import { useAuthenticatedFetch } from "@/hooks/auth/useAuthenticatedFetch";
 import { Ride } from "@/entities/Ride";
 
 export interface CreateRideData {
@@ -19,6 +20,7 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const { user } = useOptimizedAuth();
+    const { authenticatedFetch } = useAuthenticatedFetch();
     const [formData, setFormData] = useState<CreateRideData>({
         departureTime: "",
         departureLocation: "",
@@ -57,7 +59,7 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
             const matchDay = await matchResponse.json();
 
             // 2. Überprüfe, ob User bereits eine Fahrt als Fahrer für diesen Spieltag anbietet
-            const driverResponse = await fetch(`/api/rides/driver/${user.id}`);
+            const driverResponse = await authenticatedFetch(`/api/rides/driver/${user.id}`);
             if (!driverResponse.ok) {
                 throw new Error("Fehler beim Laden der Fahrerfahrten");
             }
@@ -70,7 +72,7 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
             }
 
             // 3. Überprüfe, ob User bereits als Mitfahrer in einer anderen Fahrt angemeldet ist
-            const passengerResponse = await fetch(`/api/rides/passenger/${user.id}`);
+            const passengerResponse = await authenticatedFetch(`/api/rides/passenger/${user.id}`);
             if (!passengerResponse.ok) {
                 throw new Error("Fehler beim Laden der Mitfahrerfahrten");
             }
@@ -97,7 +99,7 @@ export function useCreateRide({ matchId, onSuccess }: UseCreateRideProps) {
                 additionalInfo: data.additionalInfo || null,
             };
 
-            const createResponse = await fetch("/api/rides/create", {
+            const createResponse = await authenticatedFetch("/api/rides/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

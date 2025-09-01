@@ -1,6 +1,7 @@
 // src/hooks/matches/useBringItems.ts
 import { useState, useEffect, useCallback } from "react";
 import { BringItem, CreateBringItemData } from "@/entities/BringItem";
+import { useAuthenticatedFetch } from "@/hooks/auth/useAuthenticatedFetch";
 
 interface UseBringItemsProps {
     matchId: string;
@@ -20,6 +21,7 @@ export function useBringItems({ matchId, refreshTrigger = 0 }: UseBringItemsProp
     const [bringItems, setBringItems] = useState<BringItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { authenticatedFetch } = useAuthenticatedFetch();
 
     const fetchBringItems = useCallback(async () => {
         if (!matchId) return;
@@ -48,7 +50,7 @@ export function useBringItems({ matchId, refreshTrigger = 0 }: UseBringItemsProp
         setError(null);
 
         try {
-            const response = await fetch(`/api/matches/${matchId}/bring-items`, {
+            const response = await authenticatedFetch(`/api/matches/${matchId}/bring-items`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -73,7 +75,7 @@ export function useBringItems({ matchId, refreshTrigger = 0 }: UseBringItemsProp
         setError(null);
 
         try {
-            const response = await fetch(`/api/matches/${matchId}/bring-items/${itemId}`, {
+            const response = await authenticatedFetch(`/api/matches/${matchId}/bring-items/${itemId}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",

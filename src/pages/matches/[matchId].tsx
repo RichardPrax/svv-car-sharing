@@ -15,9 +15,6 @@ export default function MatchDetailPage() {
     const { 
         match, 
         participationOverview, 
-        rides, 
-        userRideCheck, 
-        userParticipationCheck, 
         loading, 
         error 
     } = useMatchDetailBatch({

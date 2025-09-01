@@ -36,7 +36,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     const fetchUserProfile = useCallback(async (userId: string, retryAttempt = 0): Promise<UserProfile | null> => {
         const maxRetries = 1;
-        const retryDelay = 1000; // 3 second
+        const retryDelay = 1000; // 1 second
+        
+        // Check sessionStorage cache first (client-side only)
+        if (typeof window !== 'undefined') {
+            const cacheKey = `userProfile_${userId}`;
+            const cached = sessionStorage.getItem(cacheKey);
+            if (cached) {
+                try {
+                    const { data, timestamp } = JSON.parse(cached);
+                    // Cache for 5 minutes
+                    if (Date.now() - timestamp < 5 * 60 * 1000) {
+                        return data;
+                    } else {
+                        sessionStorage.removeItem(cacheKey);
+                    }
+                } catch {
+                    sessionStorage.removeItem(cacheKey);
+                }
+            }
+        }
+        
         try {
             const response = await fetch(`/api/user/${userId}`);
             if (!response.ok) {
@@ -52,7 +72,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 }
                 throw new Error("Failed to fetch user profile");
             }
-            return await response.json();
+            
+            const data = await response.json();
+            
+            // Cache in sessionStorage (client-side only)
+            if (typeof window !== 'undefined') {
+                const cacheKey = `userProfile_${userId}`;
+                sessionStorage.setItem(cacheKey, JSON.stringify({
+                    data,
+                    timestamp: Date.now()
+                }));
+            }
+            
+            return data;
         } catch (error) {
             console.error("Error fetching user profile:", error);
             return null;
@@ -61,6 +93,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     const refreshUserProfile = async () => {
         if (user?.id) {
+            // Clear cache on refresh
+            if (typeof window !== 'undefined') {
+                sessionStorage.removeItem(`userProfile_${user.id}`);
+            }
             const profile = await fetchUserProfile(user.id);
             setUserProfile(profile);
         }

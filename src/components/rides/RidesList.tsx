@@ -9,7 +9,6 @@ import { useUserParticipationCheck } from "@/hooks/rides/useUserParticipationChe
 import RideCard from "./RideCard";
 import { CreateRideForm } from "@/components/forms";
 import { LoadingSpinner, Modal } from "@/components/ui";
-import { formatDateForId } from "@/utils/dateTime";
 import styles from "./Rides.module.css";
 import pageStyles from "../../styles/Pages.module.css";
 
@@ -18,10 +17,7 @@ interface RidesListProps {
     matchDate: string | Date;
 }
 
-export default function RidesList({ 
-    matchId, 
-    matchDate
-}: RidesListProps) {
+export default function RidesList({ matchId }: RidesListProps) {
     const { currentUserId } = useOptimizedCurrentUser();
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [showCreateForm, setShowCreateForm] = useState(false);
@@ -30,7 +26,7 @@ export default function RidesList({
     // Verwende eigene Hooks für Daten
     const { rides, loading, error } = useRides({ matchId, refreshTrigger });
     const { hasExistingRide } = useUserRideCheck({ matchId, refreshTrigger });
-    const { isParticipating, participatingRideId } = useUserParticipationCheck({ matchId, refreshTrigger });
+    const { isParticipating } = useUserParticipationCheck({ matchId, refreshTrigger });
     
     const testIdPrefix = "md";
 
@@ -213,7 +209,6 @@ export default function RidesList({
                             <RideCard
                                 key={ride.id}
                                 ride={ride}
-                                matchDate={matchDate}
                                 rideIndex={index}
                                 isUserDriverOfThisRide={isUserDriverOfThisRide}
                                 isUserPassengerOfThisRide={isUserPassengerOfThisRide}

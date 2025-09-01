@@ -3,11 +3,11 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { UserProfileRepository } from "@/lib/repositories/userProfileRepository";
 import { withRateLimit, userRateLimiter } from "@/lib/middleware/rateLimiter";
 import { withSecurity } from "@/lib/middleware/security";
-import { supabase } from "@/lib/supabaseClient";
+import { withAuth, AuthenticatedRequest } from "@/lib/middleware/authMiddleware";
 
 const userProfileRepository = new UserProfileRepository();
 
-async function adminUsersHandler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+async function adminUsersHandler(req: AuthenticatedRequest, res: NextApiResponse): Promise<void> {
     if (req.method !== "GET") {
         res.setHeader("Allow", ["GET"]);
         res.status(405).end(`Method ${req.method} Not Allowed`);
@@ -15,23 +15,8 @@ async function adminUsersHandler(req: NextApiRequest, res: NextApiResponse): Pro
     }
 
     try {
-        // Check authentication
-        const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            res.status(401).json({ error: "No valid authorization token provided" });
-            return;
-        }
-
-        const token = authHeader.split(" ")[1];
-        const {
-            data: { user },
-            error: authError,
-        } = await supabase.auth.getUser(token);
-
-        if (authError || !user) {
-            res.status(401).json({ error: "Invalid or expired token" });
-            return;
-        }
+        // User is already authenticated via middleware
+        const { user } = req;
 
         // Get user profile and check admin role
         const userProfile = await userProfileRepository.findById(user.id);
@@ -58,6 +43,8 @@ async function adminUsersHandler(req: NextApiRequest, res: NextApiResponse): Pro
     }
 }
 
-// Apply security middleware and rate limiting
-export default withRateLimit(userRateLimiter)(withSecurity()(adminUsersHandler));
+// Apply middleware chain with auth
+export default withRateLimit(userRateLimiter)(withSecurity()((req: NextApiRequest, res: NextApiResponse) => 
+    withAuth(req, res, adminUsersHandler)
+));
 

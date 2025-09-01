@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { FormField, Input, Textarea, Button } from "@/components/forms";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
-import { CreateBringItemData } from "@/entities/BringItem";
+import { useBringItems } from "@/hooks/matches/useBringItems";
 import styles from "./Forms.module.css";
 
 type Props = {
@@ -13,28 +13,12 @@ type Props = {
 
 export default function CreateBringItemForm({ matchId, onItemCreated, onCancel }: Props) {
     const { user } = useOptimizedAuth();
+    const { addBringItem } = useBringItems({ matchId });
 
     const [itemName, setItemName] = useState("");
     const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
-    const addBringItem = async (data: CreateBringItemData) => {
-        const response = await fetch(`/api/matches/${matchId}/bring-items`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || "Failed to add bring item");
-        }
-
-        return response.json();
-    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

@@ -1,26 +1,32 @@
 // src/pages/api/matches/[matchId]/bring-items.ts
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/prisma";
+import { withAuth, AuthenticatedRequest } from "@/lib/middleware/authMiddleware";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function bringItemsHandler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
     const { matchId } = req.query;
 
     if (typeof matchId !== "string") {
-        return res.status(400).json({ error: "Invalid match ID" });
+        res.status(400).json({ error: "Invalid match ID" });
+        return;
     }
 
     switch (req.method) {
         case "GET":
-            return handleGet(req, res, matchId);
+            await handleGet(req, res, matchId);
+            break;
         case "POST":
-            return handlePost(req, res, matchId);
+            // POST requires authentication
+            return withAuth(req, res, async (authReq: AuthenticatedRequest, authRes: NextApiResponse) => {
+                await handlePost(authReq, authRes, matchId);
+            });
         default:
             res.setHeader("Allow", ["GET", "POST"]);
-            return res.status(405).json({ error: `Method ${req.method} not allowed` });
+            res.status(405).json({ error: `Method ${req.method} not allowed` });
     }
 }
 
-async function handleGet(req: NextApiRequest, res: NextApiResponse, matchId: string) {
+async function handleGet(req: NextApiRequest, res: NextApiResponse, matchId: string): Promise<void> {
     try {
         const bringItems = await prisma.bringItem.findMany({
             where: {
@@ -40,19 +46,28 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, matchId: str
             },
         });
 
-        return res.status(200).json(bringItems);
+        res.status(200).json(bringItems);
     } catch (error) {
         console.error("Error fetching bring items:", error);
-        return res.status(500).json({ error: "Failed to fetch bring items" });
+        res.status(500).json({ error: "Failed to fetch bring items" });
     }
 }
 
-async function handlePost(req: NextApiRequest, res: NextApiResponse, matchId: string) {
+async function handlePost(req: AuthenticatedRequest, res: NextApiResponse, matchId: string): Promise<void> {
     try {
+        // User is already authenticated via middleware
+        const { user } = req;
         const { userId, itemName, description } = req.body;
 
         if (!userId || !itemName) {
-            return res.status(400).json({ error: "User ID and item name are required" });
+            res.status(400).json({ error: "User ID and item name are required" });
+            return;
+        }
+
+        // Sicherheitsprüfung: Nur der authentifizierte User kann Items für sich erstellen
+        if (userId !== user.id) {
+            res.status(403).json({ error: "Sie können nur Items für sich selbst erstellen" });
+            return;
         }
 
         // Verify that the match exists
@@ -61,17 +76,12 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, matchId: st
         });
 
         if (!matchDay) {
-            return res.status(404).json({ error: "Match not found" });
+            res.status(404).json({ error: "Match not found" });
+            return;
         }
 
-        // Verify that the user exists
-        const user = await prisma.userProfile.findUnique({
-            where: { id: userId },
-        });
-
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
+        // User exists check is no longer needed since we have authenticated user
+        // from middleware and already validated userId === user.id
 
         const newBringItem = await prisma.bringItem.create({
             data: {
@@ -91,10 +101,13 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, matchId: st
             },
         });
 
-        return res.status(201).json(newBringItem);
+        res.status(201).json(newBringItem);
     } catch (error) {
         console.error("Error creating bring item:", error);
-        return res.status(500).json({ error: "Failed to create bring item" });
+        res.status(500).json({ error: "Failed to create bring item" });
     }
 }
+
+// Export the handler directly (no auth middleware for the route)
+export default bringItemsHandler;
 
