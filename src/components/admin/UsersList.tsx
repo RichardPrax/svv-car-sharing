@@ -1,9 +1,13 @@
 // src/components/admin/UsersList.tsx
-import { useAdminUsers } from "@/hooks/admin/useAdminUsers";
-import { UserRole, UserProfileWithPositions, VolleyballPosition, getPositionDisplayName, getPositionColor } from "@/entities/UserProfile";
+import { useState } from "react";
+import { useAdminUsers, useDeleteUser } from "@/hooks/admin";
+import { UserRole, UserProfileWithPositions, VolleyballPosition, getPositionDisplayName, getPositionColor, hasAdminAccess } from "@/entities/UserProfile";
 import { UserEditHandler, UserDeleteHandler } from "./types";
 import { UsersListSkeleton } from "@/components/ui/SkeletonLoader";
 import { Icon } from "@/components/ui";
+import { Modal } from "@/components/ui";
+import { DeleteUserConfirm } from "@/components/admin";
+import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import styles from "./UsersList.module.css";
 
 const getRoleDisplayName = (role: UserRole): string => {
@@ -41,16 +45,40 @@ const getRoleClassName = (role: UserRole): string => {
 };
 
 export default function UsersList() {
+    const { userProfile: currentUserProfile } = useOptimizedAuth();
     const { users, loading, error, refresh } = useAdminUsers();
+    const { deleteUser, isDeleting } = useDeleteUser();
+    const [deleteUserToDelete, setDeleteUserToDelete] = useState<UserProfileWithPositions | null>(null);
+
+    // Check if current user has admin access
+    const canDeleteUsers = currentUserProfile && hasAdminAccess(currentUserProfile);
 
     const handleEdit: UserEditHandler = (user) => {
         // TODO: Implementierung für Benutzer bearbeiten
         alert(`Bearbeiten: ${user.firstName} ${user.lastName}`);
     };
 
-    const handleDelete: UserDeleteHandler = (user) => {
-        // TODO: Implementierung für Benutzer löschen
-        alert(`Löschen: ${user.firstName} ${user.lastName}`);
+    const handleDeleteClick: UserDeleteHandler = (user) => {
+        if (!canDeleteUsers) return;
+        setDeleteUserToDelete(user);
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (!deleteUserToDelete || !currentUserProfile) return;
+
+        try {
+            await deleteUser(deleteUserToDelete.id);
+            setDeleteUserToDelete(null);
+            refresh(); // Refresh the users list
+        } catch (err) {
+            console.error("Error deleting user:", err);
+            // Error is already handled in the hook, we just close the modal
+            setDeleteUserToDelete(null);
+        }
+    };
+
+    const handleDeleteCancel = () => {
+        setDeleteUserToDelete(null);
     };
 
     return (
@@ -94,11 +122,13 @@ export default function UsersList() {
                                                     <span
                                                         key={position.id}
                                                         className={`${styles.positionBadge} ${position.isPrimary ? styles.primaryPosition : styles.secondaryPosition}`}
-                                                        style={{ 
+                                                        style={{
                                                             backgroundColor: getPositionColor(position.position as VolleyballPosition),
-                                                            color: 'white'
+                                                            color: "white",
                                                         }}
-                                                        title={`${getPositionDisplayName(position.position as VolleyballPosition)} ${position.isPrimary ? '(Hauptposition)' : '(Nebenposition)'}`}
+                                                        title={`${getPositionDisplayName(position.position as VolleyballPosition)} ${
+                                                            position.isPrimary ? "(Hauptposition)" : "(Nebenposition)"
+                                                        }`}
                                                     >
                                                         {position.position}
                                                         {position.isPrimary && <span className={styles.primaryIndicator}>★</span>}
@@ -108,11 +138,9 @@ export default function UsersList() {
                                         )}
                                     </div>
                                     <div className={styles.userActions}>
-                                        <div className={`${styles.userRole} ${getRoleClassName(user.role)}`}>
-                                            {getRoleDisplayName(user.role)}
-                                        </div>
+                                        <div className={`${styles.userRole} ${getRoleClassName(user.role)}`}>{getRoleDisplayName(user.role)}</div>
                                         <div className={styles.actionButtons}>
-                                            <button 
+                                            <button
                                                 onClick={() => handleEdit(user)}
                                                 className={styles.editButton}
                                                 title="Benutzer bearbeiten"
@@ -121,12 +149,13 @@ export default function UsersList() {
                                             >
                                                 <Icon name="edit" size={16} color="currentColor" />
                                             </button>
-                                            <button 
-                                                onClick={() => handleDelete(user)}
+                                            <button
+                                                onClick={() => handleDeleteClick(user)}
                                                 className={styles.deleteButton}
                                                 title="Benutzer löschen"
                                                 type="button"
                                                 aria-label={`${user.firstName} ${user.lastName} löschen`}
+                                                disabled={!canDeleteUsers || user.id === currentUserProfile?.id}
                                             >
                                                 <Icon name="delete" size={16} color="currentColor" />
                                             </button>
@@ -138,6 +167,11 @@ export default function UsersList() {
                     ))}
                 </div>
             )}
+
+            {/* Delete Confirmation Modal */}
+            <Modal isOpen={!!deleteUserToDelete} onClose={handleDeleteCancel} title="Benutzer löschen" maxWidth="md" data-testid="delete-user-modal">
+                {deleteUserToDelete && <DeleteUserConfirm user={deleteUserToDelete} loading={isDeleting} onConfirm={handleDeleteConfirm} onCancel={handleDeleteCancel} />}
+            </Modal>
         </div>
     );
 }

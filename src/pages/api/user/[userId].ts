@@ -102,8 +102,59 @@ async function authenticatedUserHandler(req: AuthenticatedRequest, res: NextApiR
             console.error("Fehler beim Erstellen des Benutzerprofils:", error);
             res.status(500).json({ error: "Fehler beim Erstellen des Benutzerprofils" });
         }
+    } else if (req.method === "DELETE") {
+        try {
+            const { user } = req;
+            const { userId } = req.query;
+
+            if (!userId || typeof userId !== "string") {
+                res.status(400).json({ error: "User ID ist erforderlich" });
+                return;
+            }
+
+            // Get requesting user's profile to check permissions
+            const requestingUserProfile = await userProfileRepository.findById(user.id);
+            if (!requestingUserProfile) {
+                res.status(404).json({ error: "Requesting user profile not found" });
+                return;
+            }
+
+            // Check if user has admin or trainer permissions
+            if (requestingUserProfile.role !== "ADMIN" && requestingUserProfile.role !== "TRAINER") {
+                res.status(403).json({ error: "Insufficient permissions. Only admins and trainers can delete users." });
+                return;
+            }
+
+            // Check if target user exists
+            const targetUserProfile = await userProfileRepository.findById(userId);
+            if (!targetUserProfile) {
+                res.status(404).json({ error: "User not found" });
+                return;
+            }
+
+            // Prevent self-deletion
+            if (requestingUserProfile.id === userId) {
+                res.status(400).json({ error: "You cannot delete your own account" });
+                return;
+            }
+
+            // Delete the user completely (from both UserProfile and Supabase Auth)
+            await userProfileRepository.deleteUserCompletely(userId);
+
+            res.status(200).json({
+                message: "User deleted successfully",
+                deletedUser: {
+                    id: targetUserProfile.id,
+                    firstName: targetUserProfile.firstName,
+                    lastName: targetUserProfile.lastName,
+                },
+            });
+        } catch (error) {
+            console.error("Error deleting user:", error);
+            res.status(500).json({ error: "Error deleting user" });
+        }
     } else {
-        res.setHeader("Allow", ["GET", "POST"]);
+        res.setHeader("Allow", ["GET", "POST", "DELETE"]);
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 }

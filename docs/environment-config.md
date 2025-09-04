@@ -15,8 +15,10 @@
 ```bash
 NEXT_PUBLIC_SUPABASE_URL="http://localhost:54321"        # Lokal
 NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJ..."                   # Öffentlicher Key
-SUPABASE_SERVICE_ROLE_KEY="eyJ..."                       # ⚠️ Nur Server!
+SUPABASE_SERVICE_ROLE_KEY="eyJ..."                       # ⚠️ Nur Server! (Für Admin-Funktionen)
 ```
+
+> **⚠️ Wichtig:** Der `SUPABASE_SERVICE_ROLE_KEY` wird für Admin-Funktionen wie das Löschen von Benutzern benötigt. Dieser Key hat erweiterte Berechtigungen und sollte nur serverseitig verwendet werden!
 
 ### Datenbank
 

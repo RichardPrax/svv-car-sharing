@@ -1,16 +1,16 @@
 // src/components/admin/types.ts
-import { UserProfile } from "@/entities/UserProfile";
+import { UserProfile, UserProfileWithPositions } from "@/entities/UserProfile";
 
 export interface UserActionsProps {
-    user: UserProfile;
-    onEdit: (user: UserProfile) => void;
-    onDelete: (user: UserProfile) => void;
+    user: UserProfileWithPositions;
+    onEdit: (user: UserProfileWithPositions) => void;
+    onDelete: (user: UserProfileWithPositions) => void;
 }
 
 export interface UserItemProps {
-    user: UserProfile;
-    onEdit: (user: UserProfile) => void;
-    onDelete: (user: UserProfile) => void;
+    user: UserProfileWithPositions;
+    onEdit: (user: UserProfileWithPositions) => void;
+    onDelete: (user: UserProfileWithPositions) => void;
 }
 
 export interface UsersListProps {
@@ -18,13 +18,14 @@ export interface UsersListProps {
 }
 
 // Event Handler Types
-export type UserEditHandler = (user: UserProfile) => void;
-export type UserDeleteHandler = (user: UserProfile) => void;
+export type UserEditHandler = (user: UserProfileWithPositions) => void;
+export type UserDeleteHandler = (user: UserProfileWithPositions) => void;
 
 // Component State Types
 export interface UsersListState {
-    users: UserProfile[];
+    users: UserProfileWithPositions[];
     loading: boolean;
     error: string | null;
     totalUsers: number;
 }
+

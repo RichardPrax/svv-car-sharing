@@ -6,32 +6,29 @@ import { UserRole } from "@prisma/client";
 export class UserProfileRepository {
     // Get all user profiles with positions
     async findAll(): Promise<UserProfileWithPositions[]> {
-        return await prisma.userProfile.findMany({
+        return (await prisma.userProfile.findMany({
             include: {
                 playerPositions: {
                     orderBy: [
-                        { isPrimary: 'desc' }, // Primary positions first
-                        { position: 'asc' }   // Then alphabetically
-                    ]
-                }
+                        { isPrimary: "desc" }, // Primary positions first
+                        { position: "asc" }, // Then alphabetically
+                    ],
+                },
             },
             orderBy: { firstName: "asc" },
-        }) as UserProfileWithPositions[];
+        })) as UserProfileWithPositions[];
     }
 
     // Get user profile by ID with positions
     async findById(id: string): Promise<UserProfileWithPositions | null> {
-        return await prisma.userProfile.findUnique({
+        return (await prisma.userProfile.findUnique({
             where: { id },
             include: {
                 playerPositions: {
-                    orderBy: [
-                        { isPrimary: 'desc' },
-                        { position: 'asc' }
-                    ]
-                }
-            }
-        }) as UserProfileWithPositions | null;
+                    orderBy: [{ isPrimary: "desc" }, { position: "asc" }],
+                },
+            },
+        })) as UserProfileWithPositions | null;
     }
 
     // Get multiple user profiles by IDs
@@ -99,6 +96,28 @@ export class UserProfileRepository {
         return await prisma.userProfile.delete({
             where: { id },
         });
+    }
+
+    // Delete user completely (from both UserProfile and Supabase Auth)
+    async deleteUserCompletely(id: string): Promise<UserProfile> {
+        // Import here to avoid circular dependencies
+        const { deleteUserFromAuth } = await import("../supabaseAdmin");
+
+        // First delete from our database (this will cascade delete all related data)
+        const deletedProfile = await prisma.userProfile.delete({
+            where: { id },
+        });
+
+        // Then delete from Supabase Auth
+        try {
+            await deleteUserFromAuth(id);
+        } catch (error) {
+            console.error("Failed to delete user from Supabase Auth, but profile was deleted:", error);
+            // We don't throw here because the profile is already deleted
+            // The admin might need to manually clean up the auth user
+        }
+
+        return deletedProfile;
     }
 
     // Search users by name

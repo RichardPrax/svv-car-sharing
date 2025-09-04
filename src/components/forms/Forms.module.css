@@ -221,6 +221,32 @@
     line-height: 1.5;
 }
 
+.deleteWarning {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+    text-align: left;
+}
+
+.deleteWarning p {
+    margin: 0 0 var(--spacing-xs) 0;
+    font-size: 0.875rem;
+    color: #7f1d1d;
+}
+
+.deleteWarning ul {
+    margin: var(--spacing-xs) 0 0 var(--spacing-md);
+    padding: 0;
+    color: #7f1d1d;
+}
+
+.deleteWarning li {
+    font-size: 0.8rem;
+    margin-bottom: var(--spacing-xs);
+}
+
 .deleteConfirmActions {
     display: flex;
     flex-direction: row;
