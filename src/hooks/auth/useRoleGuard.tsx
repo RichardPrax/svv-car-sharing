@@ -18,7 +18,7 @@ export function useRoleGuard() {
     };
 
     const hasPlayerAccess = (): boolean => {
-        return userProfile?.role === 'PLAYER' || userProfile?.role === 'USER' || userProfile?.role === 'ADMIN';
+        return userProfile?.role === "PLAYER" || userProfile?.role === "ADMIN" || userProfile?.role === "TRAINER" || userProfile?.role === "PENALTY_MASTER";
     };
 
     const canAccessAdminPanel = (): boolean => {
@@ -33,7 +33,7 @@ export function useRoleGuard() {
         hasAdminAccess: hasAdminPermissions,
         hasPlayerAccess,
         canAccessAdminPanel,
-        currentRole: userProfile?.role || UserRole.USER,
+        currentRole: userProfile?.role || UserRole.PLAYER,
     };
 }
 

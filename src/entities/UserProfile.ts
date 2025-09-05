@@ -8,9 +8,9 @@ export { UserRole } from "@prisma/client";
 export enum VolleyballPosition {
     MB = "MB", // Mittelblock
     AA = "AA", // Außenannahme
-    L = "L",   // Libero
-    Z = "Z",   // Zuspiel
-    D = "D"    // Diagonal
+    L = "L", // Libero
+    Z = "Z", // Zuspiel
+    D = "D", // Diagonal
 }
 
 // Volleyball position with metadata
@@ -138,5 +138,37 @@ export function isPenaltyMaster(user: UserProfile | null | undefined): boolean {
 
 export function hasAdminAccess(user: UserProfile | null | undefined): boolean {
     return isAdmin(user) || isTrainer(user);
+}
+
+// Role hierarchy functions
+export function getRoleHierarchyLevel(role: UserRole): number {
+    switch (role) {
+        case UserRole.ADMIN:
+            return 4;
+        case UserRole.TRAINER:
+            return 3;
+        case UserRole.PENALTY_MASTER:
+            return 2;
+        case UserRole.PLAYER:
+            return 1;
+        default:
+            return 1; // Default to PLAYER level
+    }
+}
+
+export function canAssignRole(currentUserRole: UserRole, targetRole: UserRole): boolean {
+    const currentLevel = getRoleHierarchyLevel(currentUserRole);
+    const targetLevel = getRoleHierarchyLevel(targetRole);
+    return currentLevel >= targetLevel;
+}
+
+export function getAssignableRoles(currentUserRole: UserRole): UserRole[] {
+    const currentLevel = getRoleHierarchyLevel(currentUserRole);
+    return Object.values(UserRole)
+        .filter((role) => {
+            const roleLevel = getRoleHierarchyLevel(role);
+            return roleLevel <= currentLevel;
+        })
+        .sort((a, b) => getRoleHierarchyLevel(b) - getRoleHierarchyLevel(a)); // Sort from highest to lowest level
 }
 

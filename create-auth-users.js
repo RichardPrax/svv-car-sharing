@@ -1,4 +1,4 @@
-require('dotenv').config({ path: '.env.local' });
+require("dotenv").config({ path: ".env.local" });
 const { PrismaClient } = require("@prisma/client");
 const { createClient } = require("@supabase/supabase-js");
 
@@ -68,7 +68,10 @@ async function main() {
             firstName: "Max",
             lastName: "Mustermann",
             role: "ADMIN", // Make Max an Admin
-            positions: [{ position: "Z", isPrimary: true }, { position: "D", isPrimary: false }], // Zuspiel als Hauptposition, Diagonal als Nebenposition
+            positions: [
+                { position: "Z", isPrimary: true },
+                { position: "D", isPrimary: false },
+            ], // Zuspiel als Hauptposition, Diagonal als Nebenposition
         },
         {
             email: "anna.schmidt@test.com",
@@ -76,14 +79,17 @@ async function main() {
             firstName: "Anna",
             lastName: "Schmidt",
             role: "TRAINER", // Make Anna a Trainer
-            positions: [{ position: "AA", isPrimary: true }, { position: "Z", isPrimary: false }], // Außenannahme als Hauptposition
+            positions: [
+                { position: "AA", isPrimary: true },
+                { position: "Z", isPrimary: false },
+            ], // Außenannahme als Hauptposition
         },
         {
             email: "tom.mueller@test.com",
             password: "test1234",
             firstName: "Tom",
             lastName: "Mueller",
-            role: "USER",
+            role: "PLAYER",
             positions: [{ position: "MB", isPrimary: true }], // Mittelblock
         },
         {
@@ -91,7 +97,7 @@ async function main() {
             password: "test1234",
             firstName: "Lisa",
             lastName: "Weber",
-            role: "USER",
+            role: "PLAYER",
             positions: [{ position: "L", isPrimary: true }], // Libero
         },
         {
@@ -99,24 +105,33 @@ async function main() {
             password: "test1234",
             firstName: "Ben",
             lastName: "Schneider",
-            role: "USER",
-            positions: [{ position: "D", isPrimary: true }, { position: "AA", isPrimary: false }], // Diagonal als Hauptposition
+            role: "PLAYER",
+            positions: [
+                { position: "D", isPrimary: true },
+                { position: "AA", isPrimary: false },
+            ], // Diagonal als Hauptposition
         },
         {
             email: "sara.fischer@test.com",
             password: "test1234",
             firstName: "Sara",
             lastName: "Fischer",
-            role: "USER",
-            positions: [{ position: "AA", isPrimary: true }, { position: "L", isPrimary: false }], // Außenannahme als Hauptposition
+            role: "PLAYER",
+            positions: [
+                { position: "AA", isPrimary: true },
+                { position: "L", isPrimary: false },
+            ], // Außenannahme als Hauptposition
         },
         {
             email: "noah.hoffmann@test.com",
             password: "test1234",
             firstName: "Noah",
             lastName: "Hoffmann",
-            role: "USER",
-            positions: [{ position: "MB", isPrimary: true }, { position: "Z", isPrimary: false }], // Mittelblock als Hauptposition
+            role: "PLAYER",
+            positions: [
+                { position: "MB", isPrimary: true },
+                { position: "Z", isPrimary: false },
+            ], // Mittelblock als Hauptposition
         },
     ];
 
@@ -134,13 +149,13 @@ async function main() {
                     update: {
                         firstName: userData.firstName,
                         lastName: userData.lastName,
-                        role: userData.role || "USER",
+                        role: userData.role || "PLAYER",
                     },
                     create: {
                         id: authUser.id, // Use the auth user's UID as the database ID
                         firstName: userData.firstName,
                         lastName: userData.lastName,
-                        role: userData.role || "USER",
+                        role: userData.role || "PLAYER",
                     },
                 });
                 console.log(`✅ Database record created/updated for ${userData.email} with ID: ${authUser.id}`);
@@ -148,10 +163,10 @@ async function main() {
                 // Create user positions if provided
                 if (userData.positions && userData.positions.length > 0) {
                     console.log(`🏐 Adding volleyball positions for ${userData.firstName} ${userData.lastName}...`);
-                    
+
                     // Delete existing positions first
                     await prisma.userPosition.deleteMany({
-                        where: { userId: authUser.id }
+                        where: { userId: authUser.id },
                     });
 
                     // Create new positions
@@ -164,15 +179,15 @@ async function main() {
                                     isPrimary: positionData.isPrimary,
                                 },
                             });
-                            
+
                             const positionNames = {
                                 MB: "Mittelblock",
-                                AA: "Außenannahme", 
+                                AA: "Außenannahme",
                                 L: "Libero",
                                 Z: "Zuspiel",
-                                D: "Diagonal"
+                                D: "Diagonal",
                             };
-                            
+
                             const primaryText = positionData.isPrimary ? " (Hauptposition)" : " (Nebenposition)";
                             console.log(`   ✅ ${positionNames[positionData.position]} (${positionData.position})${primaryText}`);
                         } catch (positionError) {

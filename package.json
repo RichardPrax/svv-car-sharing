@@ -37,6 +37,8 @@
         "db:production:migrate": "dotenv -e .env.production -- prisma migrate dev",
         "db:production:studio": "dotenv -e .env.production -- prisma studio",
         "db:production:seed": "dotenv -e .env.production -- node prisma/seed.js",
+        "db:production:status": "dotenv -e .env.production -- prisma migrate status",
+        "db:production:deploy": "dotenv -e .env.production -- prisma migrate deploy",
         "supabase:start": "supabase start",
         "supabase:stop": "supabase stop",
         "supabase:status": "supabase status",
@@ -72,3 +74,4 @@
         "typescript": "^5"
     }
 }
+

@@ -43,8 +43,8 @@ async function participationHandler(req: AuthenticatedRequest, res: NextApiRespo
         // Check if user has player role
         const userProfile = await userProfileRepository.findById(user.id);
 
-        if (!userProfile || (userProfile.role !== "PLAYER" && userProfile.role !== "USER" && userProfile.role !== "ADMIN")) {
-            return res.status(403).json({ error: "Only players, users, and admins can participate in games" });
+        if (!userProfile || (userProfile.role !== "PLAYER" && userProfile.role !== "TRAINER" && userProfile.role !== "ADMIN")) {
+            return res.status(403).json({ error: "Only players, trainers, and admins can participate in games" });
         }
 
         // Upsert participation (create or update)
@@ -76,6 +76,5 @@ async function participationHandler(req: AuthenticatedRequest, res: NextApiRespo
 }
 
 // Export with auth middleware
-export default (req: NextApiRequest, res: NextApiResponse) => 
-    withAuth(req, res, participationHandler);
+export default (req: NextApiRequest, res: NextApiResponse) => withAuth(req, res, participationHandler);
 

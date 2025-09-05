@@ -1,0 +1,51 @@
+/* src/components/admin/EditUserForm.module.css */
+.editUserForm {
+    padding: 0;
+}
+
+.editUserFormGrid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+}
+
+.editUserFormError {
+    background-color: var(--danger-bg);
+    color: var(--danger);
+    padding: 0.75rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--danger-border);
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+}
+
+.disabledInput {
+    background-color: var(--background-secondary);
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+.editUserFormActions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.editUserFormButton {
+    min-width: 120px;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+    .editUserFormGrid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .editUserFormActions {
+        grid-column: 1 / -1;
+    }
+}
+

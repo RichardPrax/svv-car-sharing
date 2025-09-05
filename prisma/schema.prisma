@@ -1,40 +1,117 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-1.0.x", "rhel-openssl-3.0.x", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
-  engineType = "binary"
+  engineType    = "binary"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
 model UserProfile {
-  id         String   @id @default(cuid())
-  firstName  String   @map("first_name")
-  lastName   String   @map("last_name")
-  role       UserRole @default(PLAYER)
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  drivenRides     Ride[]           @relation("RideDriver")
-  ridePassengers  RidePassenger[]
+  id                 String              @id @default(cuid())
+  firstName          String              @map("first_name")
+  lastName           String              @map("last_name")
+  role               UserRole            @default(USER)
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+  bringItems         BringItem[]
   gameParticipations GameParticipation[]
-  bringItems      BringItem[]
-  playerPositions UserPosition[]
+  ridePassengers     RidePassenger[]
+  drivenRides        Ride[]              @relation("RideDriver")
+  playerPositions    UserPosition[]
 
   @@map("user_profiles")
 }
 
+model MatchDay {
+  id                 String              @id @default(cuid())
+  date               DateTime
+  time               String
+  location           String
+  opponent           String
+  bringItems         BringItem[]
+  gameParticipations GameParticipation[]
+  rides              Ride[]
+
+  @@map("match_days")
+}
+
+model Ride {
+  id                String          @id @default(cuid())
+  matchDayId        String          @map("match_day_id")
+  driverId          String          @map("driver_id")
+  departureTime     DateTime        @map("departure_time")
+  departureLocation String          @map("departure_location")
+  availableSeats    Int             @map("available_seats")
+  additionalInfo    String?         @map("additional_info")
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+  passengers        RidePassenger[]
+  driver            UserProfile     @relation("RideDriver", fields: [driverId], references: [id], onDelete: Cascade)
+  matchDay          MatchDay        @relation(fields: [matchDayId], references: [id], onDelete: Cascade)
+
+  @@map("rides")
+}
+
+model RidePassenger {
+  id          String      @id @default(cuid())
+  rideId      String      @map("ride_id")
+  passengerId String      @map("passenger_id")
+  joinedAt    DateTime    @default(now()) @map("joined_at")
+  passenger   UserProfile @relation(fields: [passengerId], references: [id], onDelete: Cascade)
+  ride        Ride        @relation(fields: [rideId], references: [id], onDelete: Cascade)
+
+  @@unique([rideId, passengerId])
+  @@map("ride_passengers")
+}
+
+model GameParticipation {
+  id         String                  @id @default(cuid())
+  matchDayId String                  @map("match_day_id")
+  playerId   String                  @map("player_id")
+  status     GameParticipationStatus
+  reason     String?                 @map("reason")
+  createdAt  DateTime                @default(now()) @map("created_at")
+  updatedAt  DateTime                @updatedAt @map("updated_at")
+  matchDay   MatchDay                @relation(fields: [matchDayId], references: [id], onDelete: Cascade)
+  player     UserProfile             @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([matchDayId, playerId])
+  @@map("game_participations")
+}
+
+model BringItem {
+  id          String      @id @default(cuid())
+  matchDayId  String      @map("match_day_id")
+  userId      String      @map("user_id")
+  itemName    String      @map("item_name")
+  description String?     @map("description")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  matchDay    MatchDay    @relation(fields: [matchDayId], references: [id], onDelete: Cascade)
+  user        UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("bring_items")
+}
+
+model UserPosition {
+  id        String             @id @default(cuid())
+  userId    String             @map("user_id")
+  position  VolleyballPosition
+  isPrimary Boolean            @default(false) @map("is_primary")
+  createdAt DateTime           @default(now()) @map("created_at")
+  updatedAt DateTime           @updatedAt @map("updated_at")
+  user      UserProfile        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, position])
+  @@map("user_positions")
+}
+
 enum UserRole {
+  USER
   ADMIN
   TRAINER
   PENALTY_MASTER
@@ -42,113 +119,14 @@ enum UserRole {
 }
 
 enum VolleyballPosition {
-  MB  // Mittelblock
-  AA  // Außenannahme
-  L   // Libero
-  Z   // Zuspiel
-  D   // Diagonal
+  MB
+  AA
+  L
+  Z
+  D
 }
 
 enum GameParticipationStatus {
   JOINING
   DECLINING
-}
-
-model MatchDay {
-  id       String @id @default(cuid())
-  date     DateTime
-  time     String
-  location String
-  opponent String
-
-  // Relations
-  rides Ride[]
-  gameParticipations GameParticipation[]
-  bringItems BringItem[]
-
-  @@map("match_days")
-}
-
-model Ride {
-  id                 String   @id @default(cuid())
-  matchDayId         String   @map("match_day_id")
-  driverId           String   @map("driver_id")
-  departureTime      DateTime @map("departure_time")
-  departureLocation  String   @map("departure_location")
-  availableSeats     Int      @map("available_seats")
-  additionalInfo     String?  @map("additional_info")
-  createdAt          DateTime @default(now()) @map("created_at")
-  updatedAt          DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  matchDay   MatchDay        @relation(fields: [matchDayId], references: [id], onDelete: Cascade)
-  driver     UserProfile     @relation("RideDriver", fields: [driverId], references: [id], onDelete: Cascade)
-  passengers RidePassenger[]
-
-  @@map("rides")
-}
-
-model RidePassenger {
-  id          String   @id @default(cuid())
-  rideId      String   @map("ride_id")
-  passengerId String   @map("passenger_id")
-  joinedAt    DateTime @default(now()) @map("joined_at")
-
-  // Relations
-  ride      Ride        @relation(fields: [rideId], references: [id], onDelete: Cascade)
-  passenger UserProfile @relation(fields: [passengerId], references: [id], onDelete: Cascade)
-
-  // Ensure a user can only join a ride once
-  @@unique([rideId, passengerId])
-  @@map("ride_passengers")
-}
-
-model GameParticipation {
-  id          String                 @id @default(cuid())
-  matchDayId  String                 @map("match_day_id")
-  playerId    String                 @map("player_id")
-  status      GameParticipationStatus
-  reason      String?                @map("reason") // Optional für JOINING (z.B. "Ich komme später"), verpflichtend für DECLINING
-  createdAt   DateTime               @default(now()) @map("created_at")
-  updatedAt   DateTime               @updatedAt @map("updated_at")
-
-  // Relations
-  matchDay MatchDay   @relation(fields: [matchDayId], references: [id], onDelete: Cascade)
-  player   UserProfile @relation(fields: [playerId], references: [id], onDelete: Cascade)
-
-  // Ensure a player can only have one participation status per match day
-  @@unique([matchDayId, playerId])
-  @@map("game_participations")
-}
-
-model BringItem {
-  id          String   @id @default(cuid())
-  matchDayId  String   @map("match_day_id")
-  userId      String   @map("user_id")
-  itemName    String   @map("item_name")
-  description String?  @map("description")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  matchDay MatchDay    @relation(fields: [matchDayId], references: [id], onDelete: Cascade)
-  user     UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("bring_items")
-}
-
-model UserPosition {
-  id         String            @id @default(cuid())
-  userId     String            @map("user_id")
-  position   VolleyballPosition
-  isPrimary  Boolean           @default(false) @map("is_primary") // Hauptposition des Spielers
-  createdAt  DateTime          @default(now()) @map("created_at")
-  updatedAt  DateTime          @updatedAt @map("updated_at")
-
-  // Relations
-  user       UserProfile       @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  // Ein User kann jede Position nur einmal haben
-  @@unique([userId, position])
-  @@map("user_positions")
 }

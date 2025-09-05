@@ -6,7 +6,7 @@ import { UserEditHandler, UserDeleteHandler } from "./types";
 import { UsersListSkeleton } from "@/components/ui/SkeletonLoader";
 import { Icon } from "@/components/ui";
 import { Modal } from "@/components/ui";
-import { DeleteUserConfirm } from "@/components/admin";
+import { DeleteUserConfirm, EditUserForm } from "@/components/admin";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import styles from "./UsersList.module.css";
 
@@ -14,8 +14,6 @@ const getRoleDisplayName = (role: UserRole): string => {
     switch (role) {
         case UserRole.ADMIN:
             return "Administrator";
-        case UserRole.USER:
-            return "Benutzer";
         case UserRole.TRAINER:
             return "Trainer";
         case UserRole.PENALTY_MASTER:
@@ -31,8 +29,6 @@ const getRoleClassName = (role: UserRole): string => {
     switch (role) {
         case UserRole.ADMIN:
             return styles.roleAdmin;
-        case UserRole.USER:
-            return styles.roleUser;
         case UserRole.TRAINER:
             return styles.roleTrainer;
         case UserRole.PENALTY_MASTER:
@@ -40,7 +36,7 @@ const getRoleClassName = (role: UserRole): string => {
         case UserRole.PLAYER:
             return styles.rolePlayer;
         default:
-            return styles.roleUser;
+            return styles.rolePlayer; // Default to player styling
     }
 };
 
@@ -49,13 +45,22 @@ export default function UsersList() {
     const { users, loading, error, refresh } = useAdminUsers();
     const { deleteUser, isDeleting } = useDeleteUser();
     const [deleteUserToDelete, setDeleteUserToDelete] = useState<UserProfileWithPositions | null>(null);
+    const [userToEdit, setUserToEdit] = useState<UserProfileWithPositions | null>(null);
 
     // Check if current user has admin access
     const canDeleteUsers = currentUserProfile && hasAdminAccess(currentUserProfile);
 
     const handleEdit: UserEditHandler = (user) => {
-        // TODO: Implementierung für Benutzer bearbeiten
-        alert(`Bearbeiten: ${user.firstName} ${user.lastName}`);
+        setUserToEdit(user);
+    };
+
+    const handleEditSuccess = () => {
+        setUserToEdit(null);
+        refresh(); // Refresh the users list
+    };
+
+    const handleEditCancel = () => {
+        setUserToEdit(null);
     };
 
     const handleDeleteClick: UserDeleteHandler = (user) => {
@@ -171,6 +176,11 @@ export default function UsersList() {
             {/* Delete Confirmation Modal */}
             <Modal isOpen={!!deleteUserToDelete} onClose={handleDeleteCancel} title="Benutzer löschen" maxWidth="md" data-testid="delete-user-modal">
                 {deleteUserToDelete && <DeleteUserConfirm user={deleteUserToDelete} loading={isDeleting} onConfirm={handleDeleteConfirm} onCancel={handleDeleteCancel} />}
+            </Modal>
+
+            {/* Edit User Modal */}
+            <Modal isOpen={!!userToEdit} onClose={handleEditCancel} title="Benutzer bearbeiten" maxWidth="lg" data-testid="edit-user-modal">
+                {userToEdit && <EditUserForm user={userToEdit} onUserUpdated={handleEditSuccess} onCancel={handleEditCancel} />}
             </Modal>
         </div>
     );

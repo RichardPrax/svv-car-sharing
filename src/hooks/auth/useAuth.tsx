@@ -182,31 +182,31 @@ export function useRegistration() {
                             id: authData.user.id,
                             firstName: state.firstName,
                             lastName: state.lastName,
-                            role: "USER",
+                            role: "PLAYER",
                         }),
                     });
 
                     if (!profileResponse.ok) {
                         console.error("Failed to create user profile");
-                        setState((prev) => ({ 
-                            ...prev, 
-                            error: "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.", 
-                            loading: false 
+                        setState((prev) => ({
+                            ...prev,
+                            error: "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+                            loading: false,
                         }));
                         return;
                     }
                 } catch (profileError) {
                     console.error("Error creating user profile:", profileError);
-                    setState((prev) => ({ 
-                        ...prev, 
-                        error: "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.", 
-                        loading: false 
+                    setState((prev) => ({
+                        ...prev,
+                        error: "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+                        loading: false,
                     }));
                     return;
                 }
 
                 setState((prev) => ({ ...prev, loading: false, success: true }));
-                
+
                 // If email confirmation is disabled, redirect immediately
                 if (authData.session) {
                     // Add small delay to ensure profile is available before components try to fetch it
