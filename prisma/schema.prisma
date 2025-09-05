@@ -14,7 +14,7 @@ model UserProfile {
   id                 String              @id @default(cuid())
   firstName          String              @map("first_name")
   lastName           String              @map("last_name")
-  role               UserRole            @default(USER)
+  role               UserRole            @default(PLAYER)
   createdAt          DateTime            @default(now()) @map("created_at")
   updatedAt          DateTime            @updatedAt @map("updated_at")
   bringItems         BringItem[]
@@ -111,7 +111,6 @@ model UserPosition {
 }
 
 enum UserRole {
-  USER
   ADMIN
   TRAINER
   PENALTY_MASTER
