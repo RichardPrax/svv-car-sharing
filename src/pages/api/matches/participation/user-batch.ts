@@ -21,7 +21,7 @@ async function userBatchHandler(req: AuthenticatedRequest, res: NextApiResponse)
             return res.status(400).json({ error: "Match IDs are required" });
         }
 
-        const matchIdArray = matchIds.split(",").filter(id => id.trim());
+        const matchIdArray = matchIds.split(",").filter((id) => id.trim());
 
         if (matchIdArray.length === 0) {
             return res.status(400).json({ error: "At least one match ID is required" });
@@ -30,8 +30,8 @@ async function userBatchHandler(req: AuthenticatedRequest, res: NextApiResponse)
         // Check if user has player role
         const userProfile = await userProfileRepository.findById(user.id);
 
-        if (!userProfile || (userProfile.role !== "PLAYER" && userProfile.role !== "USER" && userProfile.role !== "ADMIN")) {
-            return res.status(403).json({ error: "Only players, users, and admins can participate in games" });
+        if (!userProfile || (userProfile.role !== "PLAYER" && userProfile.role !== "ADMIN" && userProfile.role !== "TRAINER")) {
+            return res.status(403).json({ error: "Only players, trainers, and admins can participate in games" });
         }
 
         // Get all participations for this user across the specified matches
@@ -44,10 +44,10 @@ async function userBatchHandler(req: AuthenticatedRequest, res: NextApiResponse)
         });
 
         // Create a map of matchId to participation
-        const participationByMatch: Record<string, typeof participations[0] | null> = {};
-        
+        const participationByMatch: Record<string, (typeof participations)[0] | null> = {};
+
         for (const matchId of matchIdArray) {
-            const participation = participations.find(p => p.matchDayId === matchId);
+            const participation = participations.find((p) => p.matchDayId === matchId);
             participationByMatch[matchId] = participation || null;
         }
 
@@ -59,5 +59,5 @@ async function userBatchHandler(req: AuthenticatedRequest, res: NextApiResponse)
 }
 
 // Export with auth middleware
-export default (req: NextApiRequest, res: NextApiResponse) => 
-    withAuth(req, res, userBatchHandler);
+export default (req: NextApiRequest, res: NextApiResponse) => withAuth(req, res, userBatchHandler);
+
