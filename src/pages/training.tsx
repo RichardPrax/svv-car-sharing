@@ -31,7 +31,7 @@ export default function TrainingPage() {
                     {/* Page Header */}
                     <section className={styles.pageHeader}>
                         <h1 className={styles.pageTitle}>
-                            <Icon name="runner" size={32} color="#3B82F6" />
+                            <Icon name="runner" size={32} color="#3ecf8e" />
                             Training
                         </h1>
                         {hasTrainerAccess && (
@@ -45,15 +45,19 @@ export default function TrainingPage() {
                     </section>
 
                     {/* Next Training Card */}
-                    <section style={{ marginBottom: "32px" }}>
-                        <NextTrainingCard training={nextTraining} loading={loading} />
-                    </section>
+                    {nextTraining && (
+                        <section className={styles.sectionContainer}>
+                            <h2 className={styles.sectionTitle}>Nächstes Training</h2>
+                            <NextTrainingCard training={nextTraining} loading={loading} />
+                        </section>
+                    )}
 
                     {/* Training List */}
                     <section>
+                        <h2 className={styles.sectionTitle}>Alle Trainings</h2>
                         {error && (
-                            <div className={styles.errorMessage}>
-                                {error}
+                            <div className={styles.errorSection}>
+                                <p className={styles.errorText}>{error}</p>
                             </div>
                         )}
                         <TrainingList trainings={trainings} loading={loading} />

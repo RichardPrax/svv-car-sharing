@@ -42,25 +42,20 @@ export default function NextTrainingCard({ training, loading }: Props) {
     return (
         <div className={styles.nextTrainingCard} onClick={handleClick}>
             <div className={styles.nextTrainingHeader}>
-                <div className={styles.nextTrainingIcon}>🏐</div>
-                <h3 className={styles.nextTrainingTitle}>Nächstes Training</h3>
+                <p className={styles.nextTrainingDate}>{formatTrainingDate(training)}</p>
+                <p className={styles.nextTrainingTime}>{formatTrainingTimeRange(training)}</p>
             </div>
-            
-            <div className={styles.nextTrainingDate}>
-                {formatTrainingDate(training)}
-            </div>
-            
-            <div className={styles.nextTrainingTime}>
-                {formatTrainingTimeRange(training)}
-            </div>
-            
+
             <div className={styles.nextTrainingDetails}>
                 <div className={styles.nextTrainingDetail}>
-                    📍 {training.location}
+                    <span className={styles.nextTrainingDetailLabel}>Ort</span>
+                    <span className={styles.nextTrainingDetailValue}>{training.location}</span>
                 </div>
+
                 {training.description && (
                     <div className={styles.nextTrainingDetail}>
-                        📝 {training.description}
+                        <span className={styles.nextTrainingDetailLabel}>Beschreibung</span>
+                        <span className={styles.nextTrainingDetailValue}>{training.description}</span>
                     </div>
                 )}
             </div>

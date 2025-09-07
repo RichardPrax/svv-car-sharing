@@ -31,7 +31,7 @@ export default function TrainingsPage() {
                     {/* Page Header */}
                     <section className={styles.pageHeader}>
                         <h1 className={styles.pageTitle}>
-                            <Icon name="runner" size={32} color="#3B82F6" />
+                            <Icon name="runner" size={32} color="#3ecf8e" />
                             Alle Trainings
                         </h1>
                         {hasTrainerAccess && (
@@ -47,8 +47,8 @@ export default function TrainingsPage() {
                     {/* Training List */}
                     <section>
                         {error && (
-                            <div className={styles.errorMessage}>
-                                {error}
+                            <div className={styles.errorSection}>
+                                <p className={styles.errorText}>{error}</p>
                             </div>
                         )}
                         <TrainingList trainings={trainings} loading={loading} />

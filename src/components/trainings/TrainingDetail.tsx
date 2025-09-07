@@ -1,5 +1,5 @@
 // src/components/trainings/TrainingDetail.tsx
-import { Training, formatTrainingDate, formatTrainingTimeRange } from "@/entities/Training";
+import { Training, formatTrainingTimeRange } from "@/entities/Training";
 import { formatDate, formatDateForId } from "@/utils/dateTime";
 import styles from "./Trainings.module.css";
 
