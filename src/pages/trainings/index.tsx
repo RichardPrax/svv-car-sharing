@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Icon, Modal } from "@/components/ui";
 import { Button } from "@/components/forms";
-import { TrainingList, NextTrainingCard, CreateTrainingForm } from "@/components/trainings";
+import { TrainingList, CreateTrainingForm } from "@/components/trainings";
 import { useTrainings, useCreateTraining } from "@/hooks/trainings";
 import { useRoleGuard } from "@/hooks/auth/useRoleGuard";
 import { Training } from "@/entities/Training";
-import styles from "../styles/Pages.module.css";
+import styles from "../../styles/Pages.module.css";
 
-export default function TrainingPage() {
-    const { trainings, nextTraining, loading, error, refetch } = useTrainings();
+export default function TrainingsPage() {
+    const { trainings, loading, error, refetch } = useTrainings();
     const { createTraining, loading: createLoading } = useCreateTraining();
     const { hasRole, hasAdminAccess } = useRoleGuard();
     const hasTrainerAccess = hasRole("TRAINER") || hasRole("ADMIN") || hasAdminAccess();
@@ -32,7 +32,7 @@ export default function TrainingPage() {
                     <section className={styles.pageHeader}>
                         <h1 className={styles.pageTitle}>
                             <Icon name="runner" size={32} color="#3B82F6" />
-                            Training
+                            Alle Trainings
                         </h1>
                         {hasTrainerAccess && (
                             <Button 
@@ -42,11 +42,6 @@ export default function TrainingPage() {
                                 ➕ Training erstellen
                             </Button>
                         )}
-                    </section>
-
-                    {/* Next Training Card */}
-                    <section style={{ marginBottom: "32px" }}>
-                        <NextTrainingCard training={nextTraining} loading={loading} />
                     </section>
 
                     {/* Training List */}
@@ -78,4 +73,3 @@ export default function TrainingPage() {
         </>
     );
 }
-

@@ -1,0 +1,409 @@
+/* Training Card Styles */
+.trainingCard {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.trainingCard:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    transform: translateY(-1px);
+}
+
+.trainingCardPast {
+    opacity: 0.7;
+    background: #f9fafb;
+}
+
+.trainingCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.trainingCardDateTime {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.trainingCardDate {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.trainingCardTime {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.trainingCardPastIndicator {
+    background: #9ca3af;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.trainingCardDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.trainingCardDetailRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.trainingCardDetailLabel {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.trainingCardDetailValue {
+    font-size: 14px;
+    color: #111827;
+    text-align: right;
+    word-break: break-word;
+}
+
+/* Training List Styles */
+.trainingList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6b7280;
+}
+
+.emptyStateIcon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.emptyStateTitle {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #374151;
+}
+
+.emptyStateMessage {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Next Training Card Styles */
+.nextTrainingCard {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.nextTrainingCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+}
+
+.nextTrainingHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.nextTrainingIcon {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nextTrainingTitle {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.nextTrainingDate {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.nextTrainingTime {
+    font-size: 16px;
+    opacity: 0.9;
+    margin-bottom: 12px;
+}
+
+.nextTrainingDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nextTrainingDetail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* Training Detail Styles */
+.trainingDetailContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.trainingDetailWrapper {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.trainingHeaderTop {
+    padding: 20px 24px 0;
+}
+
+.trainingInfo {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.trainingTitle {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 20px 0;
+}
+
+.trainingInfoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.trainingInfoItem {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.trainingInfoLabel {
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+}
+
+.trainingInfoValue {
+    font-size: 16px;
+    color: #111827;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Form Styles */
+.formContainer {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.formTitle {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0 0 24px 0;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.formField {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.formLabel {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.formInput {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.formInput:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.formTextarea {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 100px;
+    transition: border-color 0.2s ease;
+}
+
+.formTextarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.formActions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+.formButton {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.formButtonPrimary {
+    background: #3b82f6;
+    color: white;
+}
+
+.formButtonPrimary:hover {
+    background: #2563eb;
+}
+
+.formButtonSecondary {
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+.formButtonSecondary:hover {
+    background: #e5e7eb;
+}
+
+.formButtonDanger {
+    background: #dc2626;
+    color: white;
+}
+
+.formButtonDanger:hover {
+    background: #b91c1c;
+}
+
+/* Delete Confirmation Styles */
+.deleteConfirm {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 400px;
+    text-align: center;
+}
+
+.deleteConfirmIcon {
+    font-size: 48px;
+    color: #dc2626;
+    margin-bottom: 16px;
+}
+
+.deleteConfirmTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0 0 12px 0;
+}
+
+.deleteConfirmMessage {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.5;
+    margin: 0 0 24px 0;
+}
+
+.deleteConfirmActions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .trainingCardDetailRow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .trainingCardDetailValue {
+        text-align: left;
+    }
+    
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+    
+    .trainingInfoGrid {
+        grid-template-columns: 1fr;
+    }
+    
+    .formActions {
+        flex-direction: column;
+    }
+    
+    .deleteConfirmActions {
+        flex-direction: column;
+    }
+}
