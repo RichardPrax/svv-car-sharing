@@ -89,7 +89,8 @@ export default function TrainingPage() {
                                 onClick={() => setShowCreateForm(true)}
                                 variant="primary"
                             >
-                                ➕ Training erstellen
+                                <Icon name="plus" size={16} color="currentColor" />
+                                <span style={{ marginLeft: '6px' }}>Training erstellen</span>
                             </Button>
                         )}
                     </section>
