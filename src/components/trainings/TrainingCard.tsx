@@ -8,6 +8,7 @@ import { formatDateForId, isTrainingInPast } from "@/utils/dateTime";
 import { TrainingParticipationOverview } from "@/hooks/trainings/useBatchedTrainingParticipationOverview";
 import { ThumbsUpIcon, ThumbsDownIcon, ClockIcon } from "@/components/ui/GameParticipationIcons";
 import TrainingParticipationButtons from "./TrainingParticipationButtons";
+import TrainingParticipationSummary from "./TrainingParticipationSummary";
 import { useState, useMemo } from "react";
 import styles from "./Trainings.module.css";
 
@@ -26,6 +27,7 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
     const router = useRouter();
     const hasTrainerAccess = hasRole("TRAINER") || hasRole("ADMIN") || hasAdminAccess();
     const [participationRefreshTrigger, setParticipationRefreshTrigger] = useState(0);
+    const [showParticipants, setShowParticipants] = useState(false);
 
     // Extract user's participation from the overview data
     const userParticipation = useMemo(() => {
@@ -55,6 +57,11 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
         // No need to prevent propagation since card is no longer clickable
     };
 
+    const handleToggleView = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setShowParticipants(!showParticipants);
+    };
+
     const cardClasses = [styles.trainingCard, isPast && styles.trainingCardPast].filter(Boolean).join(" ");
 
     return (
@@ -69,6 +76,20 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
                 </div>
                 <div className={styles.trainingCardHeaderRight}>
                     {isPast && <div className={styles.trainingCardPastIndicator}>Beendet</div>}
+                    
+                    {/* Toggle View Button */}
+                    {participationOverview && participationOverview.counts.total > 0 && (
+                        <button
+                            onClick={handleToggleView}
+                            className={styles.trainingCardActionButton}
+                            title={showParticipants ? "Training-Info anzeigen" : "Teilnehmer anzeigen"}
+                            type="button"
+                            aria-label={showParticipants ? "Training-Info anzeigen" : "Teilnehmer anzeigen"}
+                        >
+                            <Icon name={showParticipants ? "chart" : "users"} size={16} color="currentColor" />
+                        </button>
+                    )}
+                    
                     {hasTrainerAccess && !isPast && (
                         <div className={styles.trainingCardActions}>
                             <button
@@ -94,41 +115,52 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
                 </div>
             </div>
 
-            <div className={styles.trainingCardDetails}>
-                {training.description && (
-                    <div className={styles.trainingCardDetailRow}>
-                        <span className={styles.trainingCardDetailLabel}>Beschreibung:</span>
-                        <span className={styles.trainingCardDetailValue}>{training.description}</span>
-                    </div>
-                )}
-
-                {/* Participation Summary */}
-                {participationOverview && participationOverview.counts.total > 0 && (
-                    <div className={styles.trainingCardParticipationSummary}>
-                        <span className={styles.trainingCardParticipationLabel}>Teilnahme:</span>
-                        <div className={styles.trainingCardParticipationCounts}>
-                            {participationOverview.counts.joining > 0 && (
-                                <span className={styles.trainingCardParticipationCount} style={{ color: "#10b981" }}>
-                                    <ThumbsUpIcon size={16} />
-                                    <span style={{ marginLeft: "4px" }}>{participationOverview.counts.joining}</span>
-                                </span>
-                            )}
-                            {participationOverview.counts.declining > 0 && (
-                                <span className={styles.trainingCardParticipationCount} style={{ color: "#ef4444" }}>
-                                    <ThumbsDownIcon size={16} />
-                                    <span style={{ marginLeft: "4px" }}>{participationOverview.counts.declining}</span>
-                                </span>
-                            )}
-                            {participationOverview.counts.open > 0 && (
-                                <span className={styles.trainingCardParticipationCount} style={{ color: "#6b7280" }}>
-                                    <ClockIcon size={16} />
-                                    <span style={{ marginLeft: "4px" }}>{participationOverview.counts.open}</span>
-                                </span>
-                            )}
+            {/* Conditional rendering based on view mode */}
+            {showParticipants ? (
+                <div className={styles.trainingCardParticipantsView}>
+                    <TrainingParticipationSummary 
+                        trainingId={training.id}
+                        trainingDate={training.date}
+                        participationOverview={participationOverview}
+                    />
+                </div>
+            ) : (
+                <div className={styles.trainingCardDetails}>
+                    {training.description && (
+                        <div className={styles.trainingCardDetailRow}>
+                            <span className={styles.trainingCardDetailLabel}>Beschreibung:</span>
+                            <span className={styles.trainingCardDetailValue}>{training.description}</span>
                         </div>
-                    </div>
-                )}
-            </div>
+                    )}
+
+                    {/* Participation Summary */}
+                    {participationOverview && participationOverview.counts.total > 0 && (
+                        <div className={styles.trainingCardParticipationSummary}>
+                            <span className={styles.trainingCardParticipationLabel}>Teilnahme:</span>
+                            <div className={styles.trainingCardParticipationCounts}>
+                                {participationOverview.counts.joining > 0 && (
+                                    <span className={styles.trainingCardParticipationCount} style={{ color: "#10b981" }}>
+                                        <ThumbsUpIcon size={16} />
+                                        <span style={{ marginLeft: "4px" }}>{participationOverview.counts.joining}</span>
+                                    </span>
+                                )}
+                                {participationOverview.counts.declining > 0 && (
+                                    <span className={styles.trainingCardParticipationCount} style={{ color: "#ef4444" }}>
+                                        <ThumbsDownIcon size={16} />
+                                        <span style={{ marginLeft: "4px" }}>{participationOverview.counts.declining}</span>
+                                    </span>
+                                )}
+                                {participationOverview.counts.open > 0 && (
+                                    <span className={styles.trainingCardParticipationCount} style={{ color: "#6b7280" }}>
+                                        <ClockIcon size={16} />
+                                        <span style={{ marginLeft: "4px" }}>{participationOverview.counts.open}</span>
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
 
             {/* Show participation buttons only for players and future trainings */}
             {user && hasPlayerAccess() && !isPast && (

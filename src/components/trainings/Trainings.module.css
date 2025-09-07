@@ -510,6 +510,62 @@
     margin-top: var(--spacing-xs);
 }
 
+.trainingCardParticipantsView {
+    padding: var(--spacing-md) 0;
+    border-top: 1px solid var(--card-border);
+    margin-top: var(--spacing-md);
+}
+
+/* Override TrainingParticipationSummary styles when embedded in card */
+.trainingCardParticipantsView .participationSummaryContainer {
+    gap: var(--spacing-md);
+}
+
+.trainingCardParticipantsView .summaryHeader {
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--card-border);
+}
+
+.trainingCardParticipantsView .summaryTitle {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.trainingCardParticipantsView .statValue {
+    font-size: 1.125rem;
+}
+
+.trainingCardParticipantsView .participationGroups {
+    gap: var(--spacing-sm);
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.trainingCardParticipantsView .groupHeader {
+    padding: var(--spacing-sm);
+}
+
+.trainingCardParticipantsView .groupContent {
+    padding: var(--spacing-sm);
+    padding-top: 0;
+}
+
+.trainingCardParticipantsView .groupTitle {
+    font-size: 0.875rem;
+}
+
+.trainingCardParticipantsView .groupIcon {
+    width: 24px;
+    height: 24px;
+}
+
+.trainingCardParticipantsView .userCard {
+    padding: var(--spacing-xs);
+}
+
+.trainingCardParticipantsView .userName {
+    font-size: 0.75rem;
+}
+
 .trainingCardParticipationLabel {
     font-size: 0.75rem;
     color: var(--text-secondary);
@@ -677,5 +733,16 @@
 
     .trainingCardParticipationCounts {
         flex-wrap: wrap;
+    }
+
+    /* Mobile styles for embedded participation view */
+    .trainingCardParticipantsView .participationGroups {
+        grid-template-columns: 1fr;
+    }
+
+    .trainingCardParticipantsView .summaryHeader {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+        align-items: flex-start;
     }
 }
