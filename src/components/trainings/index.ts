@@ -4,3 +4,7 @@ export { default as CreateTrainingForm } from './CreateTrainingForm';
 export { default as EditTrainingForm } from './EditTrainingForm';
 export { default as DeleteTrainingConfirm } from './DeleteTrainingConfirm';
 export { default as NextTrainingCard } from './NextTrainingCard';
+export { default as TrainingParticipationButtons } from './TrainingParticipationButtons';
+export { default as TrainingParticipationSummary } from './TrainingParticipationSummary';
+export { default as TrainingDeclineReasonModal } from './TrainingDeclineReasonModal';
+export { default as TrainingJoinInfoModal } from './TrainingJoinInfoModal';

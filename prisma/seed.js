@@ -27,7 +27,6 @@ async function main() {
                 date: futureDate,
                 startTime: "19:00",
                 endTime: "21:00",
-                location: i % 3 === 0 ? "Sporthalle 1" : i % 3 === 1 ? "Sporthalle 2" : "Vereinsheim",
                 description: i % 2 === 0 ? 
                     "Techniktraining mit Fokus auf Angriff und Block" : 
                     i % 4 === 1 ? 

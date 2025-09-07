@@ -1,5 +1,7 @@
 // src/components/trainings/TrainingList.tsx
 import { Training } from "@/entities/Training";
+import { useState, useMemo } from "react";
+import { useBatchedTrainingParticipationOverview, BatchedTrainingParticipationOverview } from "@/hooks/trainings/useBatchedTrainingParticipationOverview";
 import TrainingCard from "./TrainingCard";
 import styles from "./Trainings.module.css";
 
@@ -11,6 +13,26 @@ type Props = {
 };
 
 export default function TrainingList({ trainings, loading, onEdit, onDelete }: Props) {
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
+    
+    // Memoize training IDs to prevent unnecessary re-renders
+    const trainingIds = useMemo(() => {
+        return trainings.map(training => training.id);
+    }, [trainings]);
+    
+    // Fetch participation overview for all trainings in a single request
+    const { overview: batchedOverview } = useBatchedTrainingParticipationOverview({
+        trainingIds,
+        refreshTrigger,
+    });
+
+    const handleParticipationChange = () => {
+        // Trigger a refresh of the participation overview
+        setTimeout(() => {
+            setRefreshTrigger((prev) => prev + 1);
+        }, 100);
+    };
+
     if (loading) {
         return (
             <div className={styles.emptyState}>
@@ -38,6 +60,8 @@ export default function TrainingList({ trainings, loading, onEdit, onDelete }: P
                 <TrainingCard 
                     key={training.id} 
                     training={training} 
+                    participationOverview={batchedOverview?.[training.id]}
+                    onParticipationChange={handleParticipationChange}
                     onEdit={onEdit}
                     onDelete={onDelete}
                 />

@@ -1,20 +1,43 @@
 // src/components/trainings/TrainingCard.tsx
 import { Training, formatTrainingDate, formatTrainingTimeRange } from "@/entities/Training";
 import { useRoleGuard } from "@/hooks/auth/useRoleGuard";
+import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
+import { useRouter } from "next/router";
 import { Icon } from "@/components/ui";
 import { formatDateForId, isTrainingInPast } from "@/utils/dateTime";
+import { TrainingParticipationOverview } from "@/hooks/trainings/useBatchedTrainingParticipationOverview";
+import { ThumbsUpIcon, ThumbsDownIcon, ClockIcon } from "@/components/ui/GameParticipationIcons";
+import TrainingParticipationButtons from "./TrainingParticipationButtons";
+import { useState, useMemo } from "react";
 import styles from "./Trainings.module.css";
 
 type Props = {
     training: Training;
     onEdit?: (training: Training) => void;
     onDelete?: (training: Training) => void;
+    participationOverview?: TrainingParticipationOverview;
+    onParticipationChange?: () => void;
 };
 
-export default function TrainingCard({ training, onEdit, onDelete }: Props) {
+export default function TrainingCard({ training, onEdit, onDelete, participationOverview, onParticipationChange }: Props) {
     const isPast = isTrainingInPast(training.date, training.startTime);
-    const { hasRole, hasAdminAccess } = useRoleGuard();
+    const { hasRole, hasAdminAccess, hasPlayerAccess } = useRoleGuard();
+    const { user } = useOptimizedAuth();
+    const router = useRouter();
     const hasTrainerAccess = hasRole("TRAINER") || hasRole("ADMIN") || hasAdminAccess();
+    const [participationRefreshTrigger, setParticipationRefreshTrigger] = useState(0);
+
+    // Extract user's participation from the overview data
+    const userParticipation = useMemo(() => {
+        if (!participationOverview || !user) return null;
+        
+        const allParticipations = [
+            ...participationOverview.participation.JOINING,
+            ...participationOverview.participation.DECLINING
+        ];
+        
+        return allParticipations.find(p => p.playerId === user.id) || null;
+    }, [participationOverview, user]);
 
     const handleEditClick = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -26,12 +49,21 @@ export default function TrainingCard({ training, onEdit, onDelete }: Props) {
         onDelete?.(training);
     };
 
+    const handleCardClick = () => {
+        router.push(`/trainings/${training.id}`);
+    };
+
+    const handleParticipationClick = (e: React.MouseEvent) => {
+        e.stopPropagation(); // Prevent card click when clicking participation buttons
+    };
+
     const cardClasses = [styles.trainingCard, isPast && styles.trainingCardPast].filter(Boolean).join(" ");
 
     return (
         <div 
             data-testid={`training-${formatDateForId(training.date)}`}
             className={cardClasses}
+            onClick={handleCardClick}
         >
             <div className={styles.trainingCardHeader}>
                 <div className={styles.trainingCardDateTime}>
@@ -65,12 +97,59 @@ export default function TrainingCard({ training, onEdit, onDelete }: Props) {
                 </div>
             </div>
 
-            {training.description && (
-                <div className={styles.trainingCardDetails}>
+            <div className={styles.trainingCardDetails}>
+                {training.description && (
                     <div className={styles.trainingCardDetailRow}>
                         <span className={styles.trainingCardDetailLabel}>Beschreibung:</span>
                         <span className={styles.trainingCardDetailValue}>{training.description}</span>
                     </div>
+                )}
+
+                {/* Participation Summary */}
+                {participationOverview && participationOverview.counts.total > 0 && (
+                    <div className={styles.trainingCardParticipationSummary}>
+                        <span className={styles.trainingCardParticipationLabel}>Teilnahme:</span>
+                        <div className={styles.trainingCardParticipationCounts}>
+                            {participationOverview.counts.joining > 0 && (
+                                <span className={styles.trainingCardParticipationCount} style={{ color: "#10b981" }}>
+                                    <ThumbsUpIcon size={16} />
+                                    <span style={{ marginLeft: "4px" }}>{participationOverview.counts.joining}</span>
+                                </span>
+                            )}
+                            {participationOverview.counts.declining > 0 && (
+                                <span className={styles.trainingCardParticipationCount} style={{ color: "#ef4444" }}>
+                                    <ThumbsDownIcon size={16} />
+                                    <span style={{ marginLeft: "4px" }}>{participationOverview.counts.declining}</span>
+                                </span>
+                            )}
+                            {participationOverview.counts.open > 0 && (
+                                <span className={styles.trainingCardParticipationCount} style={{ color: "#6b7280" }}>
+                                    <ClockIcon size={16} />
+                                    <span style={{ marginLeft: "4px" }}>{participationOverview.counts.open}</span>
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* Show participation buttons only for players and future trainings */}
+            {user && hasPlayerAccess() && !isPast && (
+                <div onClick={handleParticipationClick}>
+                    <TrainingParticipationButtons
+                        trainingId={training.id}
+                        trainingDate={training.date}
+                        userParticipation={userParticipation}
+                        refreshTrigger={participationRefreshTrigger}
+                        onParticipationChange={() => {
+                            // Trigger a refresh of the participation overview
+                            // Small delay to ensure the API call completes
+                            setTimeout(() => {
+                                setParticipationRefreshTrigger((prev) => prev + 1);
+                                onParticipationChange?.();
+                            }, 100);
+                        }}
+                    />
                 </div>
             )}
         </div>
