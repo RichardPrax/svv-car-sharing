@@ -37,12 +37,12 @@ async function authenticatedTrainingHandler(req: AuthenticatedRequest, res: Next
                 return;
             }
 
-            const { date, startTime, endTime, location, description } = req.body;
+            const { date, startTime, endTime, description } = req.body;
 
             // Validate required fields
-            if (!date || !startTime || !endTime || !location) {
+            if (!date || !startTime || !endTime) {
                 return res.status(400).json({ 
-                    error: "Datum, Startzeit, Endzeit und Ort sind erforderlich" 
+                    error: "Datum, Startzeit und Endzeit sind erforderlich" 
                 });
             }
 
@@ -51,7 +51,6 @@ async function authenticatedTrainingHandler(req: AuthenticatedRequest, res: Next
                 date: new Date(date),
                 startTime,
                 endTime,
-                location,
                 description: description || null
             });
 

@@ -46,19 +46,14 @@ export default function NextTrainingCard({ training, loading }: Props) {
                 <p className={styles.nextTrainingTime}>{formatTrainingTimeRange(training)}</p>
             </div>
 
-            <div className={styles.nextTrainingDetails}>
-                <div className={styles.nextTrainingDetail}>
-                    <span className={styles.nextTrainingDetailLabel}>Ort</span>
-                    <span className={styles.nextTrainingDetailValue}>{training.location}</span>
-                </div>
-
-                {training.description && (
+            {training.description && (
+                <div className={styles.nextTrainingDetails}>
                     <div className={styles.nextTrainingDetail}>
                         <span className={styles.nextTrainingDetailLabel}>Beschreibung</span>
                         <span className={styles.nextTrainingDetailValue}>{training.description}</span>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </div>
     );
 }

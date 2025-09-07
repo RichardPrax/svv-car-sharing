@@ -20,7 +20,6 @@ export function useCreateTraining() {
                     date: trainingData.date.toISOString(),
                     startTime: trainingData.startTime,
                     endTime: trainingData.endTime,
-                    location: trainingData.location,
                     description: trainingData.description,
                 }),
             });

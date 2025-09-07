@@ -6,34 +6,7 @@ import { UserProfileRepository } from "@/lib/repositories/userProfileRepository"
 const trainingRepository = new TrainingRepository();
 const userProfileRepository = new UserProfileRepository();
 
-async function trainingDetailHandler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-    const { trainingId } = req.query;
-
-    if (typeof trainingId !== "string") {
-        return res.status(400).json({ error: "Ungültige Training-ID" });
-    }
-
-    if (req.method === "GET") {
-        try {
-            const training = await trainingRepository.findById(trainingId);
-            
-            if (!training) {
-                return res.status(404).json({ error: "Training nicht gefunden" });
-            }
-
-            res.status(200).json(training);
-        } catch (error) {
-            console.error("Fehler beim Laden des Trainings:", error);
-            res.status(500).json({ error: "Fehler beim Laden des Trainings" });
-        }
-    } else {
-        // PUT and DELETE require authentication
-        res.setHeader("Allow", ["GET"]);
-        res.status(405).end(`Method ${req.method} Not Allowed`);
-    }
-}
-
-async function authenticatedTrainingDetailHandler(req: AuthenticatedRequest, res: NextApiResponse): Promise<void> {
+async function authenticatedTrainingHandler(req: AuthenticatedRequest, res: NextApiResponse): Promise<void> {
     const { trainingId } = req.query;
 
     if (typeof trainingId !== "string") {
@@ -52,12 +25,12 @@ async function authenticatedTrainingDetailHandler(req: AuthenticatedRequest, res
                 return;
             }
 
-            const { date, startTime, endTime, location, description } = req.body;
+            const { date, startTime, endTime, description } = req.body;
 
             // Validate required fields
-            if (!date || !startTime || !endTime || !location) {
+            if (!date || !startTime || !endTime) {
                 return res.status(400).json({ 
-                    error: "Datum, Startzeit, Endzeit und Ort sind erforderlich" 
+                    error: "Datum, Startzeit und Endzeit sind erforderlich" 
                 });
             }
 
@@ -72,7 +45,6 @@ async function authenticatedTrainingDetailHandler(req: AuthenticatedRequest, res
                 date: new Date(date),
                 startTime,
                 endTime,
-                location,
                 description: description || null
             });
 
@@ -113,14 +85,12 @@ async function authenticatedTrainingDetailHandler(req: AuthenticatedRequest, res
     }
 }
 
-// Export combined handler that routes based on method
+// Export handler that only handles authenticated PUT and DELETE requests
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method === "GET") {
-        return trainingDetailHandler(req, res);
-    } else if (req.method === "PUT" || req.method === "DELETE") {
-        return withAuth(req, res, authenticatedTrainingDetailHandler);
+    if (req.method === "PUT" || req.method === "DELETE") {
+        return withAuth(req, res, authenticatedTrainingHandler);
     } else {
-        res.setHeader("Allow", ["GET", "PUT", "DELETE"]);
+        res.setHeader("Allow", ["PUT", "DELETE"]);
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 }

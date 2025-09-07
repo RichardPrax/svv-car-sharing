@@ -6,9 +6,11 @@ import styles from "./Trainings.module.css";
 type Props = {
     trainings: Training[];
     loading?: boolean;
+    onEdit?: (training: Training) => void;
+    onDelete?: (training: Training) => void;
 };
 
-export default function TrainingList({ trainings, loading }: Props) {
+export default function TrainingList({ trainings, loading, onEdit, onDelete }: Props) {
     if (loading) {
         return (
             <div className={styles.emptyState}>
@@ -33,7 +35,12 @@ export default function TrainingList({ trainings, loading }: Props) {
     return (
         <div className={styles.trainingList}>
             {trainings.map((training) => (
-                <TrainingCard key={training.id} training={training} />
+                <TrainingCard 
+                    key={training.id} 
+                    training={training} 
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                />
             ))}
         </div>
     );

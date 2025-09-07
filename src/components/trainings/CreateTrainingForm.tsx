@@ -14,14 +14,13 @@ export default function CreateTrainingForm({ onSubmit, onCancel, loading }: Prop
         date: "",
         startTime: "",
         endTime: "",
-        location: "",
         description: "",
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
-        if (!formData.date || !formData.startTime || !formData.endTime || !formData.location) {
+        if (!formData.date || !formData.startTime || !formData.endTime) {
             alert("Bitte füllen Sie alle Pflichtfelder aus.");
             return;
         }
@@ -30,7 +29,6 @@ export default function CreateTrainingForm({ onSubmit, onCancel, loading }: Prop
             date: new Date(formData.date),
             startTime: formData.startTime,
             endTime: formData.endTime,
-            location: formData.location,
             description: formData.description || null,
         });
     };
@@ -59,19 +57,6 @@ export default function CreateTrainingForm({ onSubmit, onCancel, loading }: Prop
                         />
                     </div>
 
-                    <div className={styles.formField}>
-                        <label className={styles.formLabel} htmlFor="location">Ort *</label>
-                        <input
-                            type="text"
-                            id="location"
-                            name="location"
-                            value={formData.location}
-                            onChange={handleChange}
-                            className={styles.formInput}
-                            placeholder="z.B. Vereinsheim"
-                            required
-                        />
-                    </div>
 
                     <div className={styles.formField}>
                         <label className={styles.formLabel} htmlFor="startTime">Startzeit *</label>

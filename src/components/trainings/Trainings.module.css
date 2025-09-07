@@ -28,6 +28,12 @@
     margin-bottom: 16px;
 }
 
+.trainingCardHeaderRight {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
 .trainingCardDateTime {
     display: flex;
     flex-direction: column;
@@ -56,6 +62,42 @@
     padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-sm);
     white-space: nowrap;
+}
+
+.trainingCardActions {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.trainingCardActionButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid var(--card-border);
+}
+
+.trainingCardActionButton:hover {
+    background-color: var(--surface-hover);
+    color: var(--text-primary);
+    border-color: var(--border-light);
+}
+
+.trainingCardActionButtonDanger {
+    color: var(--error);
+}
+
+.trainingCardActionButtonDanger:hover {
+    background-color: var(--error);
+    color: white;
+    border-color: var(--error);
 }
 
 .trainingCardDetails {
@@ -203,6 +245,7 @@
     font-size: 1.125rem;
     font-weight: 600;
     color: var(--text-primary);
+    text-align: center;
 }
 
 /* Training Detail Styles */
