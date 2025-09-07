@@ -35,12 +35,10 @@ export default function NextTrainingCard({ training, loading }: Props) {
         );
     }
 
-    const handleClick = () => {
-        router.push(`/trainings/${training.id}`);
-    };
+    // No click handler needed - trainings should not be clickable
 
     return (
-        <div className={styles.nextTrainingCard} onClick={handleClick}>
+        <div className={styles.nextTrainingCard}>
             <div className={styles.nextTrainingHeader}>
                 <p className={styles.nextTrainingDate}>{formatTrainingDate(training)}</p>
                 <p className={styles.nextTrainingTime}>{formatTrainingTimeRange(training)}</p>

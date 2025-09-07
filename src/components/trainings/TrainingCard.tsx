@@ -49,12 +49,10 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
         onDelete?.(training);
     };
 
-    const handleCardClick = () => {
-        router.push(`/trainings/${training.id}`);
-    };
+    // No click handler needed - trainings should not be clickable
 
     const handleParticipationClick = (e: React.MouseEvent) => {
-        e.stopPropagation(); // Prevent card click when clicking participation buttons
+        // No need to prevent propagation since card is no longer clickable
     };
 
     const cardClasses = [styles.trainingCard, isPast && styles.trainingCardPast].filter(Boolean).join(" ");
@@ -63,7 +61,6 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
         <div 
             data-testid={`training-${formatDateForId(training.date)}`}
             className={cardClasses}
-            onClick={handleCardClick}
         >
             <div className={styles.trainingCardHeader}>
                 <div className={styles.trainingCardDateTime}>
