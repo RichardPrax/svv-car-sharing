@@ -47,11 +47,8 @@ export default function NextTrainingCard({ training, loading }: Props) {
             </div>
 
             {training.description && (
-                <div className={styles.nextTrainingDetails}>
-                    <div className={styles.nextTrainingDetail}>
-                        <span className={styles.nextTrainingDetailLabel}>Beschreibung</span>
-                        <span className={styles.nextTrainingDetailValue}>{training.description}</span>
-                    </div>
+                <div className={styles.nextTrainingDescription}>
+                    <p className={styles.nextTrainingDescriptionText}>{training.description}</p>
                 </div>
             )}
         </div>

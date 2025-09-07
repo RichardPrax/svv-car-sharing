@@ -218,6 +218,19 @@
     margin: 0;
 }
 
+.nextTrainingDescription {
+    margin-top: var(--spacing-lg);
+    text-align: center;
+}
+
+.nextTrainingDescriptionText {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.5;
+}
+
 .nextTrainingDetails {
     display: grid;
     grid-template-columns: 1fr 1fr;
