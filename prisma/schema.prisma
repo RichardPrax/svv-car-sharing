@@ -116,7 +116,6 @@ model Training {
   date                   DateTime
   startTime              String                  @map("start_time")
   endTime                String                  @map("end_time")
-  description            String?
   trainingParticipations TrainingParticipation[]
   createdAt              DateTime                @default(now()) @map("created_at")
   updatedAt              DateTime                @updatedAt @map("updated_at")

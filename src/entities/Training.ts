@@ -7,7 +7,6 @@ export interface Training {
     date: Date;
     startTime: string;
     endTime: string;
-    description?: string | null;
     createdAt: Date;
     updatedAt: Date;
 }

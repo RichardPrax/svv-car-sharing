@@ -15,7 +15,6 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
         date: "",
         startTime: "",
         endTime: "",
-        description: "",
     });
 
     useEffect(() => {
@@ -27,7 +26,6 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
                 date: dateString,
                 startTime: training.startTime,
                 endTime: training.endTime,
-                description: training.description || "",
             });
         }
     }, [training]);
@@ -45,7 +43,6 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
             date: new Date(formData.date),
             startTime: formData.startTime,
             endTime: formData.endTime,
-            description: formData.description || null,
         });
     };
 
@@ -101,17 +98,6 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
                     </div>
                 </div>
 
-                <div className={styles.formField}>
-                    <label className={styles.formLabel} htmlFor="description">Beschreibung</label>
-                    <textarea
-                        id="description"
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        className={styles.formTextarea}
-                        placeholder="Zusätzliche Informationen zum Training..."
-                    />
-                </div>
 
                 <div className={styles.formActions}>
                     <button

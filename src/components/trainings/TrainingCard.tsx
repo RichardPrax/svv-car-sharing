@@ -126,13 +126,6 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
                 </div>
             ) : (
                 <div className={styles.trainingCardDetails}>
-                    {training.description && (
-                        <div className={styles.trainingCardDetailRow}>
-                            <span className={styles.trainingCardDetailLabel}>Beschreibung:</span>
-                            <span className={styles.trainingCardDetailValue}>{training.description}</span>
-                        </div>
-                    )}
-
                     {/* Participation Summary */}
                     {participationOverview && participationOverview.counts.total > 0 && (
                         <div className={styles.trainingCardParticipationSummary}>

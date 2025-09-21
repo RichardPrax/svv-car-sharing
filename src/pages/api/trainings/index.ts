@@ -37,7 +37,7 @@ async function authenticatedTrainingHandler(req: AuthenticatedRequest, res: Next
                 return;
             }
 
-            const { date, startTime, endTime, description } = req.body;
+            const { date, startTime, endTime } = req.body;
 
             // Validate required fields
             if (!date || !startTime || !endTime) {
@@ -50,8 +50,7 @@ async function authenticatedTrainingHandler(req: AuthenticatedRequest, res: Next
             const training = await trainingRepository.create({
                 date: new Date(date),
                 startTime,
-                endTime,
-                description: description || null
+                endTime
             });
 
             res.status(201).json(training);

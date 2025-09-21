@@ -14,7 +14,6 @@ export default function CreateTrainingForm({ onSubmit, onCancel, loading }: Prop
         date: "",
         startTime: "",
         endTime: "",
-        description: "",
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -29,7 +28,6 @@ export default function CreateTrainingForm({ onSubmit, onCancel, loading }: Prop
             date: new Date(formData.date),
             startTime: formData.startTime,
             endTime: formData.endTime,
-            description: formData.description || null,
         });
     };
 
@@ -85,17 +83,6 @@ export default function CreateTrainingForm({ onSubmit, onCancel, loading }: Prop
                     </div>
                 </div>
 
-                <div className={styles.formField}>
-                    <label className={styles.formLabel} htmlFor="description">Beschreibung</label>
-                    <textarea
-                        id="description"
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        className={styles.formTextarea}
-                        placeholder="Zusätzliche Informationen zum Training..."
-                    />
-                </div>
 
                 <div className={styles.formActions}>
                     <button

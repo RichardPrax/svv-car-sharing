@@ -26,12 +26,7 @@ async function main() {
             data: {
                 date: futureDate,
                 startTime: "19:00",
-                endTime: "21:00",
-                description: i % 2 === 0 ? 
-                    "Techniktraining mit Fokus auf Angriff und Block" : 
-                    i % 4 === 1 ? 
-                    "Konditionstraining und Spielformen" : 
-                    null
+                endTime: "21:00"
             }
         });
         trainings.push(training);
