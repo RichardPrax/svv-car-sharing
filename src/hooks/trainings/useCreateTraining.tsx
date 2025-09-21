@@ -1,17 +1,19 @@
 // src/hooks/trainings/useCreateTraining.tsx
 import { useState } from "react";
 import { Training } from "@/entities/Training";
+import { useAuthenticatedFetch } from "@/hooks/auth/useAuthenticatedFetch";
 
 export function useCreateTraining() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { authenticatedFetch } = useAuthenticatedFetch();
 
     const createTraining = async (trainingData: Omit<Training, "id" | "createdAt" | "updatedAt">): Promise<Training> => {
         try {
             setLoading(true);
             setError(null);
 
-            const response = await fetch("/api/trainings", {
+            const response = await authenticatedFetch("/api/trainings", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
