@@ -39,19 +39,30 @@ export function useTrainings() {
         fetchTrainings();
     }, []);
 
-    // Sort trainings by date (newest first)
-    const sortedTrainings = trainings.sort((a, b) => b.date.getTime() - a.date.getTime());
-    
-    // Find next upcoming training
+    // Sort trainings: future trainings first (chronological), then past trainings (reverse chronological)
     const now = new Date();
-    const nextTraining = trainings
+    const futureTrainings = trainings
         .filter(training => {
             const trainingDateTime = new Date(training.date);
             const [hours, minutes] = training.startTime.split(':').map(Number);
             trainingDateTime.setHours(hours, minutes, 0, 0);
             return trainingDateTime > now;
         })
-        .sort((a, b) => a.date.getTime() - b.date.getTime())[0] || null;
+        .sort((a, b) => a.date.getTime() - b.date.getTime()); // chronological order for future trainings
+    
+    const pastTrainings = trainings
+        .filter(training => {
+            const trainingDateTime = new Date(training.date);
+            const [hours, minutes] = training.startTime.split(':').map(Number);
+            trainingDateTime.setHours(hours, minutes, 0, 0);
+            return trainingDateTime <= now;
+        })
+        .sort((a, b) => b.date.getTime() - a.date.getTime()); // reverse chronological for past trainings
+    
+    const sortedTrainings = [...futureTrainings, ...pastTrainings];
+    
+    // Find next upcoming training (first future training)
+    const nextTraining = futureTrainings[0] || null;
 
     return {
         trainings: sortedTrainings,
