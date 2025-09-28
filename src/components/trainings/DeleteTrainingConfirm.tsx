@@ -20,13 +20,8 @@ export default function DeleteTrainingConfirm({ training, onConfirm, onCancel, l
 
     return (
         <div className={styles.deleteConfirm}>
-            <div className={styles.deleteConfirmIcon}>⚠️</div>
-            
-            <h3 className={styles.deleteConfirmTitle}>Training löschen?</h3>
-            
             {isSeriesTraining && (
                 <div className={styles.editScopeSelector}>
-                    <h4 className={styles.editScopeTitle}>Löschbereich</h4>
                     <div className={styles.editScopeOptions}>
                         <label className={styles.editScopeOption}>
                             <input

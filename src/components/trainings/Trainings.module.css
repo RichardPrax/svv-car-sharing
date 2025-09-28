@@ -444,17 +444,16 @@
 .deleteConfirm {
     background: var(--card-background);
     padding: var(--spacing-xl);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-xl);
     max-width: 400px;
+    width: 100%;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    border-radius: var(--radius-lg);
 }
 
-.deleteConfirmIcon {
-    font-size: 3rem;
-    color: var(--error);
-    margin-bottom: var(--spacing-md);
-}
 
 .deleteConfirmTitle {
     font-size: 1.125rem;
@@ -506,6 +505,12 @@
     
     .deleteConfirmActions {
         flex-direction: column;
+        width: 100%;
+    }
+    
+    .deleteConfirm {
+        max-width: 90vw;
+        margin: 0 auto;
     }
 
     .nextTrainingDetails {
@@ -868,6 +873,10 @@
     background: var(--surface);
     padding: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    width: 100%;
+    text-align: left;
+    align-self: stretch;
 }
 
 .editScopeTitle {
