@@ -111,11 +111,29 @@ model UserPosition {
   @@map("user_positions")
 }
 
+model TrainingSeries {
+  id          String     @id @default(cuid())
+  name        String?    // Optional name for the series
+  description String?    // Optional description
+  weekdays    Int[]      // Days of week (1=Monday, 7=Sunday)
+  startTime   String     @map("start_time")
+  endTime     String     @map("end_time")
+  startWeek   DateTime   @map("start_week") // Start of the first week
+  endWeek     DateTime   @map("end_week")   // Start of the last week
+  trainings   Training[]
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  @@map("training_series")
+}
+
 model Training {
   id                     String                  @id @default(cuid())
   date                   DateTime
   startTime              String                  @map("start_time")
   endTime                String                  @map("end_time")
+  seriesId               String?                 @map("series_id")
+  series                 TrainingSeries?         @relation(fields: [seriesId], references: [id], onDelete: Cascade)
   trainingParticipations TrainingParticipation[]
   createdAt              DateTime                @default(now()) @map("created_at")
   updatedAt              DateTime                @updatedAt @map("updated_at")

@@ -1,17 +1,20 @@
 // src/hooks/trainings/useUpdateTraining.tsx
 import { useState } from "react";
 import { Training } from "@/entities/Training";
+import { EditScope } from "@/components/trainings";
+import { useAuthenticatedFetch } from "@/hooks/auth/useAuthenticatedFetch";
 
 export function useUpdateTraining() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { authenticatedFetch } = useAuthenticatedFetch();
 
-    const updateTraining = async (training: Training): Promise<Training> => {
+    const updateTraining = async (training: Training, editScope: EditScope = 'single'): Promise<Training> => {
         try {
             setLoading(true);
             setError(null);
 
-            const response = await fetch(`/api/trainings/${training.id}`, {
+            const response = await authenticatedFetch(`/api/trainings/${training.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -20,6 +23,7 @@ export function useUpdateTraining() {
                     date: training.date.toISOString(),
                     startTime: training.startTime,
                     endTime: training.endTime,
+                    editScope,
                 }),
             });
 

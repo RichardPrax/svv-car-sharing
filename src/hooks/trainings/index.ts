@@ -6,3 +6,5 @@ export { useNextTraining } from './useNextTraining';
 export { useTrainingParticipation } from './useTrainingParticipation';
 export { useBatchedTrainingParticipation } from './useBatchedTrainingParticipation';
 export { useBatchedTrainingParticipationOverview } from './useBatchedTrainingParticipationOverview';
+export { useTrainingSeries } from './useTrainingSeries';
+export { useCreateTrainingSeries } from './useCreateTrainingSeries';

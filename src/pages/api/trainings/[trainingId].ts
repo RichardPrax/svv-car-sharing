@@ -25,7 +25,7 @@ async function authenticatedTrainingHandler(req: AuthenticatedRequest, res: Next
                 return;
             }
 
-            const { date, startTime, endTime } = req.body;
+            const { date, startTime, endTime, editScope } = req.body;
 
             // Validate required fields
             if (!date || !startTime || !endTime) {
@@ -41,11 +41,24 @@ async function authenticatedTrainingHandler(req: AuthenticatedRequest, res: Next
             }
 
             // Update the training
-            const training = await trainingRepository.update(trainingId, {
-                date: new Date(date),
-                startTime,
-                endTime
-            });
+            let training;
+            
+            if (editScope === 'series' && existingTraining.seriesId) {
+                // Update all trainings in the series (only times, not dates)
+                await trainingRepository.updateSeriesTrainings(existingTraining.seriesId, {
+                    startTime,
+                    endTime
+                });
+                // Return the updated current training
+                training = await trainingRepository.findById(trainingId);
+            } else {
+                // Update only this training
+                training = await trainingRepository.update(trainingId, {
+                    date: new Date(date),
+                    startTime,
+                    endTime
+                });
+            }
 
             res.status(200).json(training);
         } catch (error) {

@@ -1,11 +1,13 @@
 // src/components/trainings/EditTrainingForm.tsx
 import { useState, useEffect } from "react";
-import { Training } from "@/entities/Training";
+import { Training, isPartOfSeries } from "@/entities/Training";
 import styles from "./Trainings.module.css";
+
+export type EditScope = 'single' | 'series';
 
 type Props = {
     training: Training;
-    onSubmit: (training: Training) => Promise<void>;
+    onSubmit: (training: Training, scope: EditScope) => Promise<void>;
     onCancel: () => void;
     loading?: boolean;
 };
@@ -16,6 +18,9 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
         startTime: "",
         endTime: "",
     });
+    const [editScope, setEditScope] = useState<EditScope>('single');
+    
+    const isSeriesTraining = isPartOfSeries(training);
 
     useEffect(() => {
         if (training) {
@@ -43,7 +48,7 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
             date: new Date(formData.date),
             startTime: formData.startTime,
             endTime: formData.endTime,
-        });
+        }, editScope);
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -54,6 +59,46 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
     return (
         <div className={styles.formContainer}>
             <h2 className={styles.formTitle}>Training bearbeiten</h2>
+            
+            {isSeriesTraining && (
+                <div className={styles.editScopeSelector}>
+                    <h3 className={styles.editScopeTitle}>Bearbeitungsbereich</h3>
+                    <div className={styles.editScopeOptions}>
+                        <label className={styles.editScopeOption}>
+                            <input
+                                type="radio"
+                                name="editScope"
+                                value="single"
+                                checked={editScope === 'single'}
+                                onChange={(e) => setEditScope(e.target.value as EditScope)}
+                                className={styles.editScopeRadio}
+                            />
+                            <span className={styles.editScopeLabel}>
+                                Nur dieses Training
+                                <small className={styles.editScopeDescription}>
+                                    Ändert nur das ausgewählte Training
+                                </small>
+                            </span>
+                        </label>
+                        <label className={styles.editScopeOption}>
+                            <input
+                                type="radio"
+                                name="editScope"
+                                value="series"
+                                checked={editScope === 'series'}
+                                onChange={(e) => setEditScope(e.target.value as EditScope)}
+                                className={styles.editScopeRadio}
+                            />
+                            <span className={styles.editScopeLabel}>
+                                Gesamte Serie
+                                <small className={styles.editScopeDescription}>
+                                    Ändert alle Trainings in der Serie (nur Zeit wird geändert)
+                                </small>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            )}
             
             <form onSubmit={handleSubmit}>
                 <div className={styles.formGrid}>
@@ -66,8 +111,14 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
                             value={formData.date}
                             onChange={handleChange}
                             className={styles.formInput}
+                            disabled={editScope === 'series'}
                             required
                         />
+                        {editScope === 'series' && (
+                            <small className={styles.fieldNote}>
+                                Datum kann nicht für die gesamte Serie geändert werden
+                            </small>
+                        )}
                     </div>
 
 

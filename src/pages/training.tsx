@@ -1,31 +1,34 @@
 import { useState } from "react";
 import { Icon, Modal } from "@/components/ui";
 import { Button } from "@/components/forms";
-import { TrainingList, NextTrainingCard, CreateTrainingForm, EditTrainingForm, DeleteTrainingConfirm } from "@/components/trainings";
-import { useTrainings, useCreateTraining, useUpdateTraining, useDeleteTraining } from "@/hooks/trainings";
+import { TrainingList, NextTrainingCard, CreateTrainingForm, CreateTrainingSeriesForm, EditTrainingForm, DeleteTrainingConfirm, EditScope } from "@/components/trainings";
+import { useTrainings, useCreateTraining, useUpdateTraining, useDeleteTraining, useCreateTrainingSeries } from "@/hooks/trainings";
 import { useRoleGuard } from "@/hooks/auth/useRoleGuard";
-import { Training } from "@/entities/Training";
+import { Training, CreateTrainingSeriesData } from "@/entities/Training";
 import styles from "../styles/Pages.module.css";
 
 export default function TrainingPage() {
     const { trainings, nextTraining, loading, error, refetch } = useTrainings();
     const { createTraining, loading: createLoading } = useCreateTraining();
+    const { createTrainingSeries, loading: createSeriesLoading } = useCreateTrainingSeries();
     const { updateTraining, loading: updateLoading } = useUpdateTraining();
     const { deleteTraining, loading: deleteLoading } = useDeleteTraining();
     const { hasRole, hasAdminAccess } = useRoleGuard();
     const hasTrainerAccess = hasRole("TRAINER") || hasRole("ADMIN") || hasAdminAccess();
     
     const [showCreateForm, setShowCreateForm] = useState(false);
+    const [showCreateSeriesForm, setShowCreateSeriesForm] = useState(false);
     const [showEditForm, setShowEditForm] = useState(false);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [selectedTraining, setSelectedTraining] = useState<Training | null>(null);
+    // const [createMode, setCreateMode] = useState<'single' | 'series'>('single');
 
     const handleCreateTraining = async (trainingData: Omit<Training, "id" | "createdAt" | "updatedAt">) => {
         try {
             await createTraining(trainingData);
             setShowCreateForm(false);
             refetch(); // Refresh the training list
-        } catch (error) {
+        } catch {
             // Error is handled by the hook
         }
     };
@@ -40,13 +43,23 @@ export default function TrainingPage() {
         setShowDeleteConfirm(true);
     };
 
-    const handleUpdateTraining = async (updatedTraining: Training) => {
+    const handleCreateTrainingSeries = async (seriesData: CreateTrainingSeriesData) => {
         try {
-            await updateTraining(updatedTraining);
+            await createTrainingSeries(seriesData);
+            setShowCreateSeriesForm(false);
+            refetch(); // Refresh the training list
+        } catch {
+            // Error is handled by the hook
+        }
+    };
+
+    const handleUpdateTraining = async (updatedTraining: Training, editScope: EditScope) => {
+        try {
+            await updateTraining(updatedTraining, editScope);
             setShowEditForm(false);
             setSelectedTraining(null);
             refetch(); // Refresh the training list
-        } catch (error) {
+        } catch {
             // Error is handled by the hook
         }
     };
@@ -59,7 +72,7 @@ export default function TrainingPage() {
             setShowDeleteConfirm(false);
             setSelectedTraining(null);
             refetch(); // Refresh the training list
-        } catch (error) {
+        } catch {
             // Error is handled by the hook
         }
     };
@@ -85,13 +98,22 @@ export default function TrainingPage() {
                             Training
                         </h1>
                         {hasTrainerAccess && (
-                            <Button 
-                                onClick={() => setShowCreateForm(true)}
-                                variant="primary"
-                            >
-                                <Icon name="plus" size={16} color="currentColor" />
-                                <span style={{ marginLeft: '6px' }}>Training erstellen</span>
-                            </Button>
+                            <div style={{ display: 'flex', gap: '12px' }}>
+                                <Button 
+                                    onClick={() => setShowCreateForm(true)}
+                                    variant="primary"
+                                >
+                                    <Icon name="plus" size={16} color="currentColor" />
+                                    <span style={{ marginLeft: '6px' }}>Einzelnes Training</span>
+                                </Button>
+                                <Button 
+                                    onClick={() => setShowCreateSeriesForm(true)}
+                                    variant="secondary"
+                                >
+                                    <Icon name="calendar" size={16} color="currentColor" />
+                                    <span style={{ marginLeft: '6px' }}>Trainings-Serie</span>
+                                </Button>
+                            </div>
                         )}
                     </section>
 
@@ -132,6 +154,21 @@ export default function TrainingPage() {
                         onSubmit={handleCreateTraining}
                         onCancel={() => setShowCreateForm(false)}
                         loading={createLoading}
+                    />
+                </Modal>
+            )}
+
+            {/* Create Training Series Modal */}
+            {showCreateSeriesForm && (
+                <Modal 
+                    isOpen={showCreateSeriesForm}
+                    onClose={() => setShowCreateSeriesForm(false)}
+                    title="Neue Trainings-Serie erstellen"
+                >
+                    <CreateTrainingSeriesForm
+                        onSubmit={handleCreateTrainingSeries}
+                        onCancel={() => setShowCreateSeriesForm(false)}
+                        loading={createSeriesLoading}
                     />
                 </Modal>
             )}

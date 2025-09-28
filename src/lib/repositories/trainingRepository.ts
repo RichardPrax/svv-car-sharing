@@ -69,6 +69,22 @@ export class TrainingRepository {
     }
 
     /**
+     * Create multiple trainings
+     */
+    async createMultiple(data: Omit<Training, "id" | "createdAt" | "updatedAt">[]): Promise<Training[]> {
+        const createdTrainings: Training[] = [];
+        
+        for (const trainingData of data) {
+            const training = await this.prisma.training.create({
+                data: trainingData
+            });
+            createdTrainings.push(training);
+        }
+        
+        return createdTrainings;
+    }
+
+    /**
      * Update a training
      */
     async update(id: string, data: Partial<Omit<Training, "id" | "createdAt" | "updatedAt">>): Promise<Training> {
@@ -84,6 +100,19 @@ export class TrainingRepository {
     async delete(id: string): Promise<Training> {
         return this.prisma.training.delete({
             where: { id }
+        });
+    }
+
+    /**
+     * Update all trainings in a series (only times, not dates)
+     */
+    async updateSeriesTrainings(seriesId: string, data: { startTime: string; endTime: string }): Promise<void> {
+        await this.prisma.training.updateMany({
+            where: { seriesId },
+            data: {
+                startTime: data.startTime,
+                endTime: data.endTime
+            }
         });
     }
 

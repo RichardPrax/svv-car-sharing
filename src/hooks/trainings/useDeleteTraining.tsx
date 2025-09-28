@@ -1,16 +1,18 @@
 // src/hooks/trainings/useDeleteTraining.tsx
 import { useState } from "react";
+import { useAuthenticatedFetch } from "@/hooks/auth/useAuthenticatedFetch";
 
 export function useDeleteTraining() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { authenticatedFetch } = useAuthenticatedFetch();
 
     const deleteTraining = async (trainingId: string): Promise<void> => {
         try {
             setLoading(true);
             setError(null);
 
-            const response = await fetch(`/api/trainings/${trainingId}`, {
+            const response = await authenticatedFetch(`/api/trainings/${trainingId}`, {
                 method: "DELETE",
             });
 
