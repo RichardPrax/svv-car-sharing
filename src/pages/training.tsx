@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Icon, Modal } from "@/components/ui";
 import { Button } from "@/components/forms";
-import { TrainingList, NextTrainingCard, CreateTrainingForm, CreateTrainingSeriesForm, EditTrainingForm, DeleteTrainingConfirm, EditScope } from "@/components/trainings";
+import { TrainingList, NextTrainingCard, CreateTrainingForm, CreateTrainingSeriesForm, EditTrainingForm, DeleteTrainingConfirm, EditScope, DeleteScope } from "@/components/trainings";
 import { useTrainings, useCreateTraining, useUpdateTraining, useDeleteTraining, useCreateTrainingSeries } from "@/hooks/trainings";
 import { useRoleGuard } from "@/hooks/auth/useRoleGuard";
 import { Training, CreateTrainingSeriesData } from "@/entities/Training";
@@ -64,11 +64,11 @@ export default function TrainingPage() {
         }
     };
 
-    const handleConfirmDelete = async () => {
+    const handleConfirmDelete = async (deleteScope: DeleteScope) => {
         if (!selectedTraining) return;
         
         try {
-            await deleteTraining(selectedTraining.id);
+            await deleteTraining(selectedTraining.id, deleteScope);
             setShowDeleteConfirm(false);
             setSelectedTraining(null);
             refetch(); // Refresh the training list

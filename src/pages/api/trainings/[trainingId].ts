@@ -77,16 +77,24 @@ async function authenticatedTrainingHandler(req: AuthenticatedRequest, res: Next
                 return;
             }
 
+            const { deleteScope } = req.body;
+
             // Check if training exists
             const existingTraining = await trainingRepository.findById(trainingId);
             if (!existingTraining) {
                 return res.status(404).json({ error: "Training nicht gefunden" });
             }
 
-            // Delete the training
-            await trainingRepository.delete(trainingId);
-
-            res.status(200).json({ message: "Training erfolgreich gelöscht" });
+            // Delete training(s) based on scope
+            if (deleteScope === 'series' && existingTraining.seriesId) {
+                // Delete all trainings in the series
+                await trainingRepository.deleteSeriesTrainings(existingTraining.seriesId);
+                res.status(200).json({ message: "Alle Trainings der Serie erfolgreich gelöscht" });
+            } else {
+                // Delete only this training
+                await trainingRepository.delete(trainingId);
+                res.status(200).json({ message: "Training erfolgreich gelöscht" });
+            }
         } catch (error) {
             console.error("Fehler beim Löschen des Trainings:", error);
             res.status(500).json({ error: "Fehler beim Löschen des Trainings" });

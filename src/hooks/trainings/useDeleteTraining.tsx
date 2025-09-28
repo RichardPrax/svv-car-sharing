@@ -2,18 +2,24 @@
 import { useState } from "react";
 import { useAuthenticatedFetch } from "@/hooks/auth/useAuthenticatedFetch";
 
+export type DeleteScope = 'single' | 'series';
+
 export function useDeleteTraining() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const { authenticatedFetch } = useAuthenticatedFetch();
 
-    const deleteTraining = async (trainingId: string): Promise<void> => {
+    const deleteTraining = async (trainingId: string, deleteScope: DeleteScope = 'single'): Promise<void> => {
         try {
             setLoading(true);
             setError(null);
 
             const response = await authenticatedFetch(`/api/trainings/${trainingId}`, {
                 method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ deleteScope }),
             });
 
             if (!response.ok) {

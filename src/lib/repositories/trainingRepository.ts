@@ -117,6 +117,15 @@ export class TrainingRepository {
     }
 
     /**
+     * Delete all trainings in a series
+     */
+    async deleteSeriesTrainings(seriesId: string): Promise<void> {
+        await this.prisma.training.deleteMany({
+            where: { seriesId }
+        });
+    }
+
+    /**
      * Check if training exists
      */
     async exists(id: string): Promise<boolean> {

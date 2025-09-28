@@ -5,6 +5,7 @@ export { default as CreateTrainingSeriesForm } from './CreateTrainingSeriesForm'
 export { default as EditTrainingForm } from './EditTrainingForm';
 export type { EditScope } from './EditTrainingForm';
 export { default as DeleteTrainingConfirm } from './DeleteTrainingConfirm';
+export type { DeleteScope } from './DeleteTrainingConfirm';
 export { default as NextTrainingCard } from './NextTrainingCard';
 export { default as TrainingParticipationButtons } from './TrainingParticipationButtons';
 export { default as TrainingParticipationSummary } from './TrainingParticipationSummary';
