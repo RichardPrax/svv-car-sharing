@@ -1,9 +1,7 @@
 // src/components/trainings/EditTrainingForm.tsx
 import { useState, useEffect } from "react";
-import { Training, isPartOfSeries } from "@/entities/Training";
+import { Training, isPartOfSeries, EditScope } from "@/entities/Training";
 import styles from "./Trainings.module.css";
-
-export type EditScope = 'single' | 'series';
 
 type Props = {
     training: Training;
@@ -77,6 +75,22 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
                                 Nur dieses Training
                                 <small className={styles.editScopeDescription}>
                                     Ändert nur das ausgewählte Training
+                                </small>
+                            </span>
+                        </label>
+                        <label className={styles.editScopeOption}>
+                            <input
+                                type="radio"
+                                name="editScope"
+                                value="future"
+                                checked={editScope === 'future'}
+                                onChange={(e) => setEditScope(e.target.value as EditScope)}
+                                className={styles.editScopeRadio}
+                            />
+                            <span className={styles.editScopeLabel}>
+                                Dieses und alle folgenden
+                                <small className={styles.editScopeDescription}>
+                                    Ändert dieses Training und alle zukünftigen in der Serie
                                 </small>
                             </span>
                         </label>

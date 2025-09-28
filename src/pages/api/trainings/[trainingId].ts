@@ -51,6 +51,14 @@ async function authenticatedTrainingHandler(req: AuthenticatedRequest, res: Next
                 });
                 // Return the updated current training
                 training = await trainingRepository.findById(trainingId);
+            } else if (editScope === 'future' && existingTraining.seriesId) {
+                // Update this training and all future trainings in the series
+                await trainingRepository.updateFutureSeriesTrainings(existingTraining.seriesId, existingTraining.date, {
+                    startTime,
+                    endTime
+                });
+                // Return the updated current training
+                training = await trainingRepository.findById(trainingId);
             } else {
                 // Update only this training
                 training = await trainingRepository.update(trainingId, {
@@ -90,6 +98,10 @@ async function authenticatedTrainingHandler(req: AuthenticatedRequest, res: Next
                 // Delete all trainings in the series
                 await trainingRepository.deleteSeriesTrainings(existingTraining.seriesId);
                 res.status(200).json({ message: "Alle Trainings der Serie erfolgreich gelöscht" });
+            } else if (deleteScope === 'future' && existingTraining.seriesId) {
+                // Delete this training and all future trainings in the series
+                await trainingRepository.deleteFutureSeriesTrainings(existingTraining.seriesId, existingTraining.date);
+                res.status(200).json({ message: "Dieses Training und alle folgenden erfolgreich gelöscht" });
             } else {
                 // Delete only this training
                 await trainingRepository.delete(trainingId);

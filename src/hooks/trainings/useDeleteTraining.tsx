@@ -1,8 +1,7 @@
 // src/hooks/trainings/useDeleteTraining.tsx
 import { useState } from "react";
 import { useAuthenticatedFetch } from "@/hooks/auth/useAuthenticatedFetch";
-
-export type DeleteScope = 'single' | 'series';
+import { DeleteScope } from "@/entities/Training";
 
 export function useDeleteTraining() {
     const [loading, setLoading] = useState(false);

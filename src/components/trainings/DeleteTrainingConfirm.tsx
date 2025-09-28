@@ -1,9 +1,7 @@
 // src/components/trainings/DeleteTrainingConfirm.tsx
 import { useState } from "react";
-import { Training, formatTrainingDate, formatTrainingTimeRange, isPartOfSeries } from "@/entities/Training";
+import { Training, formatTrainingDate, formatTrainingTimeRange, isPartOfSeries, DeleteScope } from "@/entities/Training";
 import styles from "./Trainings.module.css";
-
-export type DeleteScope = 'single' | 'series';
 
 type Props = {
     training: Training;
@@ -50,6 +48,22 @@ export default function DeleteTrainingConfirm({ training, onConfirm, onCancel, l
                             <input
                                 type="radio"
                                 name="deleteScope"
+                                value="future"
+                                checked={deleteScope === 'future'}
+                                onChange={(e) => setDeleteScope(e.target.value as DeleteScope)}
+                                className={styles.editScopeRadio}
+                            />
+                            <span className={styles.editScopeLabel}>
+                                Dieses und alle folgenden
+                                <small className={styles.editScopeDescription}>
+                                    Löscht dieses Training und alle zukünftigen in der Serie
+                                </small>
+                            </span>
+                        </label>
+                        <label className={styles.editScopeOption}>
+                            <input
+                                type="radio"
+                                name="deleteScope"
                                 value="series"
                                 checked={deleteScope === 'series'}
                                 onChange={(e) => setDeleteScope(e.target.value as DeleteScope)}
@@ -70,6 +84,10 @@ export default function DeleteTrainingConfirm({ training, onConfirm, onCancel, l
                 {deleteScope === 'single' ? (
                     <>
                         Möchten Sie das Training vom <strong>{formatTrainingDate(training)}</strong> um <strong>{formatTrainingTimeRange(training)}</strong> wirklich löschen?
+                    </>
+                ) : deleteScope === 'future' ? (
+                    <>
+                        Möchten Sie das Training vom <strong>{formatTrainingDate(training)}</strong> und <strong>alle folgenden Trainings</strong> in der Serie wirklich löschen?
                     </>
                 ) : (
                     <>

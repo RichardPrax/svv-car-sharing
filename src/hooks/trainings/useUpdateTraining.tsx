@@ -1,7 +1,6 @@
 // src/hooks/trainings/useUpdateTraining.tsx
 import { useState } from "react";
-import { Training } from "@/entities/Training";
-import { EditScope } from "@/components/trainings";
+import { Training, EditScope } from "@/entities/Training";
 import { useAuthenticatedFetch } from "@/hooks/auth/useAuthenticatedFetch";
 
 export function useUpdateTraining() {

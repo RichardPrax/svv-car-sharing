@@ -97,6 +97,10 @@ export function generateTrainingDatesForSeries(series: CreateTrainingSeriesData)
     return dates.sort((a, b) => a.getTime() - b.getTime());
 }
 
+// Scope types for editing and deleting trainings
+export type EditScope = 'single' | 'series' | 'future';
+export type DeleteScope = 'single' | 'series' | 'future';
+
 // Helper function to check if a training is part of a series
 export function isPartOfSeries(training: Training): boolean {
     return !!training.seriesId;

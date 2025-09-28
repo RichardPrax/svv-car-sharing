@@ -126,6 +126,38 @@ export class TrainingRepository {
     }
 
     /**
+     * Update future trainings in a series (from given date onwards)
+     */
+    async updateFutureSeriesTrainings(seriesId: string, fromDate: Date, data: { startTime: string; endTime: string }): Promise<void> {
+        await this.prisma.training.updateMany({
+            where: { 
+                seriesId,
+                date: {
+                    gte: fromDate
+                }
+            },
+            data: {
+                startTime: data.startTime,
+                endTime: data.endTime
+            }
+        });
+    }
+
+    /**
+     * Delete future trainings in a series (from given date onwards)
+     */
+    async deleteFutureSeriesTrainings(seriesId: string, fromDate: Date): Promise<void> {
+        await this.prisma.training.deleteMany({
+            where: { 
+                seriesId,
+                date: {
+                    gte: fromDate
+                }
+            }
+        });
+    }
+
+    /**
      * Check if training exists
      */
     async exists(id: string): Promise<boolean> {
