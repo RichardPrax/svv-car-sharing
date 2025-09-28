@@ -37,11 +37,8 @@ export default function CreateTrainingForm({ onSubmit, onCancel, loading }: Prop
     };
 
     return (
-        <div className={styles.formContainer}>
-            <h2 className={styles.formTitle}>Neues Training erstellen</h2>
-            
-            <form onSubmit={handleSubmit}>
-                <div className={styles.formGrid}>
+        <form onSubmit={handleSubmit}>
+            <div className={styles.formGrid}>
                     <div className={styles.formField}>
                         <label className={styles.formLabel} htmlFor="date">Datum *</label>
                         <input
@@ -101,7 +98,6 @@ export default function CreateTrainingForm({ onSubmit, onCancel, loading }: Prop
                         {loading ? "Erstelle..." : "Training erstellen"}
                     </button>
                 </div>
-            </form>
-        </div>
+        </form>
     );
 }

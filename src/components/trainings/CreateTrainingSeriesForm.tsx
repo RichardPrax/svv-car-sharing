@@ -94,11 +94,8 @@ export default function CreateTrainingSeriesForm({ onSubmit, onCancel, loading }
     };
 
     return (
-        <div className={styles.formContainer}>
-            <h2 className={styles.formTitle}>Neue Trainings-Serie erstellen</h2>
-            
-            <form onSubmit={handleSubmit}>
-                <div className={styles.formGrid}>
+        <form onSubmit={handleSubmit}>
+            <div className={styles.formGrid}>
                     <div className={styles.formField}>
                         <label className={styles.formLabel} htmlFor="name">Name (optional)</label>
                         <input
@@ -223,8 +220,7 @@ export default function CreateTrainingSeriesForm({ onSubmit, onCancel, loading }
                         {loading ? "Erstelle..." : "Serie erstellen"}
                     </button>
                 </div>
-            </form>
-        </div>
+        </form>
     );
 }
 

@@ -55,12 +55,9 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
     };
 
     return (
-        <div className={styles.formContainer}>
-            <h2 className={styles.formTitle}>Training bearbeiten</h2>
-            
+        <>
             {isSeriesTraining && (
                 <div className={styles.editScopeSelector}>
-                    <h3 className={styles.editScopeTitle}>Bearbeitungsbereich</h3>
                     <div className={styles.editScopeOptions}>
                         <label className={styles.editScopeOption}>
                             <input
@@ -115,27 +112,28 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
             )}
             
             <form onSubmit={handleSubmit}>
-                <div className={styles.formGrid}>
-                    <div className={styles.formField}>
-                        <label className={styles.formLabel} htmlFor="date">Datum *</label>
-                        <input
-                            type="date"
-                            id="date"
-                            name="date"
-                            value={formData.date}
-                            onChange={handleChange}
-                            className={styles.formInput}
-                            disabled={editScope === 'series'}
-                            required
-                        />
-                        {editScope === 'series' && (
-                            <small className={styles.fieldNote}>
-                                Datum kann nicht für die gesamte Serie geändert werden
-                            </small>
-                        )}
-                    </div>
+                {/* Date field - full width row */}
+                <div className={styles.formField}>
+                    <label className={styles.formLabel} htmlFor="date">Datum *</label>
+                    <input
+                        type="date"
+                        id="date"
+                        name="date"
+                        value={formData.date}
+                        onChange={handleChange}
+                        className={styles.formInput}
+                        disabled={editScope === 'series'}
+                        required
+                    />
+                    {editScope === 'series' && (
+                        <small className={styles.fieldNote}>
+                            Datum kann nicht für die gesamte Serie geändert werden
+                        </small>
+                    )}
+                </div>
 
-
+                {/* Time fields - same row */}
+                <div className={styles.timeFieldsRow}>
                     <div className={styles.formField}>
                         <label className={styles.formLabel} htmlFor="startTime">Startzeit *</label>
                         <input
@@ -182,6 +180,6 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
                     </button>
                 </div>
             </form>
-        </div>
+        </>
     );
 }
