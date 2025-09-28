@@ -76,5 +76,7 @@ async function participationHandler(req: AuthenticatedRequest, res: NextApiRespo
 }
 
 // Export with auth middleware
-export default (req: NextApiRequest, res: NextApiResponse) => withAuth(req, res, participationHandler);
+const handler = (req: NextApiRequest, res: NextApiResponse) => withAuth(req, res, participationHandler);
+
+export default handler;
 

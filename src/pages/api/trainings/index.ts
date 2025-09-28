@@ -50,7 +50,8 @@ async function authenticatedTrainingHandler(req: AuthenticatedRequest, res: Next
             const training = await trainingRepository.create({
                 date: new Date(date),
                 startTime,
-                endTime
+                endTime,
+                seriesId: null
             });
 
             res.status(201).json(training);

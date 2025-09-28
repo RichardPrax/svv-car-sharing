@@ -110,7 +110,7 @@ export default function TrainingPage() {
                                     onClick={() => setShowCreateSeriesForm(true)}
                                     variant="secondary"
                                 >
-                                    <Icon name="calendar" size={16} color="currentColor" />
+                                    <Icon name="chart" size={16} color="currentColor" />
                                     <span style={{ marginLeft: '6px' }}>Trainings-Serie</span>
                                 </Button>
                             </div>

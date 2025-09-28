@@ -71,5 +71,7 @@ async function rideHandler(req: AuthenticatedRequest, res: NextApiResponse): Pro
 }
 
 // Export with auth middleware
-export default (req: NextApiRequest, res: NextApiResponse) => 
+const handler = (req: NextApiRequest, res: NextApiResponse) => 
     withAuth(req, res, rideHandler);
+
+export default handler;

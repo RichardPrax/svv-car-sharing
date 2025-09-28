@@ -1,6 +1,5 @@
 // src/components/trainings/NextTrainingCard.tsx
 import { Training, formatTrainingDate, formatTrainingTimeRange } from "@/entities/Training";
-import { useRouter } from "next/router";
 import styles from "./Trainings.module.css";
 
 type Props = {
@@ -9,7 +8,6 @@ type Props = {
 };
 
 export default function NextTrainingCard({ training, loading }: Props) {
-    const router = useRouter();
 
     if (loading) {
         return (
@@ -44,9 +42,9 @@ export default function NextTrainingCard({ training, loading }: Props) {
                 <p className={styles.nextTrainingTime}>{formatTrainingTimeRange(training)}</p>
             </div>
 
-            {training.description && (
+            {training.series?.description && (
                 <div className={styles.nextTrainingDescription}>
-                    <p className={styles.nextTrainingDescriptionText}>{training.description}</p>
+                    <p className={styles.nextTrainingDescriptionText}>{training.series.description}</p>
                 </div>
             )}
         </div>

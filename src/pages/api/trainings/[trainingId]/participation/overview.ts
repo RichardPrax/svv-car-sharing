@@ -17,6 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Verify the training exists
         const training = await prisma.training.findUnique({
             where: { id: trainingId },
+            include: { series: true },
         });
 
         if (!training) {
@@ -97,7 +98,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 date: training.date,
                 startTime: training.startTime,
                 endTime: training.endTime,
-                description: training.description,
+                description: training.series?.description || null,
             },
             participation: {
                 ...participationsByStatus,

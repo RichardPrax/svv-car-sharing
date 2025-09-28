@@ -80,6 +80,8 @@ async function playerParticipationHandler(req: AuthenticatedRequest, res: NextAp
 }
 
 // Export with auth middleware
-export default (req: NextApiRequest, res: NextApiResponse) => 
+const handler = (req: NextApiRequest, res: NextApiResponse) => 
     withAuth(req, res, playerParticipationHandler);
+
+export default handler;
 

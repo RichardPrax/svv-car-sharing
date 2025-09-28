@@ -5,7 +5,7 @@ import { UserProfileRepository } from "@/lib/repositories/userProfileRepository"
 
 const userProfileRepository = new UserProfileRepository();
 
-async function playerParticipationHandler(req: AuthenticatedRequest, res: NextApiResponse) {
+async function playerParticipationHandler(req: AuthenticatedRequest, res: NextApiResponse): Promise<void> {
     const { method } = req;
 
     try {
@@ -15,25 +15,29 @@ async function playerParticipationHandler(req: AuthenticatedRequest, res: NextAp
         const { trainingId, playerId } = req.query;
 
         if (!trainingId || typeof trainingId !== "string") {
-            return res.status(400).json({ error: "Invalid training ID" });
+            res.status(400).json({ error: "Invalid training ID" });
+            return;
         }
 
         if (!playerId || typeof playerId !== "string") {
-            return res.status(400).json({ error: "Invalid player ID" });
+            res.status(400).json({ error: "Invalid player ID" });
+            return;
         }
 
         // Check if user is requesting their own participation or is admin
         const userProfile = await userProfileRepository.findById(user.id);
 
         if (!userProfile) {
-            return res.status(404).json({ error: "User profile not found" });
+            res.status(404).json({ error: "User profile not found" });
+            return;
         }
 
         const isOwnParticipation = user.id === playerId;
         const isAdmin = userProfile.role === "ADMIN";
 
         if (!isOwnParticipation && !isAdmin) {
-            return res.status(403).json({ error: "Forbidden" });
+            res.status(403).json({ error: "Forbidden" });
+            return;
         }
 
         if (method === "GET") {
@@ -47,10 +51,12 @@ async function playerParticipationHandler(req: AuthenticatedRequest, res: NextAp
             });
 
             if (!participation) {
-                return res.status(404).json({ error: "Participation not found" });
+                res.status(404).json({ error: "Participation not found" });
+                return;
             }
 
-            return res.status(200).json(participation);
+            res.status(200).json(participation);
+            return;
         }
 
         if (method === "DELETE") {
@@ -63,16 +69,19 @@ async function playerParticipationHandler(req: AuthenticatedRequest, res: NextAp
                 },
             });
 
-            return res.status(204).end();
+            res.status(204).end();
+            return;
         }
 
         res.setHeader("Allow", ["GET", "DELETE"]);
-        return res.status(405).json({ error: `Method ${method} Not Allowed` });
+        res.status(405).json({ error: `Method ${method} Not Allowed` });
     } catch (error) {
         console.error(`Error handling player training participation (${method}):`, error);
-        return res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: "Internal server error" });
     }
 }
 
 // Export with auth middleware
-export default (req: NextApiRequest, res: NextApiResponse) => withAuth(req, res, playerParticipationHandler);
+const handler = (req: NextApiRequest, res: NextApiResponse) => withAuth(req, res, playerParticipationHandler);
+
+export default handler;

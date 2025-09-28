@@ -87,7 +87,62 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
 
         // Group by training ID
-        const overviewByTraining: Record<string, any> = {};
+        const overviewByTraining: Record<string, {
+            participation: {
+                JOINING: Array<{
+                    id: string;
+                    trainingId: string;
+                    playerId: string;
+                    status: string;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    player: {
+                        id: string;
+                        firstName: string;
+                        lastName: string;
+                        playerPositions: Array<{
+                            id: string;
+                            position: string;
+                            isPrimary: boolean;
+                        }>;
+                    };
+                }>;
+                DECLINING: Array<{
+                    id: string;
+                    trainingId: string;
+                    playerId: string;
+                    status: string;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    player: {
+                        id: string;
+                        firstName: string;
+                        lastName: string;
+                        playerPositions: Array<{
+                            id: string;
+                            position: string;
+                            isPrimary: boolean;
+                        }>;
+                    };
+                }>;
+                OPEN: Array<{
+                    id: string;
+                    firstName: string;
+                    lastName: string;
+                    playerPositions: Array<{
+                        id: string;
+                        position: string;
+                        isPrimary: boolean;
+                    }>;
+                }>;
+            };
+            counts: {
+                joining: number;
+                declining: number;
+                open: number;
+                total: number;
+            };
+        }> = {};
 
         for (const trainingId of trainingIdArray) {
             const trainingParticipations = participations.filter((p) => p.trainingId === trainingId);

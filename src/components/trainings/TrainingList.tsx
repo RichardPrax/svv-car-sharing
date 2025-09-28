@@ -1,7 +1,7 @@
 // src/components/trainings/TrainingList.tsx
 import { Training } from "@/entities/Training";
 import { useState, useMemo } from "react";
-import { useBatchedTrainingParticipationOverview, BatchedTrainingParticipationOverview } from "@/hooks/trainings/useBatchedTrainingParticipationOverview";
+import { useBatchedTrainingParticipationOverview } from "@/hooks/trainings/useBatchedTrainingParticipationOverview";
 import TrainingCard from "./TrainingCard";
 import styles from "./Trainings.module.css";
 

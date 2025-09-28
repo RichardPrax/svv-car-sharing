@@ -70,7 +70,7 @@ async function updateUserHandler(req: AuthenticatedRequest, res: NextApiResponse
         // Start transaction
         const updatedUser = await prisma.$transaction(async (tx) => {
             // Update user role
-            const updated = await tx.userProfile.update({
+            await tx.userProfile.update({
                 where: { id },
                 data: { role },
                 include: {

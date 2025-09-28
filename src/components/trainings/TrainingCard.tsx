@@ -2,7 +2,6 @@
 import { Training, formatTrainingDate, formatTrainingTimeRange } from "@/entities/Training";
 import { useRoleGuard } from "@/hooks/auth/useRoleGuard";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
-import { useRouter } from "next/router";
 import { Icon } from "@/components/ui";
 import { formatDateForId, isTrainingInPast } from "@/utils/dateTime";
 import { TrainingParticipationOverview } from "@/hooks/trainings/useBatchedTrainingParticipationOverview";
@@ -24,7 +23,6 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
     const isPast = isTrainingInPast(training.date, training.startTime);
     const { hasRole, hasAdminAccess, hasPlayerAccess } = useRoleGuard();
     const { user } = useOptimizedAuth();
-    const router = useRouter();
     const hasTrainerAccess = hasRole("TRAINER") || hasRole("ADMIN") || hasAdminAccess();
     const [participationRefreshTrigger, setParticipationRefreshTrigger] = useState(0);
     const [showParticipants, setShowParticipants] = useState(false);
@@ -53,7 +51,7 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
 
     // No click handler needed - trainings should not be clickable
 
-    const handleParticipationClick = (e: React.MouseEvent) => {
+    const handleParticipationClick = () => {
         // No need to prevent propagation since card is no longer clickable
     };
 

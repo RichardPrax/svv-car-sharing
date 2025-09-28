@@ -59,4 +59,6 @@ async function userBatchHandler(req: AuthenticatedRequest, res: NextApiResponse)
 }
 
 // Export with auth middleware
-export default (req: NextApiRequest, res: NextApiResponse) => withAuth(req, res, userBatchHandler);
+const handler = (req: NextApiRequest, res: NextApiResponse) => withAuth(req, res, userBatchHandler);
+
+export default handler;
