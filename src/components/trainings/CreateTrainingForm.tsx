@@ -38,47 +38,48 @@ export default function CreateTrainingForm({ onSubmit, onCancel, loading }: Prop
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className={styles.formGrid}>
-                    <div className={styles.formField}>
-                        <label className={styles.formLabel} htmlFor="date">Datum *</label>
-                        <input
-                            type="date"
-                            id="date"
-                            name="date"
-                            value={formData.date}
-                            onChange={handleChange}
-                            className={styles.formInput}
-                            required
-                        />
-                    </div>
+            {/* Date field - full width row */}
+            <div className={styles.formField}>
+                <label className={styles.formLabel} htmlFor="date">Datum *</label>
+                <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    value={formData.date}
+                    onChange={handleChange}
+                    className={styles.formInput}
+                    required
+                />
+            </div>
 
-
-                    <div className={styles.formField}>
-                        <label className={styles.formLabel} htmlFor="startTime">Startzeit *</label>
-                        <input
-                            type="time"
-                            id="startTime"
-                            name="startTime"
-                            value={formData.startTime}
-                            onChange={handleChange}
-                            className={styles.formInput}
-                            required
-                        />
-                    </div>
-
-                    <div className={styles.formField}>
-                        <label className={styles.formLabel} htmlFor="endTime">Endzeit *</label>
-                        <input
-                            type="time"
-                            id="endTime"
-                            name="endTime"
-                            value={formData.endTime}
-                            onChange={handleChange}
-                            className={styles.formInput}
-                            required
-                        />
-                    </div>
+            {/* Time fields - same row */}
+            <div className={styles.timeFieldsRow}>
+                <div className={styles.formField}>
+                    <label className={styles.formLabel} htmlFor="startTime">Startzeit *</label>
+                    <input
+                        type="time"
+                        id="startTime"
+                        name="startTime"
+                        value={formData.startTime}
+                        onChange={handleChange}
+                        className={styles.formInput}
+                        required
+                    />
                 </div>
+
+                <div className={styles.formField}>
+                    <label className={styles.formLabel} htmlFor="endTime">Endzeit *</label>
+                    <input
+                        type="time"
+                        id="endTime"
+                        name="endTime"
+                        value={formData.endTime}
+                        onChange={handleChange}
+                        className={styles.formInput}
+                        required
+                    />
+                </div>
+            </div>
 
 
                 <div className={styles.formActions}>
