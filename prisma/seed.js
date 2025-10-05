@@ -10,29 +10,11 @@ async function main() {
     await prisma.userProfile.deleteMany();
     await prisma.matchDay.deleteMany();
     await prisma.training.deleteMany();
+    await prisma.trainingSeries.deleteMany();
 
-    console.log("ℹ️  Testdatea will be created by special import scripts");
+    console.log("ℹ️  Test data will be created by special import scripts");
+    console.log("ℹ️  Training series will be created by create-training-series.js");
 
-    // Create 10 example trainings
-    console.log("📝 Erstelle Beispiel-Trainings...");
-    const now = new Date();
-    const trainings = [];
-
-    for (let i = 0; i < 10; i++) {
-        const futureDate = new Date(now);
-        futureDate.setDate(futureDate.getDate() + (i + 1) * 7); // Weekly trainings starting next week
-        
-        const training = await prisma.training.create({
-            data: {
-                date: futureDate,
-                startTime: "19:00",
-                endTime: "21:00"
-            }
-        });
-        trainings.push(training);
-    }
-
-    console.log(`✅ ${trainings.length} Trainings erstellt`);
     console.log("🎉 Seeding abgeschlossen!");
 }
 

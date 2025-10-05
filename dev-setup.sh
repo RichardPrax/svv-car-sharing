@@ -218,12 +218,29 @@ setup_local() {
     run_command "Test data creation" "npm run create:test-data"
     print_debug "Test data creation completed"
     
+    # Create training series
+    print_progress "Creating training series for development..."
+    print_debug "About to run: npm run create:training-series"
+    run_command "Training series creation" "npm run create:training-series"
+    print_debug "Training series creation completed"
+    
     print_status "Local environment setup complete!"
     print_status "Test user credentials:"
     echo "  All 7 users have password: test1234"
     echo "  Email format: firstname.lastname@test.com"
     echo "  Users: max.mustermann, anna.schmidt, tom.mueller, lisa.weber,"
     echo "         ben.schneider, sara.fischer, noah.hoffmann"
+    echo ""
+    print_status "Training series created:"
+    echo "  1. Wochentags-Training (Di & Do, 19:00-21:00) - 6 Wochen"
+    echo "  2. Wochenend-Training (Sa, 10:00-12:00) - 4 Wochen"
+    echo ""
+    print_status "Individual trainings created:"
+    echo "  1. Technik-Workshop (18:00-20:00)"
+    echo "  2. Konditions-Training (17:30-19:30)"
+    echo "  3. Taktik-Schulung (19:00-21:30)"
+    echo "  4. Freundschaftsspiel Vorbereitung (18:30-20:30)"
+    echo "  5. Regenerations-Training (19:00-20:30)"
 
     print_status "You can now run: npm run dev:local"
 }
