@@ -75,19 +75,6 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
                         </p>
                         <p className={styles.trainingCardTime}>{formatTrainingTimeRange(training)}</p>
                     </div>
-                    <div className={styles.trainingCardTypeLabel}>
-                        {isPartOfSeries(training) && training.series ? (
-                            <span className={styles.trainingCardSeriesLabel}>
-                                <Icon name="refresh" size={14} color="currentColor" />
-                                Reguläres Training
-                            </span>
-                        ) : (
-                            <span className={styles.trainingCardSingleLabel}>
-                                <Icon name="calendar" size={14} color="currentColor" />
-                                Einzeltraining
-                            </span>
-                        )}
-                    </div>
                 </div>
                 <div className={styles.trainingCardHeaderRight}>
                     {isPast && <div className={styles.trainingCardPastIndicator}>Beendet</div>}
@@ -142,26 +129,58 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
             ) : (
                 <div className={styles.trainingCardDetails}>
                     {/* Participation Summary */}
-                    {participationOverview && participationOverview.counts.total > 0 && (
+                    {participationOverview && participationOverview.counts.total > 0 ? (
                         <div className={styles.trainingCardParticipationSummary}>
-                            <span className={styles.trainingCardParticipationLabel}>Teilnahme:</span>
-                            <div className={styles.trainingCardParticipationCounts}>
-                                {participationOverview.counts.joining > 0 && (
-                                    <span className={styles.trainingCardParticipationCount} style={{ color: "#10b981" }}>
-                                        <ThumbsUpIcon size={16} />
-                                        <span style={{ marginLeft: "4px" }}>{participationOverview.counts.joining}</span>
+                            <div className={styles.trainingCardParticipationLeft}>
+                                <span className={styles.trainingCardParticipationLabel}>Teilnahme:</span>
+                                <div className={styles.trainingCardParticipationCounts}>
+                                    {participationOverview.counts.joining > 0 && (
+                                        <span className={styles.trainingCardParticipationCount} style={{ color: "#10b981" }}>
+                                            <ThumbsUpIcon size={16} />
+                                            <span style={{ marginLeft: "4px" }}>{participationOverview.counts.joining}</span>
+                                        </span>
+                                    )}
+                                    {participationOverview.counts.declining > 0 && (
+                                        <span className={styles.trainingCardParticipationCount} style={{ color: "#ef4444" }}>
+                                            <ThumbsDownIcon size={16} />
+                                            <span style={{ marginLeft: "4px" }}>{participationOverview.counts.declining}</span>
+                                        </span>
+                                    )}
+                                    {participationOverview.counts.open > 0 && (
+                                        <span className={styles.trainingCardParticipationCount} style={{ color: "#6b7280" }}>
+                                            <ClockIcon size={16} />
+                                            <span style={{ marginLeft: "4px" }}>{participationOverview.counts.open}</span>
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                            <div className={styles.trainingCardTypeLabel}>
+                                {isPartOfSeries(training) && training.series ? (
+                                    <span className={styles.trainingCardSeriesLabel}>
+                                        <Icon name="refresh" size={14} color="currentColor" />
+                                        Reguläres Training
+                                    </span>
+                                ) : (
+                                    <span className={styles.trainingCardSingleLabel}>
+                                        <Icon name="calendar" size={14} color="currentColor" />
+                                        Einzeltraining
                                     </span>
                                 )}
-                                {participationOverview.counts.declining > 0 && (
-                                    <span className={styles.trainingCardParticipationCount} style={{ color: "#ef4444" }}>
-                                        <ThumbsDownIcon size={16} />
-                                        <span style={{ marginLeft: "4px" }}>{participationOverview.counts.declining}</span>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className={styles.trainingCardParticipationSummary}>
+                            <div></div>
+                            <div className={styles.trainingCardTypeLabel}>
+                                {isPartOfSeries(training) && training.series ? (
+                                    <span className={styles.trainingCardSeriesLabel}>
+                                        <Icon name="refresh" size={14} color="currentColor" />
+                                        Reguläres Training
                                     </span>
-                                )}
-                                {participationOverview.counts.open > 0 && (
-                                    <span className={styles.trainingCardParticipationCount} style={{ color: "#6b7280" }}>
-                                        <ClockIcon size={16} />
-                                        <span style={{ marginLeft: "4px" }}>{participationOverview.counts.open}</span>
+                                ) : (
+                                    <span className={styles.trainingCardSingleLabel}>
+                                        <Icon name="calendar" size={14} color="currentColor" />
+                                        Einzeltraining
                                     </span>
                                 )}
                             </div>

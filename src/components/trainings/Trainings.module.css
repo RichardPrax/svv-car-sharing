@@ -44,6 +44,11 @@
     margin-top: var(--spacing-xs);
 }
 
+/* When the type label is in the participation summary, remove top margin */
+.trainingCardParticipationSummary .trainingCardTypeLabel {
+    margin-top: 0;
+}
+
 .trainingCardSeriesLabel,
 .trainingCardSingleLabel {
     display: inline-flex;
@@ -688,8 +693,15 @@
 .trainingCardParticipationSummary {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: var(--spacing-sm);
     margin-top: var(--spacing-xs);
+}
+
+.trainingCardParticipationLeft {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
 }
 
 .trainingCardParticipantsView {
