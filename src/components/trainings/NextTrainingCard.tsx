@@ -44,9 +44,22 @@ export default function NextTrainingCard({ training, loading }: Props) {
         <div className={styles.nextTrainingCard}>
             <div className={styles.nextTrainingHeader}>
                 <p className={styles.nextTrainingDate}>
-                    {formatTrainingDate(training)} - {isPartOfSeries(training) && training.series ? 'Reguläres Training' : 'Einzeltraining'}
+                    {formatTrainingDate(training)}
                 </p>
                 <p className={styles.nextTrainingTime}>{formatTrainingTimeRange(training)}</p>
+                <div className={styles.nextTrainingTypeLabel}>
+                    {isPartOfSeries(training) && training.series ? (
+                        <span className={styles.nextTrainingSeriesLabel}>
+                            <Icon name="refresh" size={14} color="currentColor" />
+                            Reguläres Training
+                        </span>
+                    ) : (
+                        <span className={styles.nextTrainingSingleLabel}>
+                            <Icon name="calendar" size={14} color="currentColor" />
+                            Einzeltraining
+                        </span>
+                    )}
+                </div>
             </div>
 
             {training.series?.description && (

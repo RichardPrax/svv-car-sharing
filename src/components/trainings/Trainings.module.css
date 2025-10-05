@@ -40,6 +40,36 @@
     gap: 4px;
 }
 
+.trainingCardTypeLabel {
+    margin-top: var(--spacing-xs);
+}
+
+.trainingCardSeriesLabel,
+.trainingCardSingleLabel {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.trainingCardSeriesLabel {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.trainingCardSingleLabel {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #2563eb;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
 .trainingCardDateTimeMain {
     display: flex;
     flex-direction: column;
@@ -236,6 +266,38 @@
 .nextTrainingHeader {
     text-align: center;
     margin-bottom: var(--spacing-lg);
+}
+
+.nextTrainingTypeLabel {
+    margin-top: var(--spacing-sm);
+    display: flex;
+    justify-content: center;
+}
+
+.nextTrainingSeriesLabel,
+.nextTrainingSingleLabel {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.nextTrainingSeriesLabel {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.nextTrainingSingleLabel {
+    background-color: rgba(59, 130, 246, 0.15);
+    color: #2563eb;
+    border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
 .nextTrainingIcon {
@@ -576,6 +638,18 @@
     
     .trainingCardDetailValue {
         text-align: left;
+    }
+    
+    .trainingCardSeriesLabel,
+    .trainingCardSingleLabel {
+        font-size: 0.6875rem;
+        padding: 3px 8px;
+    }
+    
+    .nextTrainingSeriesLabel,
+    .nextTrainingSingleLabel {
+        font-size: 0.75rem;
+        padding: 4px 10px;
     }
     
     .formGrid {

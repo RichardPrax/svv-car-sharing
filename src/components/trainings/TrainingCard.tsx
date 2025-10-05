@@ -71,9 +71,22 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
                 <div className={styles.trainingCardDateTime}>
                     <div className={styles.trainingCardDateTimeMain}>
                         <p className={styles.trainingCardDate}>
-                            {formatTrainingDate(training)} - {isPartOfSeries(training) && training.series ? 'Reguläres Training' : 'Einzeltraining'}
+                            {formatTrainingDate(training)}
                         </p>
                         <p className={styles.trainingCardTime}>{formatTrainingTimeRange(training)}</p>
+                    </div>
+                    <div className={styles.trainingCardTypeLabel}>
+                        {isPartOfSeries(training) && training.series ? (
+                            <span className={styles.trainingCardSeriesLabel}>
+                                <Icon name="refresh" size={14} color="currentColor" />
+                                Reguläres Training
+                            </span>
+                        ) : (
+                            <span className={styles.trainingCardSingleLabel}>
+                                <Icon name="calendar" size={14} color="currentColor" />
+                                Einzeltraining
+                            </span>
+                        )}
                     </div>
                 </div>
                 <div className={styles.trainingCardHeaderRight}>
