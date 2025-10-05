@@ -11,17 +11,18 @@ datasource db {
 }
 
 model UserProfile {
-  id                 String              @id @default(cuid())
-  firstName          String              @map("first_name")
-  lastName           String              @map("last_name")
-  role               UserRole            @default(PLAYER)
-  createdAt          DateTime            @default(now()) @map("created_at")
-  updatedAt          DateTime            @updatedAt @map("updated_at")
-  bringItems         BringItem[]
-  gameParticipations GameParticipation[]
-  ridePassengers     RidePassenger[]
-  drivenRides        Ride[]              @relation("RideDriver")
-  playerPositions    UserPosition[]
+  id                     String                  @id @default(cuid())
+  firstName              String                  @map("first_name")
+  lastName               String                  @map("last_name")
+  role                   UserRole                @default(PLAYER)
+  createdAt              DateTime                @default(now()) @map("created_at")
+  updatedAt              DateTime                @updatedAt @map("updated_at")
+  bringItems             BringItem[]
+  gameParticipations     GameParticipation[]
+  trainingParticipations TrainingParticipation[]
+  ridePassengers         RidePassenger[]
+  drivenRides            Ride[]                  @relation("RideDriver")
+  playerPositions        UserPosition[]
 
   @@map("user_profiles")
 }
@@ -108,6 +109,51 @@ model UserPosition {
 
   @@unique([userId, position])
   @@map("user_positions")
+}
+
+model TrainingSeries {
+  id          String     @id @default(cuid())
+  name        String?    // Optional name for the series
+  description String?    // Optional description
+  weekdays    Int[]      // Days of week (1=Monday, 7=Sunday)
+  startTime   String     @map("start_time")
+  endTime     String     @map("end_time")
+  startWeek   DateTime   @map("start_week") // Start of the first week
+  endWeek     DateTime   @map("end_week")   // Start of the last week
+  trainings   Training[]
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  @@map("training_series")
+}
+
+model Training {
+  id                     String                  @id @default(cuid())
+  date                   DateTime
+  startTime              String                  @map("start_time")
+  endTime                String                  @map("end_time")
+  seriesId               String?                 @map("series_id")
+  series                 TrainingSeries?         @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  trainingParticipations TrainingParticipation[]
+  createdAt              DateTime                @default(now()) @map("created_at")
+  updatedAt              DateTime                @updatedAt @map("updated_at")
+
+  @@map("trainings")
+}
+
+model TrainingParticipation {
+  id         String                  @id @default(cuid())
+  trainingId String                  @map("training_id")
+  playerId   String                  @map("player_id")
+  status     GameParticipationStatus
+  reason     String?                 @map("reason")
+  createdAt  DateTime                @default(now()) @map("created_at")
+  updatedAt  DateTime                @updatedAt @map("updated_at")
+  training   Training                @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  player     UserProfile             @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([trainingId, playerId])
+  @@map("training_participations")
 }
 
 enum UserRole {

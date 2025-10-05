@@ -1,34 +1,34 @@
 import { useMemo, useState } from "react";
-import { GameParticipationStatus } from "@/hooks/matches/useGameParticipation";
+import { TrainingParticipationStatus } from "@/hooks/trainings/useTrainingParticipation";
 import { ThumbsUpIcon, ThumbsDownIcon } from "@/components/ui/GameParticipationIcons";
-import DeclineReasonModal from "./DeclineReasonModal";
-import JoinInfoModal from "./JoinInfoModal";
+import TrainingDeclineReasonModal from "./TrainingDeclineReasonModal";
+import TrainingJoinInfoModal from "./TrainingJoinInfoModal";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import { formatDateForId } from "@/utils/dateTime";
-import styles from "./Matches.module.css";
+import styles from "./Trainings.module.css";
 
-interface GameParticipation {
+interface TrainingParticipation {
     id: string;
-    matchDayId: string;
-        // refreshTrigger entfernt, da ungenutzt
-    status: GameParticipationStatus;
+    trainingId: string;
+    playerId: string;
+    status: TrainingParticipationStatus;
     reason?: string | null;
     createdAt: string;
     updatedAt: string;
 }
 
-interface GameParticipationButtonsProps {
-    matchDayId: string;
-    matchDate: string | Date; // Neuer Prop für das Datum
-    userParticipation?: GameParticipation | null;
+interface TrainingParticipationButtonsProps {
+    trainingId: string;
+    trainingDate: string | Date;
+    userParticipation?: TrainingParticipation | null;
     refreshTrigger?: number;
     onParticipationChange?: () => void;
 }
 
-export default function GameParticipationButtons({ matchDayId, matchDate, userParticipation, onParticipationChange }: GameParticipationButtonsProps) {
+export default function TrainingParticipationButtons({ trainingId, trainingDate, userParticipation, onParticipationChange }: TrainingParticipationButtonsProps) {
     const [showDeclineModal, setShowDeclineModal] = useState(false);
     const [showJoinModal, setShowJoinModal] = useState(false);
-    const [pendingStatus, setPendingStatus] = useState<GameParticipationStatus | null>(null);
+    const [pendingStatus, setPendingStatus] = useState<TrainingParticipationStatus | null>(null);
     const [updating, setUpdating] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const { session } = useOptimizedAuth();
@@ -38,7 +38,7 @@ export default function GameParticipationButtons({ matchDayId, matchDate, userPa
     const loading = false; // No loading since data is passed as props
 
     // Add the update and remove functions
-    const updateParticipation = async (status: GameParticipationStatus, reason?: string) => {
+    const updateParticipation = async (status: TrainingParticipationStatus, reason?: string) => {
         setUpdating(true);
         setError(null);
 
@@ -48,12 +48,12 @@ export default function GameParticipationButtons({ matchDayId, matchDate, userPa
                 return { error: "No access token available" };
             }
 
-            const body: { status: GameParticipationStatus; reason?: string } = { status };
+            const body: { status: TrainingParticipationStatus; reason?: string } = { status };
             if (reason && reason.trim()) {
                 body.reason = reason.trim();
             }
 
-            const response = await fetch(`/api/matches/${matchDayId}/participation`, {
+            const response = await fetch(`/api/trainings/${trainingId}/participation`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -69,7 +69,7 @@ export default function GameParticipationButtons({ matchDayId, matchDate, userPa
                 return { error: errorData.error || "Failed to update participation" };
             }
         } catch (err) {
-            console.error("Error updating participation:", err);
+            console.error("Error updating training participation:", err);
             return { error: "Network error" };
         } finally {
             setUpdating(false);
@@ -87,7 +87,7 @@ export default function GameParticipationButtons({ matchDayId, matchDate, userPa
             }
 
             // The delete endpoint requires the user ID, so we need to use the correct endpoint
-            const response = await fetch(`/api/matches/${matchDayId}/participation/${session.user?.id}`, {
+            const response = await fetch(`/api/trainings/${trainingId}/participation/${session.user?.id}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -101,14 +101,14 @@ export default function GameParticipationButtons({ matchDayId, matchDate, userPa
                 return { error: errorData.error || "Failed to remove participation" };
             }
         } catch (err) {
-            console.error("Error removing participation:", err);
+            console.error("Error removing training participation:", err);
             return { error: "Network error" };
         } finally {
             setUpdating(false);
         }
     };
 
-    const handleParticipationClick = async (status: GameParticipationStatus) => {
+    const handleParticipationClick = async (status: TrainingParticipationStatus) => {
         // If clicking the same status, remove participation
         if (participation?.status === status) {
             const result = await removeParticipation();
@@ -160,6 +160,7 @@ export default function GameParticipationButtons({ matchDayId, matchDate, userPa
         setShowJoinModal(false);
         setPendingStatus(null);
     };
+
     const buttonClasses = useMemo(
         () => ({
             joining: `${styles.participationButton} ${participation?.status === "JOINING" ? styles.participationButtonActive : ""} ${styles.participationButtonJOINING}`.trim(),
@@ -189,19 +190,19 @@ export default function GameParticipationButtons({ matchDayId, matchDate, userPa
             {showLoadingOverlay && <div className={styles.participationButtonsLoading}>Lade...</div>}
             <div className={styles.participationButtons}>
                 <button
-                    data-testid={`md-${formatDateForId(matchDate)}-participate`}
+                    data-testid={`training-${formatDateForId(trainingDate)}-participate`}
                     className={buttonClasses.joining}
                     onClick={() => handleParticipationClick("JOINING")}
                     disabled={updating}
-                    title="Ich komme zum Spiel"
-                    aria-label="Ich komme zum Spiel"
+                    title="Ich komme zum Training"
+                    aria-label="Ich komme zum Training"
                 >
                     <ThumbsUpIcon size={20} />
                     <span className={styles.participationButtonText}>Dabei</span>
                 </button>
 
                 <button
-                    data-testid={`md-${formatDateForId(matchDate)}-decline`}
+                    data-testid={`training-${formatDateForId(trainingDate)}-decline`}
                     className={buttonClasses.declining}
                     onClick={() => handleParticipationClick("DECLINING")}
                     disabled={updating}
@@ -213,9 +214,8 @@ export default function GameParticipationButtons({ matchDayId, matchDate, userPa
                 </button>
             </div>
 
-            <DeclineReasonModal isOpen={showDeclineModal} onClose={handleModalClose} onConfirm={handleDeclineConfirm} isLoading={updating} statusType={pendingStatus} />
-            <JoinInfoModal isOpen={showJoinModal} onClose={handleModalClose} onConfirm={handleJoinConfirm} isLoading={updating} />
+            <TrainingDeclineReasonModal isOpen={showDeclineModal} onClose={handleModalClose} onConfirm={handleDeclineConfirm} isLoading={updating} statusType={pendingStatus} />
+            <TrainingJoinInfoModal isOpen={showJoinModal} onClose={handleModalClose} onConfirm={handleJoinConfirm} isLoading={updating} />
         </div>
     );
 }
-

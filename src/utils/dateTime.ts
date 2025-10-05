@@ -43,3 +43,15 @@ export const formatDateForId = (date: string | Date): string => {
     const year = dateObj.getFullYear();
     return `${year}-${month}-${day}`;
 };
+
+export const isTrainingInPast = (date: string | Date, startTime: string): boolean => {
+    const now = new Date();
+    const dateObj = typeof date === "string" ? new Date(date) : date;
+    const trainingDate = new Date(dateObj);
+    
+    // Parse the time string (assuming format "HH:mm")
+    const [hours, minutes] = startTime.split(':').map(Number);
+    trainingDate.setHours(hours, minutes, 0, 0);
+    
+    return trainingDate < now;
+};

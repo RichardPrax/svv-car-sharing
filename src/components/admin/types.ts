@@ -1,5 +1,5 @@
 // src/components/admin/types.ts
-import { UserProfile, UserProfileWithPositions } from "@/entities/UserProfile";
+import { UserProfileWithPositions } from "@/entities/UserProfile";
 
 export interface UserActionsProps {
     user: UserProfileWithPositions;

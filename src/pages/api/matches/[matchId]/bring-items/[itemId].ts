@@ -72,6 +72,8 @@ async function handleDelete(req: AuthenticatedRequest, res: NextApiResponse, mat
 }
 
 // Export with auth middleware
-export default (req: NextApiRequest, res: NextApiResponse) => 
+const handler = (req: NextApiRequest, res: NextApiResponse) => 
     withAuth(req, res, bringItemHandler);
+
+export default handler;
 

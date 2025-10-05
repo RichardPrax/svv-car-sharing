@@ -1,6 +1,6 @@
 // src/components/ui/icons/Icon.tsx
 
-export type IconName = "home" | "volleyball" | "runner" | "scales" | "chart" | "users" | "logout" | "menu" | "dashboard" | "car" | "refresh" | "user" | "edit" | "delete";
+export type IconName = "home" | "volleyball" | "runner" | "scales" | "chart" | "users" | "logout" | "menu" | "dashboard" | "car" | "refresh" | "user" | "edit" | "delete" | "plus" | "add" | "calendar" | "clock-loading";
 
 interface IconProps {
     name: IconName;
@@ -181,34 +181,82 @@ const Icon: React.FC<IconProps> = ({ name, size = 24, className = "", color = "c
             case "edit":
                 return (
                     <g>
-                        <path
-                            d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-                            stroke={color}
-                            strokeWidth="2"
-                            fill="none"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                        {/* Document/Square background */}
+                        <rect x="2" y="2" width="20" height="20" rx="2" ry="2" stroke={color} strokeWidth="1.5" fill="none" />
+                        {/* Pencil */}
+                        <path d="M16 4l4 4-8 8H8v-4l8-8z" fill={color} stroke={color} strokeWidth="0.5" strokeLinecap="round" strokeLinejoin="round" />
+                        {/* Pencil tip highlight */}
+                        <path d="M16 4l4 4-2 2-4-4 2-2z" fill="white" stroke="none" />
+                        {/* Writing lines indicator */}
+                        <line x1="5" y1="18" x2="10" y2="18" stroke={color} strokeWidth="1" strokeLinecap="round" />
+                        <line x1="5" y1="15" x2="8" y2="15" stroke={color} strokeWidth="1" strokeLinecap="round" />
                     </g>
                 );
 
             case "delete":
                 return (
                     <g>
-                        {/* Mülltonne Deckel */}
-                        <rect x="2" y="4" width="20" height="2" rx="1" fill={color} />
-                        {/* Griff oben */}
-                        <rect x="8" y="2" width="8" height="2" rx="1" fill={color} />
-                        {/* Mülltonne Körper */}
-                        <path 
-                            d="M5 6 L19 6 L18 20 Q18 21 17 21 L7 21 Q6 21 6 20 L5 6 Z" 
-                            fill={color}
-                        />
-                        {/* Vertikale Linien im Inneren */}
-                        <line x1="9" y1="9" x2="9" y2="18" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-                        <line x1="12" y1="9" x2="12" y2="18" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-                        <line x1="15" y1="9" x2="15" y2="18" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+                        {/* Trash can lid */}
+                        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                        {/* Handle on top */}
+                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                        {/* Vertical lines inside */}
+                        <line x1="10" y1="11" x2="10" y2="17" stroke={color} strokeWidth="2" strokeLinecap="round" />
+                        <line x1="14" y1="11" x2="14" y2="17" stroke={color} strokeWidth="2" strokeLinecap="round" />
+                    </g>
+                );
+
+            case "plus":
+            case "add":
+                return (
+                    <g>
+                        {/* Circle background */}
+                        <circle cx="12" cy="12" r="10" stroke={color} strokeWidth="2" fill="none" />
+                        {/* Plus sign */}
+                        <line x1="12" y1="8" x2="12" y2="16" stroke={color} strokeWidth="2" strokeLinecap="round" />
+                        <line x1="8" y1="12" x2="16" y2="12" stroke={color} strokeWidth="2" strokeLinecap="round" />
+                    </g>
+                );
+
+            case "calendar":
+                return (
+                    <g>
+                        {/* Calendar base */}
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke={color} strokeWidth="2" fill="none" />
+                        {/* Top line */}
+                        <line x1="16" y1="2" x2="16" y2="6" stroke={color} strokeWidth="2" strokeLinecap="round" />
+                        <line x1="8" y1="2" x2="8" y2="6" stroke={color} strokeWidth="2" strokeLinecap="round" />
+                        {/* Header separator */}
+                        <line x1="3" y1="10" x2="21" y2="10" stroke={color} strokeWidth="2" strokeLinecap="round" />
+                        {/* Calendar dots */}
+                        <circle cx="8" cy="14" r="1" fill={color} />
+                        <circle cx="12" cy="14" r="1" fill={color} />
+                        <circle cx="16" cy="14" r="1" fill={color} />
+                        <circle cx="8" cy="18" r="1" fill={color} />
+                        <circle cx="12" cy="18" r="1" fill={color} />
+                    </g>
+                );
+
+            case "clock-loading":
+                return (
+                    <g>
+                        {/* Clock circle */}
+                        <circle cx="12" cy="12" r="10" stroke={color} strokeWidth="2" fill="none" />
+                        {/* Clock hands */}
+                        <path d="M12 6v6l4 2" stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                        {/* Loading indicator dots */}
+                        <circle cx="12" cy="2" r="1.5" fill={color} opacity="1">
+                            <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite" begin="0s" />
+                        </circle>
+                        <circle cx="19.07" cy="5.93" r="1.5" fill={color} opacity="0.8">
+                            <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite" begin="0.2s" />
+                        </circle>
+                        <circle cx="22" cy="12" r="1.5" fill={color} opacity="0.6">
+                            <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite" begin="0.4s" />
+                        </circle>
+                        <circle cx="19.07" cy="18.07" r="1.5" fill={color} opacity="0.4">
+                            <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite" begin="0.6s" />
+                        </circle>
                     </g>
                 );
 

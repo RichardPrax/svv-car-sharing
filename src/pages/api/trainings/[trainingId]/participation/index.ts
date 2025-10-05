@@ -15,11 +15,11 @@ async function participationHandler(req: AuthenticatedRequest, res: NextApiRespo
         // User is already authenticated via middleware
         const { user } = req;
 
-        const { matchId } = req.query;
+        const { trainingId } = req.query;
         const { status, reason } = req.body;
 
-        if (!matchId || typeof matchId !== "string") {
-            return res.status(400).json({ error: "Invalid match ID" });
+        if (!trainingId || typeof trainingId !== "string") {
+            return res.status(400).json({ error: "Invalid training ID" });
         }
 
         if (!status || !["JOINING", "DECLINING"].includes(status)) {
@@ -31,27 +31,27 @@ async function participationHandler(req: AuthenticatedRequest, res: NextApiRespo
             return res.status(400).json({ error: "Bei einer Absage muss ein Grund angegeben werden" });
         }
 
-        // Check if match day exists
-        const matchDay = await prisma.matchDay.findUnique({
-            where: { id: matchId },
+        // Check if training exists
+        const training = await prisma.training.findUnique({
+            where: { id: trainingId },
         });
 
-        if (!matchDay) {
-            return res.status(404).json({ error: "Match day not found" });
+        if (!training) {
+            return res.status(404).json({ error: "Training not found" });
         }
 
         // Check if user has player role
         const userProfile = await userProfileRepository.findById(user.id);
 
         if (!userProfile || (userProfile.role !== "PLAYER" && userProfile.role !== "TRAINER" && userProfile.role !== "ADMIN")) {
-            return res.status(403).json({ error: "Only players, trainers, and admins can participate in games" });
+            return res.status(403).json({ error: "Only players, trainers, and admins can participate in trainings" });
         }
 
         // Upsert participation (create or update)
-        const participation = await prisma.gameParticipation.upsert({
+        const participation = await prisma.trainingParticipation.upsert({
             where: {
-                matchDayId_playerId: {
-                    matchDayId: matchId,
+                trainingId_playerId: {
+                    trainingId: trainingId,
                     playerId: user.id,
                 },
             },
@@ -61,7 +61,7 @@ async function participationHandler(req: AuthenticatedRequest, res: NextApiRespo
                 updatedAt: new Date(),
             },
             create: {
-                matchDayId: matchId,
+                trainingId: trainingId,
                 playerId: user.id,
                 status: status as GameParticipationStatus,
                 reason: reason && reason.trim() ? reason.trim() : null, // Grund optional bei JOINING, erforderlich bei DECLINING
@@ -70,7 +70,7 @@ async function participationHandler(req: AuthenticatedRequest, res: NextApiRespo
 
         return res.status(200).json(participation);
     } catch (error) {
-        console.error("Error handling participation:", error);
+        console.error("Error handling training participation:", error);
         return res.status(500).json({ error: "Internal server error" });
     }
 }
@@ -79,4 +79,3 @@ async function participationHandler(req: AuthenticatedRequest, res: NextApiRespo
 const handler = (req: NextApiRequest, res: NextApiResponse) => withAuth(req, res, participationHandler);
 
 export default handler;
-

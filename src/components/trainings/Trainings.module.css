@@ -1,0 +1,1118 @@
+/* Training Card Styles */
+.trainingCard {
+    background-color: var(--card-background);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--card-shadow);
+}
+
+.trainingCard:hover {
+    border-color: var(--border-light);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.trainingCardPast {
+    opacity: 0.8;
+    background-color: var(--card-past-background);
+    border-color: var(--card-past-border);
+}
+
+.trainingCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.trainingCardHeaderRight {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.trainingCardDateTime {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.trainingCardTypeLabel {
+    margin-top: var(--spacing-xs);
+}
+
+/* When the type label is in the participation summary, remove top margin */
+.trainingCardParticipationSummary .trainingCardTypeLabel {
+    margin-top: 0;
+}
+
+.trainingCardSeriesLabel,
+.trainingCardSingleLabel {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.trainingCardSeriesLabel {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.trainingCardSingleLabel {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #2563eb;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.trainingCardDateTimeMain {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.trainingCardSeriesInfo {
+    margin-top: var(--spacing-xs);
+}
+
+.trainingCardSeriesIndicator,
+.trainingCardSingleIndicator {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.trainingCardSeriesIndicator {
+    background-color: var(--color-accent-light);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent-border);
+}
+
+.trainingCardSingleIndicator {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary-border);
+}
+
+.trainingCardSeriesIcon,
+.trainingCardSingleIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: currentColor;
+}
+
+.trainingCardSeriesName,
+.trainingCardSingleName {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.trainingCardDate {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-xs) 0;
+    line-height: 1.4;
+}
+
+.trainingCardTime {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.trainingCardPastIndicator {
+    font-size: 0.75rem;
+    color: var(--text-accent);
+    font-weight: 600;
+    background-color: var(--card-past-border);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+}
+
+.trainingCardActions {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.trainingCardActionButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid var(--card-border);
+}
+
+.trainingCardActionButton:hover {
+    background-color: var(--surface-hover);
+    color: var(--text-primary);
+    border-color: var(--border-light);
+}
+
+.trainingCardActionButtonDanger {
+    color: var(--error);
+}
+
+.trainingCardActionButtonDanger:hover {
+    background-color: var(--error);
+    color: white;
+    border-color: var(--error);
+}
+
+.trainingCardDetails {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.trainingCardDetailRow {
+    display: flex;
+    align-items: center;
+}
+
+.trainingCardDetailLabel {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.trainingCardDetailValue {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-left: var(--spacing-xs);
+}
+
+/* Training List Styles */
+.trainingList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.emptyState {
+    text-align: center;
+    padding: var(--spacing-xl) var(--spacing-lg);
+    color: var(--text-secondary);
+}
+
+.emptyStateIcon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.emptyStateTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-primary);
+}
+
+.emptyStateMessage {
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+/* Next Training Card Styles */
+.nextTrainingCard {
+    background: linear-gradient(135deg, var(--card-background) 0%, var(--surface) 100%);
+    border: 2px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.nextTrainingCard::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3ecf8e, #10b981);
+}
+
+.nextTrainingCard:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
+    border-color: #3ecf8e;
+}
+
+.nextTrainingHeader {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.nextTrainingTypeLabel {
+    margin-top: var(--spacing-sm);
+    display: flex;
+    justify-content: center;
+}
+
+.nextTrainingSeriesLabel,
+.nextTrainingSingleLabel {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.nextTrainingSeriesLabel {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.nextTrainingSingleLabel {
+    background-color: rgba(59, 130, 246, 0.15);
+    color: #2563eb;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.nextTrainingIcon {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+}
+
+.nextTrainingTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.nextTrainingDate {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-xs) 0;
+    line-height: 1.4;
+}
+
+.nextTrainingTime {
+    font-size: 1.125rem;
+    color: var(--text-accent);
+    font-weight: 600;
+    margin: 0;
+}
+
+.nextTrainingSeriesInfo,
+.nextTrainingSingleInfo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-sm);
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.nextTrainingSeriesInfo {
+    background-color: var(--color-accent-light);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent-border);
+}
+
+.nextTrainingSingleInfo {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary-border);
+}
+
+.nextTrainingSeriesIcon,
+.nextTrainingSingleIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: currentColor;
+}
+
+.nextTrainingSeriesName,
+.nextTrainingSingleName {
+    font-weight: 600;
+}
+
+.nextTrainingDescription {
+    margin-top: var(--spacing-lg);
+    text-align: center;
+}
+
+.nextTrainingDescriptionText {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.nextTrainingDetails {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    text-align: center;
+}
+
+.nextTrainingDetail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nextTrainingDetailLabel {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.nextTrainingDetailValue {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+/* Training Detail Styles */
+.trainingDetailContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+}
+
+.trainingDetailWrapper {
+    background: var(--card-background);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+}
+
+.trainingHeaderTop {
+    padding: var(--spacing-lg) var(--spacing-xl) 0;
+}
+
+.trainingInfo {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    border-bottom: 1px solid var(--card-border);
+}
+
+.trainingTitle {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-lg) 0;
+}
+
+.trainingInfoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.trainingInfoItem {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.trainingInfoLabel {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    margin: 0;
+}
+
+.trainingInfoValue {
+    font-size: 1.125rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Form Styles */
+.formContainer {
+    background: var(--card-background);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--card-shadow);
+}
+
+.formTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-xl) 0;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.formField {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+}
+
+.timeFieldsRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.formLabel {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.formInput {
+    padding: var(--spacing-md);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    background-color: var(--input-background);
+    color: var(--text-primary);
+    transition: border-color 0.2s ease;
+}
+
+.formInput:focus {
+    outline: none;
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 2px rgba(62, 207, 142, 0.1);
+}
+
+.formTextarea {
+    padding: var(--spacing-md);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    background-color: var(--input-background);
+    color: var(--text-primary);
+    resize: vertical;
+    min-height: 100px;
+    transition: border-color 0.2s ease;
+}
+
+.formTextarea:focus {
+    outline: none;
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 2px rgba(62, 207, 142, 0.1);
+}
+
+.formActions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: flex-end;
+    margin-top: var(--spacing-xl);
+}
+
+.formButton {
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.formButtonPrimary {
+    background: var(--primary);
+    color: white;
+}
+
+.formButtonPrimary:hover {
+    background: var(--primary-hover);
+}
+
+.formButtonSecondary {
+    background: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--card-border);
+}
+
+.formButtonSecondary:hover {
+    background: var(--surface-hover);
+}
+
+.formButtonDanger {
+    background: var(--error);
+    color: white;
+}
+
+.formButtonDanger:hover {
+    background: var(--error-hover);
+}
+
+/* Delete Confirmation Styles */
+.deleteConfirm {
+    background: var(--card-background);
+    padding: var(--spacing-xl);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    border-radius: var(--radius-lg);
+}
+
+
+.deleteConfirmTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.deleteConfirmMessage {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0 0 var(--spacing-xl) 0;
+}
+
+.deleteConfirmActions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .trainingCardDetailRow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+    
+    .trainingCardDetailValue {
+        text-align: left;
+    }
+    
+    .trainingCardSeriesLabel,
+    .trainingCardSingleLabel {
+        font-size: 0.6875rem;
+        padding: 3px 8px;
+    }
+    
+    .nextTrainingSeriesLabel,
+    .nextTrainingSingleLabel {
+        font-size: 0.75rem;
+        padding: 4px 10px;
+    }
+    
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+    
+    .timeFieldsRow {
+        grid-template-columns: 1fr;
+    }
+    
+    .trainingInfoGrid {
+        grid-template-columns: 1fr;
+    }
+    
+    .formActions {
+        flex-direction: column;
+    }
+    
+    .deleteConfirmActions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .deleteConfirm {
+        max-width: 90vw;
+        margin: 0 auto;
+    }
+
+    .nextTrainingDetails {
+        grid-template-columns: 1fr !important;
+        gap: var(--spacing-md) !important;
+    }
+}
+
+/* Training Participation Styles */
+.trainingCardParticipationSummary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+}
+
+.trainingCardParticipationLeft {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.trainingCardParticipantsView {
+    padding: var(--spacing-md) 0;
+    border-top: 1px solid var(--card-border);
+    margin-top: var(--spacing-md);
+}
+
+/* Override TrainingParticipationSummary styles when embedded in card */
+.trainingCardParticipantsView .participationSummaryContainer {
+    gap: var(--spacing-md);
+}
+
+.trainingCardParticipantsView .summaryHeader {
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--card-border);
+}
+
+.trainingCardParticipantsView .summaryTitle {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.trainingCardParticipantsView .statValue {
+    font-size: 1.125rem;
+}
+
+.trainingCardParticipantsView .participationGroups {
+    gap: var(--spacing-sm);
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.trainingCardParticipantsView .groupHeader {
+    padding: var(--spacing-sm);
+}
+
+.trainingCardParticipantsView .groupContent {
+    padding: var(--spacing-sm);
+    padding-top: 0;
+}
+
+.trainingCardParticipantsView .groupTitle {
+    font-size: 0.875rem;
+}
+
+.trainingCardParticipantsView .groupIcon {
+    width: 24px;
+    height: 24px;
+}
+
+.trainingCardParticipantsView .userCard {
+    padding: var(--spacing-xs);
+}
+
+.trainingCardParticipantsView .userName {
+    font-size: 0.75rem;
+}
+
+.trainingCardParticipationLabel {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.trainingCardParticipationCounts {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.trainingCardParticipationCount {
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--background-secondary);
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Training Participation Buttons */
+.participationButtonsContainer {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--card-border);
+    position: relative;
+    background: transparent;
+}
+
+.participationButtonsLabel {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.participationButtons {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.participationButton {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    background: var(--card-background);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 100px;
+    justify-content: center;
+}
+
+.participationButton:hover {
+    background: var(--surface-hover);
+    border-color: var(--border-light);
+    transform: translateY(-1px);
+}
+
+.participationButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.participationButtonActive {
+    border-width: 2px;
+    font-weight: 600;
+}
+
+.participationButtonJOINING {
+    border-color: #10b981;
+    color: #10b981;
+}
+
+.participationButtonJOINING.participationButtonActive {
+    background: #10b981;
+    color: white;
+}
+
+.participationButtonDECLINING {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.participationButtonDECLINING.participationButtonActive {
+    background: #ef4444;
+    color: white;
+}
+
+.participationButtonText {
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.participationButtonsLoading {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    padding: var(--spacing-sm);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    backdrop-filter: blur(2px);
+}
+
+/* Modal styles for training participation */
+.modalDescription {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: var(--spacing-lg);
+}
+
+.formField {
+    margin-bottom: var(--spacing-lg);
+}
+
+.formLabel {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.formError {
+    font-size: 0.75rem;
+    color: var(--error);
+    margin-top: var(--spacing-xs);
+}
+
+.modalFooter {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: flex-end;
+    margin-top: var(--spacing-xl);
+}
+
+/* Responsive adjustments for participation */
+@media (max-width: 480px) {
+    .participationButtons {
+        flex-direction: column;
+    }
+
+    .participationButton {
+        justify-content: flex-start;
+        min-width: auto;
+    }
+
+    .trainingCardParticipationCounts {
+        flex-wrap: wrap;
+    }
+
+    /* Mobile styles for embedded participation view */
+    .trainingCardParticipantsView .participationGroups {
+        grid-template-columns: 1fr;
+    }
+
+    .trainingCardParticipantsView .summaryHeader {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+        align-items: flex-start;
+    }
+}
+
+/* Training Series Form Styles */
+.weekdayGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+}
+
+.weekdayLabel {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--surface);
+}
+
+.weekdayLabel:hover {
+    background: var(--surface-hover);
+    border-color: var(--primary);
+}
+
+.weekdayLabel:has(.weekdayCheckbox:checked) {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.weekdayCheckbox {
+    margin: 0;
+}
+
+.weekdayText {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.previewContainer {
+    background: var(--surface);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.previewTitle {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin: 0 0 var(--spacing-xs) 0;
+}
+
+.previewText {
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.submitButton {
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--primary);
+    color: white;
+}
+
+.submitButton:hover:not(:disabled) {
+    background: var(--primary-hover);
+}
+
+.submitButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.cancelButton {
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: 1px solid var(--card-border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--surface);
+    color: var(--text-primary);
+}
+
+.cancelButton:hover:not(:disabled) {
+    background: var(--surface-hover);
+    border-color: var(--card-border-hover);
+}
+
+.cancelButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Edit Scope Selector Styles */
+.editScopeSelector {
+    background: var(--surface);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    width: 100%;
+    text-align: left;
+    align-self: stretch;
+}
+
+.editScopeTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-md) 0;
+}
+
+.editScopeOptions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.editScopeOption {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--background);
+}
+
+.editScopeOption:hover {
+    background: var(--surface-hover);
+    border-color: var(--primary);
+}
+
+.editScopeOption:has(.editScopeRadio:checked) {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.editScopeRadio {
+    margin: 0;
+    margin-top: 2px;
+}
+
+.editScopeLabel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    flex: 1;
+}
+
+.editScopeDescription {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: normal;
+}
+
+.fieldNote {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: var(--spacing-xs);
+    font-style: italic;
+}
