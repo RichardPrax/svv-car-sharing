@@ -211,19 +211,19 @@
     align-items: center;
     gap: var(--spacing-md);
     padding: var(--spacing-md);
-    background: var(--surface-hover);
+    background: transparent;
     border-radius: 12px;
     transition: all 0.2s ease;
-    opacity: 0;
-    transition: opacity 0s ease;
+    opacity: 1;
     min-height: 56px;
     height: 56px;
     position: relative;
+    justify-content: center;
 }
 
 .sidebar:hover .userInfo {
-    opacity: 1;
-    transition: opacity 0.2s ease 0.1s;
+    background: var(--surface-hover);
+    justify-content: flex-start;
 }
 
 .userInfo:hover {
