@@ -51,7 +51,7 @@ export default function NextTrainingCard({ training, loading }: Props) {
                     {isPartOfSeries(training) && training.series ? (
                         <span className={styles.nextTrainingSeriesLabel}>
                             <Icon name="refresh" size={14} color="currentColor" />
-                            Reguläres Training
+                            {getSeriesDisplayName(training.series)}
                         </span>
                     ) : (
                         <span className={styles.nextTrainingSingleLabel}>

@@ -158,7 +158,7 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
                                 {isPartOfSeries(training) && training.series ? (
                                     <span className={styles.trainingCardSeriesLabel}>
                                         <Icon name="refresh" size={14} color="currentColor" />
-                                        Reguläres Training
+                                        {getSeriesDisplayName(training.series)}
                                     </span>
                                 ) : (
                                     <span className={styles.trainingCardSingleLabel}>
@@ -175,7 +175,7 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
                                 {isPartOfSeries(training) && training.series ? (
                                     <span className={styles.trainingCardSeriesLabel}>
                                         <Icon name="refresh" size={14} color="currentColor" />
-                                        Reguläres Training
+                                        {getSeriesDisplayName(training.series)}
                                     </span>
                                 ) : (
                                     <span className={styles.trainingCardSingleLabel}>
