@@ -1,6 +1,6 @@
 // src/components/ui/icons/Icon.tsx
 
-export type IconName = "home" | "volleyball" | "runner" | "scales" | "chart" | "users" | "logout" | "menu" | "dashboard" | "car" | "refresh" | "user" | "edit" | "delete" | "plus" | "add";
+export type IconName = "home" | "volleyball" | "runner" | "scales" | "chart" | "users" | "logout" | "menu" | "dashboard" | "car" | "refresh" | "user" | "edit" | "delete" | "plus" | "add" | "calendar" | "clock-loading";
 
 interface IconProps {
     name: IconName;
@@ -215,6 +215,48 @@ const Icon: React.FC<IconProps> = ({ name, size = 24, className = "", color = "c
                         {/* Plus sign */}
                         <line x1="12" y1="8" x2="12" y2="16" stroke={color} strokeWidth="2" strokeLinecap="round" />
                         <line x1="8" y1="12" x2="16" y2="12" stroke={color} strokeWidth="2" strokeLinecap="round" />
+                    </g>
+                );
+
+            case "calendar":
+                return (
+                    <g>
+                        {/* Calendar base */}
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke={color} strokeWidth="2" fill="none" />
+                        {/* Top line */}
+                        <line x1="16" y1="2" x2="16" y2="6" stroke={color} strokeWidth="2" strokeLinecap="round" />
+                        <line x1="8" y1="2" x2="8" y2="6" stroke={color} strokeWidth="2" strokeLinecap="round" />
+                        {/* Header separator */}
+                        <line x1="3" y1="10" x2="21" y2="10" stroke={color} strokeWidth="2" strokeLinecap="round" />
+                        {/* Calendar dots */}
+                        <circle cx="8" cy="14" r="1" fill={color} />
+                        <circle cx="12" cy="14" r="1" fill={color} />
+                        <circle cx="16" cy="14" r="1" fill={color} />
+                        <circle cx="8" cy="18" r="1" fill={color} />
+                        <circle cx="12" cy="18" r="1" fill={color} />
+                    </g>
+                );
+
+            case "clock-loading":
+                return (
+                    <g>
+                        {/* Clock circle */}
+                        <circle cx="12" cy="12" r="10" stroke={color} strokeWidth="2" fill="none" />
+                        {/* Clock hands */}
+                        <path d="M12 6v6l4 2" stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                        {/* Loading indicator dots */}
+                        <circle cx="12" cy="2" r="1.5" fill={color} opacity="1">
+                            <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite" begin="0s" />
+                        </circle>
+                        <circle cx="19.07" cy="5.93" r="1.5" fill={color} opacity="0.8">
+                            <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite" begin="0.2s" />
+                        </circle>
+                        <circle cx="22" cy="12" r="1.5" fill={color} opacity="0.6">
+                            <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite" begin="0.4s" />
+                        </circle>
+                        <circle cx="19.07" cy="18.07" r="1.5" fill={color} opacity="0.4">
+                            <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite" begin="0.6s" />
+                        </circle>
                     </g>
                 );
 

@@ -116,3 +116,13 @@ export function getWeekdayName(weekday: number): string {
 export function getSeriesWeekdayNames(series: TrainingSeries): string {
     return series.weekdays.map(getWeekdayName).join(', ');
 }
+
+// Helper function to get series display name
+export function getSeriesDisplayName(series: TrainingSeries): string {
+    return series.name || `Training-Serie (${getSeriesWeekdayNames(series)})`;
+}
+
+// Helper function to check if a training is a single training (not part of a series)
+export function isSingleTraining(training: Training): boolean {
+    return !training.seriesId && !training.series;
+}

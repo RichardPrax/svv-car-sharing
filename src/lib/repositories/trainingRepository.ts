@@ -9,6 +9,9 @@ export class TrainingRepository {
      */
     async findAll(): Promise<Training[]> {
         return this.prisma.training.findMany({
+            include: {
+                series: true
+            },
             orderBy: {
                 date: 'desc'
             }
@@ -20,7 +23,10 @@ export class TrainingRepository {
      */
     async findById(id: string): Promise<Training | null> {
         return this.prisma.training.findUnique({
-            where: { id }
+            where: { id },
+            include: {
+                series: true
+            }
         });
     }
 
@@ -35,6 +41,9 @@ export class TrainingRepository {
                 date: {
                     gte: now
                 }
+            },
+            include: {
+                series: true
             },
             orderBy: {
                 date: 'asc'
@@ -52,6 +61,9 @@ export class TrainingRepository {
                     gte: startDate,
                     lte: endDate
                 }
+            },
+            include: {
+                series: true
             },
             orderBy: {
                 date: 'asc'

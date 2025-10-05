@@ -18,11 +18,23 @@ export function useTrainings() {
 
             const data = await response.json();
             // Convert date strings to Date objects
-            const trainingsWithDates = data.map((training: Training & { date: string; createdAt: string; updatedAt: string }) => ({
+            const trainingsWithDates = data.map((training: Training & { 
+                date: string; 
+                createdAt: string; 
+                updatedAt: string;
+                series?: { createdAt: string; updatedAt: string; startWeek: string; endWeek: string } | null;
+            }) => ({
                 ...training,
                 date: new Date(training.date),
                 createdAt: new Date(training.createdAt),
                 updatedAt: new Date(training.updatedAt),
+                series: training.series ? {
+                    ...training.series,
+                    createdAt: new Date(training.series.createdAt),
+                    updatedAt: new Date(training.series.updatedAt),
+                    startWeek: new Date(training.series.startWeek),
+                    endWeek: new Date(training.series.endWeek)
+                } : null
             }));
             
             setTrainings(trainingsWithDates);

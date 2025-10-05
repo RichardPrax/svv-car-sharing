@@ -187,7 +187,6 @@ export default function GameParticipationButtons({ matchDayId, matchDate, userPa
     return (
         <div className={styles.participationButtonsContainer}>
             {showLoadingOverlay && <div className={styles.participationButtonsLoading}>Lade...</div>}
-            <div className={styles.participationButtonsLabel}>Teilnahme:</div>
             <div className={styles.participationButtons}>
                 <button
                     data-testid={`md-${formatDateForId(matchDate)}-participate`}

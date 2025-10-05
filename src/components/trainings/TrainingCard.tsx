@@ -1,5 +1,5 @@
 // src/components/trainings/TrainingCard.tsx
-import { Training, formatTrainingDate, formatTrainingTimeRange } from "@/entities/Training";
+import { Training, formatTrainingDate, formatTrainingTimeRange, isPartOfSeries, getSeriesDisplayName } from "@/entities/Training";
 import { useRoleGuard } from "@/hooks/auth/useRoleGuard";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import { Icon } from "@/components/ui";
@@ -69,8 +69,12 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
         >
             <div className={styles.trainingCardHeader}>
                 <div className={styles.trainingCardDateTime}>
-                    <p className={styles.trainingCardDate}>{formatTrainingDate(training)}</p>
-                    <p className={styles.trainingCardTime}>{formatTrainingTimeRange(training)}</p>
+                    <div className={styles.trainingCardDateTimeMain}>
+                        <p className={styles.trainingCardDate}>
+                            {formatTrainingDate(training)} - {isPartOfSeries(training) && training.series ? 'Reguläres Training' : 'Einzeltraining'}
+                        </p>
+                        <p className={styles.trainingCardTime}>{formatTrainingTimeRange(training)}</p>
+                    </div>
                 </div>
                 <div className={styles.trainingCardHeaderRight}>
                     {isPast && <div className={styles.trainingCardPastIndicator}>Beendet</div>}
