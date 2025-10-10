@@ -448,6 +448,11 @@
         padding: var(--spacing-md) var(--spacing-lg);
     }
 
+    .sidebar.mobileOpen .userInfo {
+        justify-content: flex-start;
+        background: var(--surface-hover);
+    }
+
     .sidebar.mobileOpen .logoutButton {
         justify-content: flex-start;
         padding: var(--spacing-md) var(--spacing-lg);
