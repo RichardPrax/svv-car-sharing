@@ -57,7 +57,7 @@
         "dotenv": "^17.2.2",
         "next": "15.5.4",
         "react": "^19.0.0",
-        "react-dom": "^19.0.0"
+        "react-dom": "^19.2.0"
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3",
