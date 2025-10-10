@@ -1,4 +1,24 @@
 import type { NextConfig } from "next";
+import withPWAInit from "next-pwa";
+
+const withPWA = withPWAInit({
+    dest: "public",
+    register: true,
+    skipWaiting: true,
+    disable: process.env.NODE_ENV === "development",
+    // Reload on route changes
+    reloadOnOnline: true,
+    // Scope of the PWA
+    scope: "/",
+    // Service worker path
+    sw: "sw.js",
+    // Deaktiviere Offline-Caching - App funktioniert nur mit Internet
+    runtimeCaching: [],
+    // Kein Precaching von statischen Assets
+    cacheOnFrontEndNav: false,
+    // Minimales Caching - nur für Installierbarkeit
+    publicExcludes: ['!**/*'],
+});
 
 const nextConfig: NextConfig = {
     reactStrictMode: true,
@@ -25,5 +45,6 @@ const nextConfig: NextConfig = {
     },
 };
 
-export default nextConfig;
+// @ts-ignore - Type mismatch between next-pwa types and Next.js 15
+export default withPWA(nextConfig);
 
