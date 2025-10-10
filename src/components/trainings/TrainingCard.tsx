@@ -64,7 +64,7 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
 
     return (
         <div 
-            data-testid={`training-${formatDateForId(training.date)}`}
+            data-testid={`tr-${formatDateForId(training.date)}`}
             className={cardClasses}
         >
             <div className={styles.trainingCardHeader}>
@@ -87,6 +87,7 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
                             title={showParticipants ? "Training-Info anzeigen" : "Teilnehmer anzeigen"}
                             type="button"
                             aria-label={showParticipants ? "Training-Info anzeigen" : "Teilnehmer anzeigen"}
+                            data-testid={`tr-${formatDateForId(training.date)}-toggle-view`}
                         >
                             <Icon name={showParticipants ? "chart" : "users"} size={16} color="currentColor" />
                         </button>
@@ -100,6 +101,7 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
                                 title="Training bearbeiten"
                                 type="button"
                                 aria-label={`Training vom ${formatTrainingDate(training)} bearbeiten`}
+                                data-testid={`tr-${formatDateForId(training.date)}-edit`}
                             >
                                 <Icon name="edit" size={16} color="currentColor" />
                             </button>
@@ -109,6 +111,7 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
                                 title="Training löschen"
                                 type="button"
                                 aria-label={`Training vom ${formatTrainingDate(training)} löschen`}
+                                data-testid={`tr-${formatDateForId(training.date)}-delete`}
                             >
                                 <Icon name="delete" size={16} color="currentColor" />
                             </button>
@@ -119,7 +122,7 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
 
             {/* Conditional rendering based on view mode */}
             {showParticipants ? (
-                <div className={styles.trainingCardParticipantsView}>
+                <div className={styles.trainingCardParticipantsView} data-testid={`tr-${formatDateForId(training.date)}-participants-view`}>
                     <TrainingParticipationSummary 
                         trainingId={training.id}
                         trainingDate={training.date}
@@ -127,7 +130,7 @@ export default function TrainingCard({ training, onEdit, onDelete, participation
                     />
                 </div>
             ) : (
-                <div className={styles.trainingCardDetails}>
+                <div className={styles.trainingCardDetails} data-testid={`tr-${formatDateForId(training.date)}-details`}>
                     {/* Participation Summary */}
                     {participationOverview && participationOverview.counts.total > 0 ? (
                         <div className={styles.trainingCardParticipationSummary}>

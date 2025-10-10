@@ -94,7 +94,7 @@ export default function CreateTrainingSeriesForm({ onSubmit, onCancel, loading }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} data-testid="tr-create-series-form">
             <div className={styles.formGrid}>
                     <div className={styles.formField}>
                         <label className={styles.formLabel} htmlFor="name">Name (optional)</label>
@@ -106,6 +106,7 @@ export default function CreateTrainingSeriesForm({ onSubmit, onCancel, loading }
                             onChange={handleChange}
                             className={styles.formInput}
                             placeholder="z.B. Wintertraining 2024"
+                            data-testid="tr-series-name"
                         />
                     </div>
 
@@ -119,13 +120,14 @@ export default function CreateTrainingSeriesForm({ onSubmit, onCancel, loading }
                             className={styles.formTextarea}
                             placeholder="Zusätzliche Informationen zur Trainings-Serie"
                             rows={3}
+                            data-testid="tr-series-description"
                         />
                     </div>
                 </div>
 
                 <div className={styles.formField}>
                     <label className={styles.formLabel}>Trainingstage *</label>
-                    <div className={styles.weekdayGrid}>
+                    <div className={styles.weekdayGrid} data-testid="tr-series-weekdays">
                         {WEEKDAYS.map(weekday => (
                             <label key={weekday.value} className={styles.weekdayLabel}>
                                 <input
@@ -151,6 +153,7 @@ export default function CreateTrainingSeriesForm({ onSubmit, onCancel, loading }
                             onChange={handleChange}
                             className={styles.formInput}
                             required
+                            data-testid="tr-series-start-time"
                         />
                     </div>
 
@@ -164,6 +167,7 @@ export default function CreateTrainingSeriesForm({ onSubmit, onCancel, loading }
                             onChange={handleChange}
                             className={styles.formInput}
                             required
+                            data-testid="tr-series-end-time"
                         />
                     </div>
                 </div>
@@ -179,6 +183,7 @@ export default function CreateTrainingSeriesForm({ onSubmit, onCancel, loading }
                             onChange={handleChange}
                             className={styles.formInput}
                             required
+                            data-testid="tr-series-start-week"
                         />
                     </div>
 
@@ -192,6 +197,7 @@ export default function CreateTrainingSeriesForm({ onSubmit, onCancel, loading }
                             onChange={handleChange}
                             className={styles.formInput}
                             required
+                            data-testid="tr-series-end-week"
                         />
                     </div>
                 </div>
@@ -209,6 +215,7 @@ export default function CreateTrainingSeriesForm({ onSubmit, onCancel, loading }
                         onClick={onCancel}
                         className={styles.cancelButton}
                         disabled={loading}
+                        data-testid="tr-series-cancel"
                     >
                         Abbrechen
                     </button>
@@ -216,6 +223,7 @@ export default function CreateTrainingSeriesForm({ onSubmit, onCancel, loading }
                         type="submit"
                         className={styles.submitButton}
                         disabled={loading}
+                        data-testid="tr-series-submit"
                     >
                         {loading ? "Erstelle..." : "Serie erstellen"}
                     </button>

@@ -21,7 +21,7 @@ export default function DeleteTrainingConfirm({ training, onConfirm, onCancel, l
     return (
         <div className={styles.deleteConfirm}>
             {isSeriesTraining && (
-                <div className={styles.editScopeSelector}>
+                <div className={styles.editScopeSelector} data-testid="tr-delete-scope-selector">
                     <div className={styles.editScopeOptions}>
                         <label className={styles.editScopeOption}>
                             <input
@@ -31,6 +31,7 @@ export default function DeleteTrainingConfirm({ training, onConfirm, onCancel, l
                                 checked={deleteScope === 'single'}
                                 onChange={(e) => setDeleteScope(e.target.value as DeleteScope)}
                                 className={styles.editScopeRadio}
+                                data-testid="tr-delete-scope-single"
                             />
                             <span className={styles.editScopeLabel}>
                                 Nur dieses Training
@@ -47,6 +48,7 @@ export default function DeleteTrainingConfirm({ training, onConfirm, onCancel, l
                                 checked={deleteScope === 'future'}
                                 onChange={(e) => setDeleteScope(e.target.value as DeleteScope)}
                                 className={styles.editScopeRadio}
+                                data-testid="tr-delete-scope-future"
                             />
                             <span className={styles.editScopeLabel}>
                                 Dieses und alle folgenden
@@ -63,6 +65,7 @@ export default function DeleteTrainingConfirm({ training, onConfirm, onCancel, l
                                 checked={deleteScope === 'series'}
                                 onChange={(e) => setDeleteScope(e.target.value as DeleteScope)}
                                 className={styles.editScopeRadio}
+                                data-testid="tr-delete-scope-series"
                             />
                             <span className={styles.editScopeLabel}>
                                 Gesamte Serie
@@ -98,6 +101,7 @@ export default function DeleteTrainingConfirm({ training, onConfirm, onCancel, l
                     onClick={onCancel}
                     className={`${styles.formButton} ${styles.formButtonSecondary}`}
                     disabled={loading}
+                    data-testid="tr-delete-cancel"
                 >
                     Abbrechen
                 </button>
@@ -105,6 +109,7 @@ export default function DeleteTrainingConfirm({ training, onConfirm, onCancel, l
                     onClick={handleConfirm}
                     className={`${styles.formButton} ${styles.formButtonDanger}`}
                     disabled={loading}
+                    data-testid="tr-delete-confirm"
                 >
                     {loading ? "Lösche..." : "Löschen"}
                 </button>

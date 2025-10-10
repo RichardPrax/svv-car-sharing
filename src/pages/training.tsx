@@ -102,6 +102,7 @@ export default function TrainingPage() {
                                 <Button 
                                     onClick={() => setShowCreateForm(true)}
                                     variant="primary"
+                                    data-testid="tr-create-single-button"
                                 >
                                     <Icon name="plus" size={16} color="currentColor" />
                                     <span style={{ marginLeft: '6px' }}>Einzelnes Training</span>
@@ -109,6 +110,7 @@ export default function TrainingPage() {
                                 <Button 
                                     onClick={() => setShowCreateSeriesForm(true)}
                                     variant="secondary"
+                                    data-testid="tr-create-series-button"
                                 >
                                     <Icon name="chart" size={16} color="currentColor" />
                                     <span style={{ marginLeft: '6px' }}>Trainings-Serie</span>
@@ -119,14 +121,14 @@ export default function TrainingPage() {
 
                     {/* Next Training Card */}
                     {nextTraining && (
-                        <section className={styles.sectionContainer}>
+                        <section className={styles.sectionContainer} data-testid="tr-next-training-section">
                             <h2 className={styles.sectionTitle}>Nächstes Training</h2>
                             <NextTrainingCard training={nextTraining} loading={loading} />
                         </section>
                     )}
 
                     {/* Training List */}
-                    <section>
+                    <section data-testid="tr-list-section">
                         <h2 className={styles.sectionTitle}>Alle Trainings</h2>
                         {error && (
                             <div className={styles.errorSection}>

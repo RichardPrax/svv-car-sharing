@@ -57,7 +57,7 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
     return (
         <>
             {isSeriesTraining && (
-                <div className={styles.editScopeSelector}>
+                <div className={styles.editScopeSelector} data-testid="tr-edit-scope-selector">
                     <div className={styles.editScopeOptions}>
                         <label className={styles.editScopeOption}>
                             <input
@@ -67,6 +67,7 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
                                 checked={editScope === 'single'}
                                 onChange={(e) => setEditScope(e.target.value as EditScope)}
                                 className={styles.editScopeRadio}
+                                data-testid="tr-edit-scope-single"
                             />
                             <span className={styles.editScopeLabel}>
                                 Nur dieses Training
@@ -83,6 +84,7 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
                                 checked={editScope === 'future'}
                                 onChange={(e) => setEditScope(e.target.value as EditScope)}
                                 className={styles.editScopeRadio}
+                                data-testid="tr-edit-scope-future"
                             />
                             <span className={styles.editScopeLabel}>
                                 Dieses und alle folgenden
@@ -99,6 +101,7 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
                                 checked={editScope === 'series'}
                                 onChange={(e) => setEditScope(e.target.value as EditScope)}
                                 className={styles.editScopeRadio}
+                                data-testid="tr-edit-scope-series"
                             />
                             <span className={styles.editScopeLabel}>
                                 Gesamte Serie
@@ -111,7 +114,7 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
                 </div>
             )}
             
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} data-testid="tr-edit-form">
                 {/* Date field - full width row */}
                 <div className={styles.formField}>
                     <label className={styles.formLabel} htmlFor="date">Datum *</label>
@@ -124,6 +127,7 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
                         className={styles.formInput}
                         disabled={editScope === 'series'}
                         required
+                        data-testid="tr-edit-date"
                     />
                     {editScope === 'series' && (
                         <small className={styles.fieldNote}>
@@ -144,6 +148,7 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
                             onChange={handleChange}
                             className={styles.formInput}
                             required
+                            data-testid="tr-edit-start-time"
                         />
                     </div>
 
@@ -157,6 +162,7 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
                             onChange={handleChange}
                             className={styles.formInput}
                             required
+                            data-testid="tr-edit-end-time"
                         />
                     </div>
                 </div>
@@ -168,6 +174,7 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
                         onClick={onCancel}
                         className={`${styles.formButton} ${styles.formButtonSecondary}`}
                         disabled={loading}
+                        data-testid="tr-edit-cancel"
                     >
                         Abbrechen
                     </button>
@@ -175,6 +182,7 @@ export default function EditTrainingForm({ training, onSubmit, onCancel, loading
                         type="submit"
                         className={`${styles.formButton} ${styles.formButtonPrimary}`}
                         disabled={loading}
+                        data-testid="tr-edit-submit"
                     >
                         {loading ? "Speichere..." : "Änderungen speichern"}
                     </button>

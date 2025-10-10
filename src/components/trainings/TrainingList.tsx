@@ -35,7 +35,7 @@ export default function TrainingList({ trainings, loading, onEdit, onDelete }: P
 
     if (loading) {
         return (
-            <div className={styles.emptyState}>
+            <div className={styles.emptyState} data-testid="tr-list-loading">
                 <div className={styles.emptyStateIcon}>⏳</div>
                 <h3 className={styles.emptyStateTitle}>Lade Trainings...</h3>
             </div>
@@ -44,7 +44,7 @@ export default function TrainingList({ trainings, loading, onEdit, onDelete }: P
 
     if (trainings.length === 0) {
         return (
-            <div className={styles.emptyState}>
+            <div className={styles.emptyState} data-testid="tr-list-empty">
                 <div className={styles.emptyStateIcon}>🏐</div>
                 <h3 className={styles.emptyStateTitle}>Keine Trainings verfügbar</h3>
                 <p className={styles.emptyStateMessage}>
@@ -55,7 +55,7 @@ export default function TrainingList({ trainings, loading, onEdit, onDelete }: P
     }
 
     return (
-        <div className={styles.trainingList}>
+        <div className={styles.trainingList} data-testid="tr-list">
             {trainings.map((training) => (
                 <TrainingCard 
                     key={training.id} 

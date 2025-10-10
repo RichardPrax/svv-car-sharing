@@ -190,7 +190,7 @@ export default function TrainingParticipationButtons({ trainingId, trainingDate,
             {showLoadingOverlay && <div className={styles.participationButtonsLoading}>Lade...</div>}
             <div className={styles.participationButtons}>
                 <button
-                    data-testid={`training-${formatDateForId(trainingDate)}-participate`}
+                    data-testid={`tr-${formatDateForId(trainingDate)}-participate`}
                     className={buttonClasses.joining}
                     onClick={() => handleParticipationClick("JOINING")}
                     disabled={updating}
@@ -202,7 +202,7 @@ export default function TrainingParticipationButtons({ trainingId, trainingDate,
                 </button>
 
                 <button
-                    data-testid={`training-${formatDateForId(trainingDate)}-decline`}
+                    data-testid={`tr-${formatDateForId(trainingDate)}-decline`}
                     className={buttonClasses.declining}
                     onClick={() => handleParticipationClick("DECLINING")}
                     disabled={updating}

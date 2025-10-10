@@ -37,7 +37,7 @@ export default function CreateTrainingForm({ onSubmit, onCancel, loading }: Prop
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} data-testid="tr-create-form">
             {/* Date field - full width row */}
             <div className={styles.formField}>
                 <label className={styles.formLabel} htmlFor="date">Datum *</label>
@@ -49,6 +49,7 @@ export default function CreateTrainingForm({ onSubmit, onCancel, loading }: Prop
                     onChange={handleChange}
                     className={styles.formInput}
                     required
+                    data-testid="tr-create-date"
                 />
             </div>
 
@@ -64,6 +65,7 @@ export default function CreateTrainingForm({ onSubmit, onCancel, loading }: Prop
                         onChange={handleChange}
                         className={styles.formInput}
                         required
+                        data-testid="tr-create-start-time"
                     />
                 </div>
 
@@ -77,6 +79,7 @@ export default function CreateTrainingForm({ onSubmit, onCancel, loading }: Prop
                         onChange={handleChange}
                         className={styles.formInput}
                         required
+                        data-testid="tr-create-end-time"
                     />
                 </div>
             </div>
@@ -88,6 +91,7 @@ export default function CreateTrainingForm({ onSubmit, onCancel, loading }: Prop
                         onClick={onCancel}
                         className={`${styles.formButton} ${styles.formButtonSecondary}`}
                         disabled={loading}
+                        data-testid="tr-create-cancel"
                     >
                         Abbrechen
                     </button>
@@ -95,6 +99,7 @@ export default function CreateTrainingForm({ onSubmit, onCancel, loading }: Prop
                         type="submit"
                         className={`${styles.formButton} ${styles.formButtonPrimary}`}
                         disabled={loading}
+                        data-testid="tr-create-submit"
                     >
                         {loading ? "Erstelle..." : "Training erstellen"}
                     </button>

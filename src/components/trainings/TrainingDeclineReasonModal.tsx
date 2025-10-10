@@ -42,8 +42,8 @@ export default function TrainingDeclineReasonModal({ isOpen, onClose, onConfirm,
     if (!isOpen) return null;
 
     return (
-        <Modal isOpen={isOpen} onClose={handleClose} title="Absage begründen" maxWidth="sm" data-testid="training-decline-reason-modal">
-            <form onSubmit={handleSubmit} data-testid="training-decline-reason-form">
+        <Modal isOpen={isOpen} onClose={handleClose} title="Absage begründen" maxWidth="sm">
+            <form onSubmit={handleSubmit} data-testid="tr-decline-reason-form">
                 <p className={styles.modalDescription}>Bitte geben Sie einen Grund für Ihre Absage an. Dies hilft bei der Trainingsplanung und Kommunikation.</p>
 
                 <div className={styles.formField}>
@@ -59,9 +59,9 @@ export default function TrainingDeclineReasonModal({ isOpen, onClose, onConfirm,
                         rows={3}
                         disabled={isLoading}
                         maxLength={255}
-                        data-testid="training-decline-reason-input"
+                        data-testid="tr-decline-reason-input"
                     />
-                    {error && <div className={styles.formError} data-testid="training-decline-reason-error">{error}</div>}
+                    {error && <div className={styles.formError} data-testid="tr-decline-reason-error">{error}</div>}
                 </div>
 
                 <div className={styles.modalFooter}>
@@ -70,7 +70,7 @@ export default function TrainingDeclineReasonModal({ isOpen, onClose, onConfirm,
                         variant="secondary" 
                         onClick={handleClose} 
                         disabled={isLoading}
-                        data-testid="training-decline-reason-cancel"
+                        data-testid="tr-decline-reason-cancel"
                     >
                         Abbrechen
                     </Button>
@@ -79,7 +79,7 @@ export default function TrainingDeclineReasonModal({ isOpen, onClose, onConfirm,
                         variant="primary" 
                         loading={isLoading} 
                         disabled={!reason.trim() || reason.trim().length < 3}
-                        data-testid="training-decline-reason-submit"
+                        data-testid="tr-decline-reason-submit"
                     >
                         Absage bestätigen
                     </Button>

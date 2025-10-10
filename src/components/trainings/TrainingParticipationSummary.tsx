@@ -126,7 +126,7 @@ export default function TrainingParticipationSummary({ participationOverview }: 
     // Use passed data if available, otherwise show loading
     if (!participationOverview) {
         return (
-            <div className={styles.loadingContainer} data-testid="training-participation-loading">
+            <div className={styles.loadingContainer} data-testid="tr-participation-loading">
                 <div className={styles.loadingSpinner}></div>
                 <span>Lade Teilnahme-Übersicht...</span>
             </div>
@@ -137,7 +137,7 @@ export default function TrainingParticipationSummary({ participationOverview }: 
 
     if (overview.counts.total === 0) {
         return (
-            <div className={styles.emptyContainer} data-testid="training-participation-empty">
+            <div className={styles.emptyContainer} data-testid="tr-participation-empty">
                 <div className={styles.emptyIcon}>👥</div>
                 <h3 className={styles.emptyTitle}>Keine Spieler registriert</h3>
                 <p className={styles.emptyText}>Es sind noch keine Spieler im System registriert.</p>
@@ -149,7 +149,7 @@ export default function TrainingParticipationSummary({ participationOverview }: 
     const gridClassName = `${styles.participationGroups} ${styles.gridThreeColumns}`;
 
     return (
-        <div className={styles.participationSummaryContainer} data-testid="training-participation-summary">
+        <div className={styles.participationSummaryContainer} data-testid="tr-participation-summary">
             <div className={styles.summaryHeader}>
                 <h2 className={styles.summaryTitle}>Teilnahme-Übersicht</h2>
                 <div className={styles.summaryStats}>
@@ -172,7 +172,7 @@ export default function TrainingParticipationSummary({ participationOverview }: 
                     participations={overview.participation.JOINING}
                     count={overview.counts.joining}
                     color="#10b981"
-                    testIdPrefix="training"
+                    testIdPrefix="tr"
                     groupType="joining"
                 />
 
@@ -182,7 +182,7 @@ export default function TrainingParticipationSummary({ participationOverview }: 
                     participations={overview.participation.DECLINING}
                     count={overview.counts.declining}
                     color="#ef4444"
-                    testIdPrefix="training"
+                    testIdPrefix="tr"
                     groupType="declining"
                 />
 
@@ -193,7 +193,7 @@ export default function TrainingParticipationSummary({ participationOverview }: 
                     count={overview.counts.open}
                     sectionType="open"
                     color="#6b7280"
-                    testIdPrefix="training"
+                    testIdPrefix="tr"
                     groupType="open"
                 />
             </div>

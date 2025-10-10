@@ -26,8 +26,8 @@ export default function TrainingJoinInfoModal({ isOpen, onClose, onConfirm, isLo
     if (!isOpen) return null;
 
     return (
-        <Modal isOpen={isOpen} onClose={handleClose} title="Zusage bestätigen" maxWidth="sm" data-testid="training-join-info-modal">
-            <form onSubmit={handleSubmit} data-testid="training-join-info-form">
+        <Modal isOpen={isOpen} onClose={handleClose} title="Zusage bestätigen" maxWidth="sm">
+            <form onSubmit={handleSubmit} data-testid="tr-join-info-form">
                 <p className={styles.modalDescription}>Super, du bist beim Training dabei! Falls du zusätzliche Informationen hast, kannst du sie hier optional angeben.</p>
 
                 <div className={styles.formField}>
@@ -43,7 +43,7 @@ export default function TrainingJoinInfoModal({ isOpen, onClose, onConfirm, isLo
                         rows={2}
                         disabled={isLoading}
                         maxLength={255}
-                        data-testid="training-join-info-input"
+                        data-testid="tr-join-info-input"
                     />
                 </div>
 
@@ -53,7 +53,7 @@ export default function TrainingJoinInfoModal({ isOpen, onClose, onConfirm, isLo
                         variant="secondary" 
                         onClick={handleClose} 
                         disabled={isLoading}
-                        data-testid="training-join-info-cancel"
+                        data-testid="tr-join-info-cancel"
                     >
                         Abbrechen
                     </Button>
@@ -61,7 +61,7 @@ export default function TrainingJoinInfoModal({ isOpen, onClose, onConfirm, isLo
                         type="submit" 
                         variant="primary" 
                         loading={isLoading}
-                        data-testid="training-join-info-submit"
+                        data-testid="tr-join-info-submit"
                     >
                         Zusage bestätigen
                     </Button>

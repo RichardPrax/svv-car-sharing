@@ -4,20 +4,28 @@ Diese Dokumentation beschreibt die HTML-ID Konventionen für End-to-End Tests mi
 
 ## ID-Format
 
-Wir verwenden eine **kontextbewusste** ID-Strategie:
+Wir verwenden eine **kontextbewusste** ID-Strategie mit verschiedenen Präfixen:
 
-- **Datum-spezifische IDs** für Elemente die zwischen verschiedenen MatchDays unterscheiden müssen
-- **Vereinfachte IDs** für Elemente innerhalb einer spezifischen MatchDay-Detailseite
+- **`md-`** für MatchDay-Elemente
+- **`tr-`** für Training-Elemente
+- Keine Präfixe für globale Elemente (z.B. Login, Kategorien)
 
 ### Datum-basierte IDs (für Listen und Überblick)
 ```
-md-{YYYY-MM-DD}-{action}
+{prefix}-{YYYY-MM-DD}-{action}
 ```
+Beispiele:
+- `md-2025-08-30-participate` (MatchDay)
+- `tr-2025-10-15-participate` (Training)
 
-### Vereinfachte IDs (für Detailseiten)
+### Vereinfachte IDs (für Detailseiten und Formulare)
 ```
-md-{element}
+{prefix}-{element}
 ```
+Beispiele:
+- `md-tab-participation` (MatchDay Detail)
+- `tr-join-info-form` (Training Modal)
+- `login-email` (Global, ohne Präfix)
 
 ## Verfügbare Test-IDs
 
@@ -116,12 +124,89 @@ md-{element}
 | Login E-Mail Feld | `login-email` | `login-email` | Eingabefeld für E-Mail-Adresse |
 | Login Passwort Feld | `login-password` | `login-password` | Eingabefeld für Passwort |
 | Login Submit Button | `login-submit` | `login-submit` | Button zum Absenden des Login-Formulars |
+| **Training** | **Übersicht** | | |
+| Training Card | `tr-{YYYY-MM-DD}` | `tr-2025-10-15` | Hauptcontainer einer Training Karte |
+| Training Liste | `tr-list` | `tr-list` | Container für alle Trainings |
+| Training Liste Loading | `tr-list-loading` | `tr-list-loading` | Ladeindikator für Training-Liste |
+| Training Liste Leer | `tr-list-empty` | `tr-list-empty` | Anzeige wenn keine Trainings vorhanden |
+| Nächstes Training Sektion | `tr-next-training-section` | `tr-next-training-section` | Sektion für nächstes Training |
+| Nächstes Training Card | `tr-next-training-card` | `tr-next-training-card` | Karte mit nächstem Training |
+| Nächstes Training Loading | `tr-next-training-loading` | `tr-next-training-loading` | Ladeindikator für nächstes Training |
+| Nächstes Training Leer | `tr-next-training-empty` | `tr-next-training-empty` | Anzeige wenn kein Training geplant |
+| Training Sektion | `tr-list-section` | `tr-list-section` | Sektion für alle Trainings |
+| **Training** | **Aktionen** | | |
+| Training bearbeiten | `tr-{YYYY-MM-DD}-edit` | `tr-2025-10-15-edit` | Button zum Bearbeiten eines Trainings |
+| Training löschen | `tr-{YYYY-MM-DD}-delete` | `tr-2025-10-15-delete` | Button zum Löschen eines Trainings |
+| Ansicht umschalten | `tr-{YYYY-MM-DD}-toggle-view` | `tr-2025-10-15-toggle-view` | Button zum Umschalten zwischen Details und Teilnehmern |
+| Training Details | `tr-{YYYY-MM-DD}-details` | `tr-2025-10-15-details` | Container für Training-Details |
+| Teilnehmer Ansicht | `tr-{YYYY-MM-DD}-participants-view` | `tr-2025-10-15-participants-view` | Container für Teilnehmer-Ansicht |
+| **Training** | **Teilnahme** | | |
+| Participate Button | `tr-{YYYY-MM-DD}-participate` | `tr-2025-10-15-participate` | "Dabei" Button für Training-Teilnahme |
+| Decline Button | `tr-{YYYY-MM-DD}-decline` | `tr-2025-10-15-decline` | "Nicht dabei" Button für Training-Absage |
+| **Training** | **Zusage** | | |
+| Zusage Info Form | `tr-join-info-form` | `tr-join-info-form` | Formular für Zusage-Details |
+| Zusage Info Text | `tr-join-info-input` | `tr-join-info-input` | Textfeld für zusätzliche Angaben bei Zusage |
+| Zusage bestätigen | `tr-join-info-submit` | `tr-join-info-submit` | Button zum Bestätigen der Zusage |
+| Zusage abbrechen | `tr-join-info-cancel` | `tr-join-info-cancel` | Button zum Abbrechen der Zusage |
+| **Training** | **Absage** | | |
+| Absage-Grund Form | `tr-decline-reason-form` | `tr-decline-reason-form` | Formular für Absage-Grund |
+| Absage-Grund Text | `tr-decline-reason-input` | `tr-decline-reason-input` | Textfeld für Absage-Begründung |
+| Absage-Grund Fehler | `tr-decline-reason-error` | `tr-decline-reason-error` | Fehlermeldung bei ungültigem Grund |
+| Absage bestätigen | `tr-decline-reason-submit` | `tr-decline-reason-submit` | Button zum Bestätigen der Absage |
+| Absage abbrechen | `tr-decline-reason-cancel` | `tr-decline-reason-cancel` | Button zum Abbrechen der Absage |
+| **Training** | **Teilnahme Übersicht** | | |
+| Teilnahme Container | `tr-participation-summary` | `tr-participation-summary` | Hauptcontainer der Teilnahme-Übersicht |
+| Loading State | `tr-participation-loading` | `tr-participation-loading` | Ladeindikator für Teilnahme-Daten |
+| Empty State | `tr-participation-empty` | `tr-participation-empty` | Anzeige wenn keine Spieler registriert |
+| Gruppe "Dabei" | `tr-group-joining` | `tr-group-joining` | Gruppe der zusagenden Spieler |
+| Gruppe "Absage" | `tr-group-declining` | `tr-group-declining` | Gruppe der absagenden Spieler |
+| Gruppe "Offen" | `tr-group-open` | `tr-group-open` | Gruppe der noch nicht entschiedenen Spieler |
+| User in Gruppe | `tr-user-{type}-{index}` | `tr-user-joining-0` | Einzelner User in Teilnahme-Gruppe |
+| **Training** | **Training erstellen** | | |
+| Einzelnes Training erstellen | `tr-create-single-button` | `tr-create-single-button` | Button zum Erstellen eines einzelnen Trainings |
+| Training erstellen Form | `tr-create-form` | `tr-create-form` | Formular zum Erstellen eines Trainings |
+| Datum | `tr-create-date` | `tr-create-date` | Eingabefeld für Datum |
+| Startzeit | `tr-create-start-time` | `tr-create-start-time` | Eingabefeld für Startzeit |
+| Endzeit | `tr-create-end-time` | `tr-create-end-time` | Eingabefeld für Endzeit |
+| Form absenden | `tr-create-submit` | `tr-create-submit` | Button zum Speichern des Trainings |
+| Form abbrechen | `tr-create-cancel` | `tr-create-cancel` | Button zum Abbrechen |
+| **Training** | **Training bearbeiten** | | |
+| Training bearbeiten Form | `tr-edit-form` | `tr-edit-form` | Formular zum Bearbeiten eines Trainings |
+| Bearbeitungsbereich Auswahl | `tr-edit-scope-selector` | `tr-edit-scope-selector` | Selector für Bearbeitungsbereich (Serie) |
+| Scope: Nur dieses | `tr-edit-scope-single` | `tr-edit-scope-single` | Radio-Button für einzelnes Training |
+| Scope: Dieses und folgende | `tr-edit-scope-future` | `tr-edit-scope-future` | Radio-Button für dieses und folgende |
+| Scope: Gesamte Serie | `tr-edit-scope-series` | `tr-edit-scope-series` | Radio-Button für gesamte Serie |
+| Datum bearbeiten | `tr-edit-date` | `tr-edit-date` | Eingabefeld für Datum (Edit) |
+| Startzeit bearbeiten | `tr-edit-start-time` | `tr-edit-start-time` | Eingabefeld für Startzeit (Edit) |
+| Endzeit bearbeiten | `tr-edit-end-time` | `tr-edit-end-time` | Eingabefeld für Endzeit (Edit) |
+| Form absenden | `tr-edit-submit` | `tr-edit-submit` | Button zum Speichern der Änderungen |
+| Form abbrechen | `tr-edit-cancel` | `tr-edit-cancel` | Button zum Abbrechen der Bearbeitung |
+| **Training** | **Training löschen** | | |
+| Löschbereich Auswahl | `tr-delete-scope-selector` | `tr-delete-scope-selector` | Selector für Löschbereich (Serie) |
+| Scope: Nur dieses | `tr-delete-scope-single` | `tr-delete-scope-single` | Radio-Button für einzelnes Training |
+| Scope: Dieses und folgende | `tr-delete-scope-future` | `tr-delete-scope-future` | Radio-Button für dieses und folgende |
+| Scope: Gesamte Serie | `tr-delete-scope-series` | `tr-delete-scope-series` | Radio-Button für gesamte Serie |
+| Training löschen bestätigen | `tr-delete-confirm` | `tr-delete-confirm` | Button zum endgültigen Löschen des Trainings |
+| Training löschen abbrechen | `tr-delete-cancel` | `tr-delete-cancel` | Button zum Abbrechen der Löschung |
+| **Training** | **Trainings-Serie erstellen** | | |
+| Serie erstellen Button | `tr-create-series-button` | `tr-create-series-button` | Button zum Erstellen einer Trainings-Serie |
+| Serie erstellen Form | `tr-create-series-form` | `tr-create-series-form` | Formular zum Erstellen einer Serie |
+| Serie Name | `tr-series-name` | `tr-series-name` | Eingabefeld für Serien-Name |
+| Serie Beschreibung | `tr-series-description` | `tr-series-description` | Textfeld für Beschreibung |
+| Trainingstage | `tr-series-weekdays` | `tr-series-weekdays` | Container für Wochentag-Auswahl |
+| Startzeit | `tr-series-start-time` | `tr-series-start-time` | Eingabefeld für Startzeit |
+| Endzeit | `tr-series-end-time` | `tr-series-end-time` | Eingabefeld für Endzeit |
+| Startwoche | `tr-series-start-week` | `tr-series-start-week` | Eingabefeld für Startwoche |
+| Endwoche | `tr-series-end-week` | `tr-series-end-week` | Eingabefeld für Endwoche |
+| Form absenden | `tr-series-submit` | `tr-series-submit` | Button zum Erstellen der Serie |
+| Form abbrechen | `tr-series-cancel` | `tr-series-cancel` | Button zum Abbrechen |
 
 ## Hinweise
 
 - Datumsformat ist immer `YYYY-MM-DD` (ISO-Format)
 - Alle Test-IDs verwenden `data-testid` Attribute (nicht `id`)
-- IDs sind eindeutig pro Kontext (Übersicht vs. Detail)
+- IDs sind eindeutig pro Kontext und Feature-Bereich
+- Präfixe: `md-` für MatchDay, `tr-` für Training
 - Für Playwright wird `page.getByTestId()` empfohlen
 - Index-basierte IDs beginnen bei 0
 - Modal- und Form-IDs sind kontextspezifisch benannt

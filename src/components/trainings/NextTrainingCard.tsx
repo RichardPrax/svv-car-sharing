@@ -12,7 +12,7 @@ export default function NextTrainingCard({ training, loading }: Props) {
 
     if (loading) {
         return (
-            <div className={styles.nextTrainingCard}>
+            <div className={styles.nextTrainingCard} data-testid="tr-next-training-loading">
                 <div className={styles.nextTrainingHeader}>
                     <div className={styles.nextTrainingIcon}>
                         <Icon name="clock-loading" size={20} />
@@ -26,7 +26,7 @@ export default function NextTrainingCard({ training, loading }: Props) {
 
     if (!training) {
         return (
-            <div className={styles.nextTrainingCard}>
+            <div className={styles.nextTrainingCard} data-testid="tr-next-training-empty">
                 <div className={styles.nextTrainingHeader}>
                     <div className={styles.nextTrainingIcon}>
                         <Icon name="volleyball" size={20} />
@@ -41,7 +41,7 @@ export default function NextTrainingCard({ training, loading }: Props) {
     // No click handler needed - trainings should not be clickable
 
     return (
-        <div className={styles.nextTrainingCard}>
+        <div className={styles.nextTrainingCard} data-testid="tr-next-training-card">
             <div className={styles.nextTrainingHeader}>
                 <p className={styles.nextTrainingDate}>
                     {formatTrainingDate(training)}
