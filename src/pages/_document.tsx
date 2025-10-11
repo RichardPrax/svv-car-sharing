@@ -22,7 +22,7 @@ export default function Document() {
         <link rel="apple-touch-icon" sizes="512x512" href="/icon-512x512.png" />
 
         {/* Manifest */}
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="/api/manifest" />
 
         {/* Favicon */}
         <link rel="shortcut icon" href="/favicon.ico" />
