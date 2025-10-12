@@ -138,6 +138,12 @@
 .userInfo {
     flex: 1;
     min-width: 0; /* Allow text truncation */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
 }
 
 .userName {
@@ -309,7 +315,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-xs);
-    margin-top: var(--spacing-xs);
+    align-items: center;
 }
 
 .positionBadge {
