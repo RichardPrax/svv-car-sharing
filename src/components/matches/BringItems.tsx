@@ -4,7 +4,7 @@ import { useBringItems } from "@/hooks/matches/useBringItems";
 import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
 import { CreateBringItemForm } from "@/components/forms";
 import { DeleteBringItemConfirm } from "@/components/matches";
-import { Modal } from "@/components/ui";
+import { Modal, Icon } from "@/components/ui";
 import { BringItem } from "@/entities/BringItem";
 import styles from "./BringItems.module.css";
 
@@ -118,7 +118,7 @@ export default function BringItems({ matchId }: BringItemsProps) {
                                     <div className={styles.itemHeader}>
                                         <span className={styles.itemName}>{item.itemName}</span>
                                         <div className={styles.itemMeta}>
-                                            <span className={styles.itemUser}>✅ {getUserDisplayName(item.user.firstName, item.user.lastName)}</span>
+                                            <span className={styles.itemUser}>{getUserDisplayName(item.user.firstName, item.user.lastName)}</span>
                                             {isUserItem(item.userId) && (
                                                 <button 
                                                     onClick={() => handleDeleteClick(item)} 
@@ -126,7 +126,7 @@ export default function BringItems({ matchId }: BringItemsProps) {
                                                     title="Löschen"
                                                     data-testid={`md-delete-bring-item-${index}`}
                                                 >
-                                                    🗑️
+                                                    <Icon name="delete" size={16} color="currentColor" />
                                                 </button>
                                             )}
                                         </div>

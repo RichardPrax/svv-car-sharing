@@ -90,11 +90,11 @@
 }
 
 .error {
-    background: #fef2f2;
-    border: 1px solid #fecaca;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
     border-radius: var(--radius-md);
     padding: var(--spacing-md);
-    color: #dc2626;
+    color: #ef4444;
     font-size: 0.875rem;
     margin-bottom: var(--spacing-lg);
 }
@@ -230,27 +230,38 @@
 .itemUser {
     font-size: 0.875rem;
     font-weight: 500;
-    color: var(--primary);
-    background: #f0f9ff;
+    color: var(--text-accent);
+    background: rgba(34, 197, 94, 0.15);
     padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-sm);
-    border: 1px solid #bae6fd;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    height: 2rem;
+    display: flex;
+    align-items: center;
 }
 
 .deleteButton {
-    background: none;
-    border: none;
-    cursor: pointer;
     font-size: 1rem;
-    padding: var(--spacing-xs);
+    font-weight: 600;
+    color: #ef4444;
+    background-color: transparent;
+    border: 1px solid #ef4444;
+    padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-sm);
-    transition: background-color 0.2s ease;
-    opacity: 0.7;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    height: 2rem;
+    min-width: 2rem;
 }
 
 .deleteButton:hover {
-    background: #fee2e2;
-    opacity: 1;
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: #dc2626;
+    color: #dc2626;
 }
 
 .itemDescription {

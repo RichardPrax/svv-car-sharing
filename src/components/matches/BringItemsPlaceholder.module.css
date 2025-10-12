@@ -97,9 +97,9 @@
 .comingSoon {
     text-align: center;
     padding: var(--spacing-xl);
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    background: var(--background-secondary);
     border-radius: var(--radius-lg);
-    border: 2px dashed #cbd5e1;
+    border: 2px dashed var(--border);
 }
 
 .comingSoonIcon {
