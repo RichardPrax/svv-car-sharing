@@ -54,10 +54,17 @@ const ParticipationGroup: React.FC<ParticipationGroupProps> = ({
 }) => {
     const headerClassName = `${styles.groupHeader} ${isClickable ? styles.groupHeaderClickable : ''} ${isCurrentState ? styles.groupHeaderActive : ''}`;
     
+    // Generate active state styles based on the group's color
+    const headerStyle = isCurrentState ? {
+        backgroundColor: `${color}15`, // 15 is hex for ~8% opacity
+        borderBottom: `2px solid ${color}`
+    } : {};
+    
     return (
         <div className={styles.participationGroup} data-testid={`${testIdPrefix}-group-${groupType}`} style={{ borderLeftColor: color }}>
             <div 
                 className={headerClassName}
+                style={headerStyle}
                 onClick={isClickable ? onClick : undefined}
                 role={isClickable ? "button" : undefined}
                 tabIndex={isClickable ? 0 : undefined}

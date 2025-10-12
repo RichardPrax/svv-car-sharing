@@ -117,8 +117,7 @@
 }
 
 .groupHeaderActive {
-    background: var(--primary-light, rgba(59, 130, 246, 0.1));
-    border-bottom: 2px solid var(--primary-color, #3b82f6);
+    /* Background and border colors are now applied via inline styles based on the group's color */
 }
 
 .groupIcon {
@@ -152,7 +151,7 @@
 
 .groupContent {
     padding: var(--spacing-lg);
-    padding-top: 0;
+    padding-top: var(--spacing-md);
 }
 
 /* Empty Group Placeholder */
