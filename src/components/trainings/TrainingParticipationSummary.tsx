@@ -1,7 +1,11 @@
 import { TrainingParticipationData, TrainingParticipationPlayer, TrainingParticipationOverview } from "@/hooks/trainings/useBatchedTrainingParticipationOverview";
 import { ThumbsUpIcon, ThumbsDownIcon, ClockIcon } from "@/components/ui/GameParticipationIcons";
 import { getPositionDisplayName, getPositionColor, VolleyballPosition } from "@/entities/UserProfile";
-import React from "react";
+import React, { useState } from "react";
+import { useOptimizedAuth } from "@/hooks/auth/useOptimizedAuth";
+import { TrainingParticipationStatus } from "@/hooks/trainings/useTrainingParticipation";
+import TrainingDeclineReasonModal from "./TrainingDeclineReasonModal";
+import TrainingJoinInfoModal from "./TrainingJoinInfoModal";
 import styles from "./TrainingParticipationSummary.module.css";
 
 // Helper function to safely convert string position to enum
@@ -29,12 +33,42 @@ interface ParticipationGroupProps {
     color: string;
     testIdPrefix: string;
     groupType: string;
+    onClick?: () => void;
+    isClickable?: boolean;
+    isCurrentState?: boolean;
 }
 
-const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, participations, openUsers, count, sectionType = "participation", color, testIdPrefix, groupType }) => {
+const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ 
+    title, 
+    icon, 
+    participations, 
+    openUsers, 
+    count, 
+    sectionType = "participation", 
+    color, 
+    testIdPrefix, 
+    groupType,
+    onClick,
+    isClickable = false,
+    isCurrentState = false
+}) => {
+    const headerClassName = `${styles.groupHeader} ${isClickable ? styles.groupHeaderClickable : ''} ${isCurrentState ? styles.groupHeaderActive : ''}`;
+    
     return (
         <div className={styles.participationGroup} data-testid={`${testIdPrefix}-group-${groupType}`} style={{ borderLeftColor: color }}>
-            <div className={styles.groupHeader}>
+            <div 
+                className={headerClassName}
+                onClick={isClickable ? onClick : undefined}
+                role={isClickable ? "button" : undefined}
+                tabIndex={isClickable ? 0 : undefined}
+                onKeyDown={isClickable ? (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        onClick?.();
+                    }
+                } : undefined}
+                title={isClickable ? `${title} auswählen` : undefined}
+            >
                 <div className={styles.groupIcon} style={{ color }}>
                     {icon}
                 </div>
@@ -122,7 +156,13 @@ const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, pa
     );
 };
 
-export default function TrainingParticipationSummary({ participationOverview }: TrainingParticipationSummaryProps) {
+export default function TrainingParticipationSummary({ trainingId, trainingDate, participationOverview }: TrainingParticipationSummaryProps) {
+    const { user, session } = useOptimizedAuth();
+    const [showDeclineModal, setShowDeclineModal] = useState(false);
+    const [showJoinModal, setShowJoinModal] = useState(false);
+    const [pendingStatus, setPendingStatus] = useState<TrainingParticipationStatus | null>(null);
+    const [updating, setUpdating] = useState(false);
+
     // Use passed data if available, otherwise show loading
     if (!participationOverview) {
         return (
@@ -144,6 +184,150 @@ export default function TrainingParticipationSummary({ participationOverview }: 
             </div>
         );
     }
+
+    // Determine current user's participation state
+    const currentUserParticipation = overview.participation.JOINING.find(p => p.playerId === user?.id) 
+        || overview.participation.DECLINING.find(p => p.playerId === user?.id);
+    
+    const currentUserStatus = currentUserParticipation?.status || null;
+    const isUserInOpenState = !currentUserParticipation && overview.participation.OPEN.some(u => u.id === user?.id);
+
+    // Check if training is in the past
+    const trainingDateObj = new Date(trainingDate);
+    const isPastTraining = trainingDateObj < new Date();
+
+    // Only make clickable if user is logged in, is a player, and training is not in the past
+    const isClickable = !!(user && !isPastTraining);
+
+    const updateParticipation = async (status: TrainingParticipationStatus, reason?: string) => {
+        setUpdating(true);
+
+        try {
+            const token = session?.access_token;
+            if (!token) {
+                return { error: "No access token available" };
+            }
+
+            const body: { status: TrainingParticipationStatus; reason?: string } = { status };
+            if (reason && reason.trim()) {
+                body.reason = reason.trim();
+            }
+
+            const response = await fetch(`/api/trainings/${trainingId}/participation`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify(body),
+            });
+
+            if (response.ok) {
+                // Reload the page to refresh all data
+                window.location.reload();
+                return { success: true };
+            } else {
+                const errorData = await response.json();
+                return { error: errorData.error || "Failed to update participation" };
+            }
+        } catch (err) {
+            console.error("Error updating training participation:", err);
+            return { error: "Network error" };
+        } finally {
+            setUpdating(false);
+        }
+    };
+
+    const removeParticipation = async () => {
+        setUpdating(true);
+
+        try {
+            const token = session?.access_token;
+            if (!token) {
+                return { error: "No access token available" };
+            }
+
+            const response = await fetch(`/api/trainings/${trainingId}/participation/${user?.id}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                // Reload the page to refresh all data
+                window.location.reload();
+                return { success: true };
+            } else {
+                const errorData = await response.json();
+                return { error: errorData.error || "Failed to remove participation" };
+            }
+        } catch (err) {
+            console.error("Error removing training participation:", err);
+            return { error: "Network error" };
+        } finally {
+            setUpdating(false);
+        }
+    };
+
+    const handleGroupClick = async (targetStatus: TrainingParticipationStatus | "OPEN") => {
+        if (!isClickable || updating) return;
+
+        // If clicking current state, remove participation (set to open)
+        if (
+            (targetStatus === "JOINING" && currentUserStatus === "JOINING") ||
+            (targetStatus === "DECLINING" && currentUserStatus === "DECLINING")
+        ) {
+            await removeParticipation();
+            return;
+        }
+
+        // If clicking "open" state and user is already open, do nothing
+        if (targetStatus === "OPEN" && isUserInOpenState) {
+            return;
+        }
+
+        // For DECLINING status, show modal to get reason (required)
+        if (targetStatus === "DECLINING") {
+            setPendingStatus(targetStatus);
+            setShowDeclineModal(true);
+            return;
+        }
+
+        // For JOINING status, show modal to optionally add info
+        if (targetStatus === "JOINING") {
+            setPendingStatus(targetStatus);
+            setShowJoinModal(true);
+            return;
+        }
+
+        // For OPEN status (clicking on "Noch offen"), remove participation
+        if (targetStatus === "OPEN") {
+            await removeParticipation();
+        }
+    };
+
+    const handleDeclineConfirm = async (reason: string) => {
+        if (!pendingStatus) return;
+
+        await updateParticipation(pendingStatus, reason);
+        setShowDeclineModal(false);
+        setPendingStatus(null);
+    };
+
+    const handleJoinConfirm = async (info?: string) => {
+        if (!pendingStatus) return;
+
+        await updateParticipation(pendingStatus, info);
+        setShowJoinModal(false);
+        setPendingStatus(null);
+    };
+
+    const handleModalClose = () => {
+        setShowDeclineModal(false);
+        setShowJoinModal(false);
+        setPendingStatus(null);
+    };
 
     // Always show all three groups for consistent layout
     const gridClassName = `${styles.participationGroups} ${styles.gridThreeColumns}`;
@@ -174,6 +358,9 @@ export default function TrainingParticipationSummary({ participationOverview }: 
                     color="#10b981"
                     testIdPrefix="tr"
                     groupType="joining"
+                    onClick={() => handleGroupClick("JOINING")}
+                    isClickable={isClickable}
+                    isCurrentState={currentUserStatus === "JOINING"}
                 />
 
                 <ParticipationGroup
@@ -184,6 +371,9 @@ export default function TrainingParticipationSummary({ participationOverview }: 
                     color="#ef4444"
                     testIdPrefix="tr"
                     groupType="declining"
+                    onClick={() => handleGroupClick("DECLINING")}
+                    isClickable={isClickable}
+                    isCurrentState={currentUserStatus === "DECLINING"}
                 />
 
                 <ParticipationGroup
@@ -195,8 +385,25 @@ export default function TrainingParticipationSummary({ participationOverview }: 
                     color="#6b7280"
                     testIdPrefix="tr"
                     groupType="open"
+                    onClick={() => handleGroupClick("OPEN")}
+                    isClickable={isClickable}
+                    isCurrentState={isUserInOpenState}
                 />
             </div>
+
+            <TrainingDeclineReasonModal 
+                isOpen={showDeclineModal} 
+                onClose={handleModalClose} 
+                onConfirm={handleDeclineConfirm} 
+                isLoading={updating} 
+                statusType={pendingStatus} 
+            />
+            <TrainingJoinInfoModal 
+                isOpen={showJoinModal} 
+                onClose={handleModalClose} 
+                onConfirm={handleJoinConfirm} 
+                isLoading={updating} 
+            />
         </div>
     );
 }
