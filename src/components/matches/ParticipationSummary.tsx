@@ -33,8 +33,8 @@ interface ParticipationGroupProps {
 
 const ParticipationGroup: React.FC<ParticipationGroupProps> = ({ title, icon, participations, openUsers, count, sectionType = "participation", color, testIdPrefix, groupType }) => {
     return (
-        <div className={styles.participationGroup} data-testid={`${testIdPrefix}-group-${groupType}`}>
-            <div className={styles.groupHeader} style={{ borderLeftColor: color }}>
+        <div className={styles.participationGroup} data-testid={`${testIdPrefix}-group-${groupType}`} style={{ borderLeftColor: color }}>
+            <div className={styles.groupHeader}>
                 <div className={styles.groupIcon} style={{ color }}>
                     {icon}
                 </div>
