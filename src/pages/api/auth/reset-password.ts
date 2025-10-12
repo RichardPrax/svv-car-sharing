@@ -1,7 +1,7 @@
 // src/pages/api/auth/reset-password.ts
 import { NextApiRequest, NextApiResponse } from "next";
 import { supabase } from "@/lib/supabaseClient";
-import { withRateLimit } from "@/lib/middleware/rateLimiter";
+import { withRateLimit, passwordResetRateLimiter } from "@/lib/middleware/rateLimiter";
 import { SecurityValidator } from "@/lib/middleware/security";
 
 async function resetPasswordHandler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
@@ -58,8 +58,5 @@ async function resetPasswordHandler(req: NextApiRequest, res: NextApiResponse): 
 }
 
 // Apply rate limiting: 3 requests per 15 minutes per IP for password reset
-export default withRateLimit(resetPasswordHandler, {
-    maxRequests: 3,
-    windowMs: 15 * 60 * 1000, // 15 minutes
-});
+export default withRateLimit(passwordResetRateLimiter)(resetPasswordHandler);
 
