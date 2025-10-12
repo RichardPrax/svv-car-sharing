@@ -30,8 +30,9 @@ async function resetPasswordHandler(req: NextApiRequest, res: NextApiResponse): 
         }
 
         // Get the site URL for the redirect URL
-        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:3000';
-        const redirectTo = `${siteUrl}/reset-password-confirm`;
+        const redirectTo = 'https://svv-team-manager.vercel.app/reset-password-confirm';
+
+        console.log(`Password reset requested for ${email}, redirect to ${redirectTo}`);
 
         // Send password reset email via Supabase
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
