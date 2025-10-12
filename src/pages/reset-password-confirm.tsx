@@ -63,16 +63,20 @@ export default function ResetPasswordConfirmPage() {
 
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password });
-    setLoading(false);
 
     if (error) {
+      setLoading(false);
       setError(error.message || "Fehler beim Zurücksetzen des Passworts.");
       return;
     }
 
+    // Benutzer ausloggen nach Passwort-Änderung
+    await supabase.auth.signOut();
+    setLoading(false);
+
     setSuccess(true);
-    // Optional: direkt in die App oder zum Login
-    setTimeout(() => router.push("/login"), 1500);
+    // Zum Login weiterleiten, damit sich der Benutzer mit neuem Passwort anmelden kann
+    setTimeout(() => router.push("/login"), 2000);
   };
 
   if (validating) {
@@ -99,8 +103,8 @@ export default function ResetPasswordConfirmPage() {
   if (success) {
     return (
       <AuthContainer>
-        <AuthHeader title="Passwort aktualisiert" subtitle="Du kannst dich jetzt anmelden" />
-        <div className={styles.successMessage}><p>Weiterleitung…</p></div>
+        <AuthHeader title="Passwort aktualisiert" subtitle="Bitte melde dich mit deinem neuen Passwort an" />
+        <div className={styles.successMessage}><p>Weiterleitung zur Anmeldung…</p></div>
       </AuthContainer>
     );
   }
