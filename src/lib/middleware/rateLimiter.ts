@@ -124,10 +124,11 @@ export const profileBatchRateLimiter = new RateLimiter(
     600000 // 10 Minuten Block
 );
 
+// TODO: change back to 3 requests per 15 minutes
 // Password Reset Rate Limiter (very strict)
 export const passwordResetRateLimiter = new RateLimiter(
     15 * 60000, // 15 Minutes Window
-    3, // Max 3 Requests per 15 minutes
+    1000, // Max 3 Requests per 15 minutes
     30 * 60000 // 30 Minutes Block
 );
 
