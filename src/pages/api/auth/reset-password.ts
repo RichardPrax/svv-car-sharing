@@ -30,7 +30,9 @@ async function resetPasswordHandler(req: NextApiRequest, res: NextApiResponse): 
         }
 
         // Get the site URL for the redirect URL
-        const redirectTo = 'https://svv-team-manager.vercel.app/reset-password-confirm';
+        // Use environment variable if available, otherwise fallback to production URL
+        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://svv-team-manager.vercel.app';
+        const redirectTo = `${siteUrl}/reset-password-confirm`;
 
         console.log(`Password reset requested for ${email}, redirect to ${redirectTo}`);
 

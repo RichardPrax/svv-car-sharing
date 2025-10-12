@@ -19,26 +19,46 @@ export default function ResetPasswordConfirmPage() {
     const [validatingToken, setValidatingToken] = useState(true);
 
     useEffect(() => {
-        // Check if we have a valid recovery token
-        const checkToken = async () => {
-            try {
-                const { data: { session }, error } = await supabase.auth.getSession();
-                
-                if (error || !session) {
-                    setError("Ungültiger oder abgelaufener Link. Bitte fordere einen neuen Link an.");
-                    setValidatingToken(false);
-                    return;
-                }
-
+        // Listen for auth state changes when Supabase processes the recovery token from URL
+        const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+            console.log("Auth state changed:", event, session?.user?.email);
+            
+            if (event === 'PASSWORD_RECOVERY') {
+                // Token is valid, user can now reset password
                 setValidatingToken(false);
-            } catch (err) {
-                console.error("Error checking token:", err);
-                setError("Ein Fehler ist aufgetreten. Bitte versuche es erneut.");
+            } else if (event === 'SIGNED_IN' && session) {
+                // Also accept SIGNED_IN event (sometimes Supabase uses this)
+                setValidatingToken(false);
+            }
+        });
+
+        // Also check immediately if there's already a session
+        const checkExistingSession = async () => {
+            // Give Supabase time to process the URL hash
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            const { data: { session }, error } = await supabase.auth.getSession();
+            
+            if (error) {
+                console.error("Error getting session:", error);
+            }
+            
+            if (session) {
+                console.log("Existing session found");
+                setValidatingToken(false);
+            } else if (!session) {
+                // No session after waiting - token is invalid or expired
+                setError("Ungültiger oder abgelaufener Link. Bitte fordere einen neuen Link an.");
                 setValidatingToken(false);
             }
         };
 
-        checkToken();
+        checkExistingSession();
+
+        // Cleanup subscription
+        return () => {
+            authListener.subscription.unsubscribe();
+        };
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
