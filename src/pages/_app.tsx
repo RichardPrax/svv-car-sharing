@@ -11,7 +11,7 @@ function AppContent({ Component, pageProps }: AppProps) {
     const router = useRouter();
 
     // Seiten ohne Layout (Login/Auth Seiten)
-    const routesWithoutLayout = ["/login"];
+    const routesWithoutLayout = ["/login", "/reset-password-confirm"];
     const showLayout = !routesWithoutLayout.includes(router.pathname);
 
     return (
