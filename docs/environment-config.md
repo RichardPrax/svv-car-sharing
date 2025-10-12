@@ -32,7 +32,10 @@ DIRECT_URL="postgresql://postgres:postgres@localhost:54322/postgres"
 ```bash
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="local-development-secret-key"
+NEXT_PUBLIC_SITE_URL="http://localhost:3000"  # Für Password-Reset Redirects
 ```
+
+> **📝 Hinweis:** `NEXT_PUBLIC_SITE_URL` wird für Password-Reset E-Mails verwendet. In der Produktion sollte dies auf deine echte Domain gesetzt werden (z.B. `https://deine-domain.de`).
 
 ## 🔧 Setup
 
