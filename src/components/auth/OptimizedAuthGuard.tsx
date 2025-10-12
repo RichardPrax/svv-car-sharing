@@ -13,7 +13,7 @@ const OptimizedAuthGuard = ({ children }: OptimizedAuthGuardProps) => {
     const router = useRouter();
 
     // Seiten, die ohne Login zugänglich sind - useMemo für Performance
-    const publicRoutes = useMemo(() => ["/login"], []);
+    const publicRoutes = useMemo(() => ["/login", "/reset-password-confirm"], []);
 
     // In development, allow access to all pages to prevent authentication blocking
     const isDevelopment = process.env.NODE_ENV === "development";

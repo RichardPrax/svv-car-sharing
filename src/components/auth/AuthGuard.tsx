@@ -13,7 +13,7 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
     const router = useRouter();
 
     // Seiten, die ohne Login zugänglich sind - useMemo für Performance
-    const publicRoutes = useMemo(() => ["/login"], []);
+    const publicRoutes = useMemo(() => ["/login", "/reset-password-confirm"], []);
 
     useEffect(() => {
         // Nur redirect, keine zusätzlichen Auth-Calls

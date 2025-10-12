@@ -124,6 +124,13 @@ export const profileBatchRateLimiter = new RateLimiter(
     600000 // 10 Minuten Block
 );
 
+// Password Reset Rate Limiter (very strict)
+export const passwordResetRateLimiter = new RateLimiter(
+    15 * 60000, // 15 Minutes Window
+    3, // Max 3 Requests per 15 minutes
+    30 * 60000 // 30 Minutes Block
+);
+
 export function withRateLimit(rateLimiter: RateLimiter) {
     return function (handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void> | void) {
         return async function (req: NextApiRequest, res: NextApiResponse) {

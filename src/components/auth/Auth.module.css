@@ -172,3 +172,25 @@
     }
 }
 
+/* Forgot Password Link */
+.forgotPasswordContainer {
+    text-align: right;
+    margin-top: -0.5rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.forgotPasswordLink {
+    color: var(--text-accent);
+    font-size: 0.875rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.forgotPasswordLink:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+

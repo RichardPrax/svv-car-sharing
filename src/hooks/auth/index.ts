@@ -5,4 +5,5 @@ export { useOptimizedAuth, useCurrentUser, useUserProfile as useOptimizedUserPro
 export { useUserProfileCache, useOptimizedUserProfile as useOptimizedSingleProfile, useOptimizedUserProfiles, UserProfileProvider } from "./useUserProfileCache";
 export { useRoleGuard, useAdminGuard } from "./useRoleGuard";
 export { useAuthenticatedFetch } from "./useAuthenticatedFetch";
+export { usePasswordReset, usePasswordUpdate } from "./usePasswordReset";
 
