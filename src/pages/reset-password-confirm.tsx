@@ -19,21 +19,33 @@ export default function ResetPasswordConfirmPage() {
   const [validating, setValidating] = useState(true);
 
   useEffect(() => {
-    let done = false;
+    let cancelled = false;
+
     (async () => {
       try {
-        // WICHTIG: ganze URL übergeben (inkl. ?code=…)
-        const { error } = await supabase.auth.exchangeCodeForSession(window.location.href);
+        const params = new URLSearchParams(window.location.search);
+        const token_hash = params.get("token_hash");
+        const type = (params.get("type") || "recovery") as "recovery";
+
+        if (!token_hash) {
+          setError("Kein Token gefunden. Bitte fordere einen neuen Link an.");
+          return;
+        }
+
+        // Einmalige Verifikation des Links (kein PKCE nötig)
+        const { error } = await supabase.auth.verifyOtp({ type, token_hash });
         if (error) {
-          setError("Ungültiger oder abgelaufener Link. Bitte fordere einen neuen Link an.");
+          setError(error.message || "Link ungültig oder abgelaufen.");
+          return;
         }
       } catch (e) {
         setError("Ein Fehler ist aufgetreten. Bitte versuche es erneut.");
       } finally {
-        if (!done) setValidating(false);
+        if (!cancelled) setValidating(false);
       }
     })();
-    return () => { done = true; };
+
+    return () => { cancelled = true; };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -59,7 +71,7 @@ export default function ResetPasswordConfirmPage() {
     }
 
     setSuccess(true);
-    // Optional: direkt in die App statt Login, weil bereits Session existiert
+    // Optional: direkt in die App oder zum Login
     setTimeout(() => router.push("/login"), 1500);
   };
 
