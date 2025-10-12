@@ -178,8 +178,11 @@
 
 .userInfo {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     gap: var(--spacing-xs);
+    flex-wrap: wrap;
 }
 
 .userName {
@@ -371,7 +374,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
-    margin-top: var(--spacing-xs);
 }
 
 .positionBadge {
