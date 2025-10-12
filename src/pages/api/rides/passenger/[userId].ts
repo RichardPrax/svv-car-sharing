@@ -9,6 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const { userId } = req.query;
 
             if (!userId || typeof userId !== "string") {
+                console.error("Invalid userId parameter:", userId);
                 return res.status(400).json({ error: "User ID ist erforderlich" });
             }
 
@@ -16,7 +17,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(200).json(rides);
         } catch (error) {
             console.error("Fehler beim Laden der Mitfahrerfahrten:", error);
-            res.status(500).json({ error: "Fehler beim Laden der Mitfahrerfahrten" });
+            const errorMessage = error instanceof Error ? error.message : "Unbekannter Fehler";
+            res.status(500).json({ 
+                error: "Fehler beim Laden der Mitfahrerfahrten",
+                details: errorMessage 
+            });
         }
     } else {
         res.setHeader("Allow", ["GET"]);

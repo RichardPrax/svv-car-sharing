@@ -37,7 +37,10 @@ export function useUserParticipationCheck({ matchId, refreshTrigger }: UseUserPa
             const response = await fetch(`/api/rides/passenger/${user.id}`);
 
             if (!response.ok) {
-                throw new Error("Fehler beim Laden der Mitfahrerfahrten");
+                const errorData = await response.json().catch(() => ({ error: "Unbekannter Fehler" }));
+                const errorMessage = errorData.error || "Fehler beim Laden der Mitfahrerfahrten";
+                console.error(`API Error (${response.status}):`, errorMessage, errorData);
+                throw new Error(`${errorMessage} (Status: ${response.status})`);
             }
 
             const passengerRides = await response.json();
@@ -48,7 +51,8 @@ export function useUserParticipationCheck({ matchId, refreshTrigger }: UseUserPa
             setParticipatingRideId(hasParticipation ? participationInMatch.rideId : null);
         } catch (err) {
             console.error("Error checking participation:", err);
-            setError("Ein unerwarteter Fehler ist aufgetreten");
+            const errorMessage = err instanceof Error ? err.message : "Ein unerwarteter Fehler ist aufgetreten";
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
