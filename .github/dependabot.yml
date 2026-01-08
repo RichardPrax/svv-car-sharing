@@ -1,14 +1,14 @@
 # .github/dependabot.yml
-
-version: 2
-updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
-    schedule:
-      interval: "weekly"
-    groups:
-      npm-minor-and-patch-updates:
-        # group all Minor and Patch Versions
-        update-types:
-          - "minor"
-          - "patch"
+# DEACTIVATED: PROJECT DEPRECATED
+# version: 2
+# updates:
+#   - package-ecosystem: "npm" # See documentation for possible values
+#     directory: "/" # Location of package manifests
+#     schedule:
+#       interval: "weekly"
+#     groups:
+#       npm-minor-and-patch-updates:
+#         # group all Minor and Patch Versions
+#         update-types:
+#           - "minor"
+#           - "patch"
